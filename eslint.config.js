@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import tseslint from 'typescript-eslint'
+import stylistic from '@stylistic/eslint-plugin'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
@@ -18,12 +19,15 @@ export default defineConfig([
     ],
     plugins: {
       'react-compiler': reactCompiler,
+      '@stylistic': stylistic,
     },
     languageOptions: {
       globals: globals.browser,
     },
     rules: {
       'react-compiler/react-compiler': 'error',
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/comma-dangle': ['error', 'always-multiline'],
       'no-console': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',

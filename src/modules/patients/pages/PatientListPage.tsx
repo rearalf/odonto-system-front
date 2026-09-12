@@ -1,13 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
+import Breadcrumbs from '@/shared/components/ui/Breadcrumbs';
 
 export default function PatientListPage() {
   return (
     <div>
+      <Breadcrumbs />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Pacientes</h1>
-          <p className="mt-1 text-sm text-gray-500">Gestión de pacientes registrados</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Gestión de pacientes registrados
+          </p>
         </div>
         <Link
           to="/patients/new"
@@ -30,7 +34,9 @@ export default function PatientListPage() {
       </div>
 
       <div className="mt-6 p-12 bg-white rounded-xl border border-gray-200 shadow-sm text-center">
-        <p className="text-sm text-gray-500">No hay pacientes registrados aún.</p>
+        <p className="text-sm text-gray-500">
+          No hay pacientes registrados aún.
+        </p>
         <Link
           to="/patients/new"
           className="inline-block mt-4 text-sm font-medium text-emerald-600 hover:text-emerald-700"

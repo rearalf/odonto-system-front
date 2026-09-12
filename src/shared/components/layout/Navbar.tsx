@@ -84,7 +84,7 @@ export const Navbar = ({
               className={`w-full pl-9 pr-4 py-1.5 rounded-lg text-xs focus:outline-none transition-colors placeholder:text-text-subtle ${
                 isDark
                   ? 'bg-[#152438] text-white focus:bg-[#1c2e47] border border-border-subtle'
-                  : 'bg-[#f8fafc] text-[#1e293b] border border-border-subtle focus:bg-white focus:border-primary'
+                  : 'bg-bg-app text-[#1e293b] border border-border-subtle focus:bg-white focus:border-primary'
               }`}
             />
           </div>
@@ -100,7 +100,7 @@ export const Navbar = ({
           className={`relative p-1.5 rounded-lg transition-colors ${
             isDark
               ? 'text-slate-300 hover:text-white hover:bg-[#1c2e47]'
-              : 'text-[#64748b] hover:text-[#1e293b] hover:bg-slate-100'
+              : 'text-text-muted hover:text-[#1e293b] hover:bg-slate-100'
           }`}
         >
           <Bell className="w-4 h-4" />
@@ -114,7 +114,7 @@ export const Navbar = ({
           className={`hidden lg:flex p-1.5 rounded-lg transition-colors ${
             isDark
               ? 'text-slate-300 hover:text-white hover:bg-[#1c2e47]'
-              : 'text-[#64748b] hover:text-[#1e293b] hover:bg-slate-100'
+              : 'text-text-muted hover:text-[#1e293b] hover:bg-slate-100'
           }`}
         >
           <HelpCircle className="w-4 h-4" />

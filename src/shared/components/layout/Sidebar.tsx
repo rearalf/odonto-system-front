@@ -87,9 +87,7 @@ export function Sidebar({
             </div>
             {!collapsed && (
               <div className="flex flex-col">
-                <span
-                  className="text-sm font-bold leading-tight text-text-primary"
-                >
+                <span className="text-sm font-bold leading-tight text-text-primary">
                   DentalCare
                 </span>
                 <span className="text-[10px] text-text-subtle leading-tight">
@@ -135,7 +133,7 @@ export function Sidebar({
                       ? 'bg-primary text-white font-medium shadow-sm'
                       : isDark
                         ? 'text-slate-300 hover:bg-[#152438] hover:text-white'
-                        : 'text-[#64748b] hover:bg-[#edf3fa] hover:text-[#1e293b]',
+                        : 'text-text-muted hover:bg-[#edf3fa] hover:text-[#1e293b]',
                   )
                 }
               >
@@ -165,7 +163,7 @@ export function Sidebar({
                 'mx-auto p-2 rounded-xl transition-colors bg-bg-surface-elevated',
                 isDark
                   ? 'text-amber-400 hover:bg-[#1f334f]'
-                  : 'text-[#64748b] hover:text-[#0b1c30]',
+                  : 'text-text-muted hover:text-[#0b1c30]',
               )}
             >
               {isDark ? (
@@ -183,7 +181,7 @@ export function Sidebar({
               <span
                 className={clsx(
                   'text-[11px] font-medium',
-                  isDark ? 'text-slate-300' : 'text-[#64748b]',
+                  isDark ? 'text-slate-300' : 'text-text-muted',
                 )}
               >
                 Tema visual
@@ -198,7 +196,7 @@ export function Sidebar({
                   'p-1 rounded-md transition-colors',
                   isDark
                     ? 'text-amber-400 hover:bg-[#1f334f]'
-                    : 'text-[#64748b] hover:text-[#0b1c30]',
+                    : 'text-text-muted hover:text-[#0b1c30]',
                 )}
               >
                 {isDark ? (
@@ -215,7 +213,7 @@ export function Sidebar({
             className={clsx(
               'flex items-center justify-between rounded-xl transition-colors cursor-pointer',
               collapsed ? 'justify-center p-2' : 'justify-between p-2',
-              isDark ? 'hover:bg-[#152438]' : 'hover:bg-[#f1f5f9]',
+              isDark ? 'hover:bg-[#152438]' : 'hover:bg-bg-surface-subtle',
             )}
           >
             <div
@@ -239,9 +237,9 @@ export function Sidebar({
                   >
                     Dra. Sarah Jensen
                   </span>
-<span className="text-[10px] text-text-subtle truncate leading-tight">
-                  Administradora Clínica
-                </span>
+                  <span className="text-[10px] text-text-subtle truncate leading-tight">
+                    Administradora Clínica
+                  </span>
                 </div>
               )}
             </div>

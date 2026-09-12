@@ -22,8 +22,8 @@ export function DashboardLayout() {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main
-          className={`flex-1 overflow-y-auto p-6 ${
-            collapsed ? 'lg:pl-16' : 'lg:pl-64'
+          className={`flex-1 overflow-y-auto p-6 pt-20 ${
+            collapsed ? 'lg:pl-22' : 'lg:pl-72'
           }`}
         >
           <Outlet />

@@ -1,1 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
 @import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme {
+  /* Tipografía (base del design system) */
+  --font-sans: 'Inter', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Canvas & Contenedores */
+  --color-bg-app: #f8fafc;
+  --color-bg-surface: #fcfdff;
+  --color-bg-surface-elevated: #eef4fb;
+  --color-bg-surface-subtle: #f1f5f9;
+
+  /* Tipografía */
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+  --color-text-inverse: #ffffff;
+
+  /* Bordes & Divisores */
+  --color-border-subtle: #e2e8f0;
+  --color-border-default: #edf2f7;
+  --color-border-sidebar: #e9eff6;
+  --color-border-strong: #94a3b8;
+
+  /* Marca interactiva */
+  --color-primary: #0088cc;
+  --color-primary-hover: #0369a1;
+  --color-primary-active: #075985;
+  --color-primary-light: #e0f2fe;
+
+  /* Componentes funcionales */
+  --color-switch-track-off: #cbd5e1;
+  --color-switch-track-on: #0284c7;
+  --color-switch-thumb: #ffffff;
+
+  /* Estados / Diagnóstico */
+  --color-success: #059669;
+  --color-success-hover: #10b981;
+  --color-warning: #d97706;
+  --color-warning-hover: #f59e0b;
+  --color-error: #ba1a1a;
+  --color-error-hover: #f43f5e;
+  --color-info: #0284c7;
+  --color-info-hover: #0ea5e9;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  /* Display & Headings usan Plus Jakarta Sans (spec: "friendly precision") */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+:root {
+  /* Sombras */
+  --shadow-card:
+    0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-elevated:
+    0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-modal:
+    0 20px 25px -5px rgba(15, 23, 42, 0.12),
+    0 8px 10px -6px rgba(15, 23, 42, 0.08);
+
+  /* Foco */
+  --primary-focus: rgba(2, 132, 199, 0.25);
+}
+
+/* ==========================================================================
+   Dark theme
+   Mismas variables pero con los valores del layout en modo oscuro.
+   ========================================================================== */
+[data-theme='dark'] {
+  /* Canvas & Contenedores */
+  --color-bg-app: #0b1c30; /* Chrome de Navbar/Sidebar */
+  --color-bg-surface: #0b1c30; /* Sidebar */
+  --color-bg-surface-elevated: #152438; /* Superficies elevadas */
+  --color-bg-surface-subtle: #152438;
+
+  /* Tipografía */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1; /* slate-300 */
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff; /* Texto sobre acento de marca */
+
+  /* Bordes & Divisores */
+  --color-border-subtle: #213145;
+  --color-border-default: #213145;
+  --color-border-sidebar: #213145;
+  --color-border-strong: #475569;
+
+  /* Marca interactiva */
+  --color-primary: #0088cc;
+  --color-primary-hover: #7dd3fc;
+  --color-primary-active: #bae6fd;
+
+  /* Componentes funcionales */
+  --color-switch-track-off: #334155;
+  --color-switch-track-on: #0284c7;
+  --color-switch-thumb: #f8fafc;
+
+  --shadow-card:
+    0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-elevated:
+    0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-modal:
+    0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+
+  --primary-focus: rgba(56, 189, 248, 0.35);
+}

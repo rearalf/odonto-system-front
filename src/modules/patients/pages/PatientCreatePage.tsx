@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import { format, subYears } from 'date-fns';
-import { Calendar, CreditCard, User, Users, IdCard } from 'lucide-react';
+import {
+  Briefcase,
+  Calendar,
+  CreditCard,
+  Home,
+  IdCard,
+  Phone,
+  User,
+  Users,
+} from 'lucide-react';
+
 import Breadcrumbs from '@/shared/components/ui/Breadcrumbs';
 import { Badge } from '@/shared/components/ui/Badge';
-import { FieldMock } from '@/shared/components/ui/form/FieldMock';
+import FieldMock from '@/shared/components/ui/form/FieldMock';
+import SelectField from '@/shared/components/ui/form/SelectField';
 import InputField from '@/shared/components/ui/form/InputField';
-import { SelectField } from '@/shared/components/ui/form/SelectField';
+import MaskedInputField from '@/shared/components/ui/form/MaskedInputField';
 import DateField from '@/shared/components/ui/form/DateField';
+import TextAreaField from '@/shared/components/ui/form/TextAreaField';
+
 import { PhotoUploadCard } from '@/modules/patients/components/PhotoUploadCard';
+
 import { calculateAge } from '@/shared/utils/date';
 
 export default function PatientCreatePage() {
@@ -19,34 +33,36 @@ export default function PatientCreatePage() {
     <div>
       <Breadcrumbs />
 
-      <h1 className="text-2xl font-bold text-text-primary">Nuevo paciente</h1>
-      <p className="mt-1 text-sm text-text-muted">
+      <h1 className="mt-4 text-headline-lg font-bold text-text-primary">
+        Nuevo paciente
+      </h1>
+      <p className="mt-1 text-body-md text-text-muted">
         Complete la información requerida del paciente. Los campos marcados con
         (<span className="text-orange-400">*</span>) son obligatorios para la
         apertura oficial del expediente clínico y la asignación del número de
         historia.
       </p>
 
-      <div className="mt-6 rounded-xl border border-border-default bg-bg-surface p-8 shadow-sm">
-        <div className="mb-4 flex gap-4 items-center">
-          <div className="flex gap-4 items-center flex-1">
-            <div className="bg-bg-surface-elevated p-2 rounded-lg text-primary">
-              <IdCard size={32} />
+      <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
+        <div className="mb-4 flex items-center gap-4 flex-wrap justify-center lg:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="rounded-lg bg-bg-surface-elevated p-2 text-primary shrink-0">
+              <IdCard aria-hidden="true" size={32} />
             </div>
-            <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold text-text-primary">
+            <div className="flex min-w-0 flex-col gap-1">
+              <h2 className="text-headline-md font-semibold text-text-primary">
                 1. Información Personal del Paciente
               </h2>
-              <p className="mt-1 text-sm text-text-muted">
+              <p className="text-body-md text-text-muted">
                 Filiación legal requerida según normativa sanitaria vigente.
               </p>
             </div>
           </div>
-          <Badge variant="primary" size="md">
+          <Badge variant="primary" size="md" className="shrink-0">
             OBLIGATORIO
           </Badge>
         </div>
-        <hr className='border-border-strong mb-4' />
+        <hr className="mb-4 border-border-strong" />
         <PhotoUploadCard />
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
           <InputField
@@ -102,9 +118,53 @@ export default function PatientCreatePage() {
             placeholder="18.940.321-K"
           />
         </div>
-      </div>
+      </section>
 
-      <div className="mt-6"></div>
+      <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
+        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="flex min-w-0 flex-1 items-center gap-4">
+            <div className="rounded-lg bg-bg-surface-elevated p-2 text-primary shrink-0">
+              <Phone aria-hidden="true" size={32} />
+            </div>
+            <div className="flex min-w-0 flex-col gap-1">
+              <h2 className="text-headline-md font-semibold text-text-primary">
+                2. Información de Contacto y Residencia
+              </h2>
+              <p className="text-body-md text-text-muted">
+                Datos de localización telefónica, ocupación profesional y
+                dirección postal.
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr className="mb-4 border-border-strong" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <MaskedInputField
+            id="telefono"
+            label="Teléfono Celular Primario"
+            required
+            inputMode="tel"
+            prefix="+503"
+            mask="0000 0000"
+            placeholder="#### ####"
+          />
+          <InputField
+            id="ocupacion"
+            label="Ocupación / Profesión"
+            leftIcon={Briefcase}
+            placeholder="Ej. Ingeniero de Software"
+          />
+          <div className="md:col-span-2">
+            <TextAreaField
+              id="direccion"
+              label="Dirección Completa de Residencia"
+              leftIcon={Home}
+              rows={3}
+              placeholder="Dirección completa (calle, número, piso, puerta, código postal y ciudad de residencia)..."
+            />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -8,6 +8,7 @@ const TextAreaField = ({
   label,
   required,
   optional,
+  leftIcon: Icon,
   help,
   error,
   rows = 4,
@@ -24,14 +25,27 @@ const TextAreaField = ({
         optional={optional}
         htmlFor={id}
       />
-      <textarea
-        id={id}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={messageId}
-        rows={rows}
-        className={clsx(fieldBaseClass, fieldColorClass(error), 'resize-y')}
-        {...textareaProps}
-      />
+      <div className="relative">
+        {Icon && (
+          <Icon
+            aria-hidden="true"
+            className="pointer-events-none absolute top-4 left-4 h-4 w-4 text-text-subtle"
+          />
+        )}
+        <textarea
+          id={id}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={messageId}
+          rows={rows}
+          className={clsx(
+            fieldBaseClass,
+            fieldColorClass(error),
+            Icon && 'pl-11',
+            'resize-y',
+          )}
+          {...textareaProps}
+        />
+      </div>
       <FieldHelp help={help} error={error} id={messageId} />
     </div>
   );

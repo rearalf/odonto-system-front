@@ -8,7 +8,7 @@ const FieldHelp = ({ help, error, id }: FieldHelpProps) => {
     <p
       id={id}
       role={error ? 'alert' : undefined}
-      className={`mt-1.5 text-xs leading-relaxed ${
+      className={`mt-1.5 text-body-sm leading-relaxed ${
         error ? 'font-medium text-error' : 'text-text-muted'
       }`}
     >

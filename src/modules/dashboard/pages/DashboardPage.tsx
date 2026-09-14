@@ -11,8 +11,8 @@ export default function DashboardPage() {
   return (
     <div>
       <Breadcrumbs />
-      <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
-      <p className="mt-1 text-sm text-text-muted">
+      <h1 className="text-headline-lg font-bold text-text-primary">Dashboard</h1>
+      <p className="mt-1 text-body-md text-text-muted">
         Resumen del sistema odontológico
       </p>
 
@@ -27,8 +27,8 @@ export default function DashboardPage() {
                 <Icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-text-muted">{label}</p>
-                <p className="text-2xl font-bold text-text-primary">{value}</p>
+                <p className="text-body-md text-text-muted">{label}</p>
+                <p className="text-headline-lg font-bold text-text-primary">{value}</p>
               </div>
             </div>
           </div>
@@ -36,8 +36,8 @@ export default function DashboardPage() {
       </div>
 
       <div className="mt-8 p-6 bg-bg-surface rounded-xl border border-border-default shadow-sm">
-        <h2 className="text-lg font-semibold text-text-primary">Bienvenido</h2>
-        <p className="mt-2 text-sm text-text-muted">
+        <h2 className="text-headline-sm font-semibold text-text-primary">Bienvenido</h2>
+        <p className="mt-2 text-body-md text-text-muted">
           Sistema en fase de desarrollo. Próximamente se habilitarán los módulos
           de gestión de pacientes, citas y odontograma.
         </p>

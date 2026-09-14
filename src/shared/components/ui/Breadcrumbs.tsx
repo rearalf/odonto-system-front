@@ -25,7 +25,7 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   if (crumbs.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="text-sm">
+    <nav aria-label="Breadcrumb" className="text-body-md">
       <ol className="flex flex-wrap items-center gap-y-1.5 m-0 p-0 list-none">
         {crumbs.map((crumb, index) => {
           const isCurrent = index === crumbs.length - 1;

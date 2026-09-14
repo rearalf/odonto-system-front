@@ -1,11 +1,19 @@
+import { useState } from 'react';
+import { format, subYears } from 'date-fns';
 import { Calendar, CreditCard, User, Users, IdCard } from 'lucide-react';
 import Breadcrumbs from '@/shared/components/ui/Breadcrumbs';
 import { FieldMock } from '@/shared/components/ui/form/FieldMock';
-import { InputField } from '@/shared/components/ui/form/InputField';
+import InputField from '@/shared/components/ui/form/InputField';
 import { SelectField } from '@/shared/components/ui/form/SelectField';
+import DateField from '@/shared/components/ui/form/DateField';
 import { PhotoUploadCard } from '@/modules/patients/components/PhotoUploadCard';
+import { calculateAge } from '@/shared/utils/date';
 
 export default function PatientCreatePage() {
+  const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
+  const [birthDate, setBirthDate] = useState(maxBirthDate);
+  const age = calculateAge(birthDate);
+
   return (
     <div>
       <Breadcrumbs />
@@ -19,7 +27,7 @@ export default function PatientCreatePage() {
       </p>
 
       <div className="mt-6 rounded-xl border border-border-default bg-bg-surface p-8 shadow-sm">
-        <div className='flex'>
+        <div className="flex">
           <div className="bg-bg-surface-elevated p-2 rounded-lg text-primary">
             <IdCard />
           </div>
@@ -50,11 +58,16 @@ export default function PatientCreatePage() {
             placeholder="Ej. Gómez Mendoza"
           />
 
-          <FieldMock
+          <DateField
+            id="fecha-nacimiento"
             label="Fecha de Nacimiento"
-            badge="34 años"
+            required
             leftIcon={Calendar}
-            placeholder="06/15/1992"
+            help="Formato: DD/MM/AAAA"
+            max={maxBirthDate}
+            value={birthDate}
+            onChange={setBirthDate}
+            badge={age !== null ? `${age} años` : undefined}
           />
           <SelectField
             id="genero"

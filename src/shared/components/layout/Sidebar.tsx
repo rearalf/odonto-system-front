@@ -70,7 +70,7 @@ export function Sidebar({
           'fixed left-0 top-0 h-screen border-r z-50 flex flex-col justify-between select-none transition duration-200 lg:translate-x-0',
           collapsed ? 'w-16' : 'w-64',
           open ? 'translate-x-0' : '-translate-x-full',
-          'bg-bg-surface border-border-sidebar text-text-secondary',
+          'bg-bg-chrome border-border-sidebar text-text-secondary',
         )}
       >
         {/* Sección Superior: Marca, Sede y Menú */}
@@ -102,8 +102,7 @@ export function Sidebar({
             <div className="px-4 pb-3">
               <div
                 className={clsx(
-                  'flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border border-border-subtle text-text-secondary',
-                  isDark ? 'bg-[#152438]' : 'bg-[#f4f7fb]',
+                  'flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border border-border-subtle text-text-secondary bg-bg-surface-subtle',
                 )}
               >
                 <span className="text-xs text-primary font-bold leading-none">
@@ -131,9 +130,7 @@ export function Sidebar({
                     collapsed ? 'justify-center' : 'justify-start',
                     isActive
                       ? 'bg-primary text-white font-medium shadow-sm'
-                      : isDark
-                        ? 'text-slate-300 hover:bg-[#152438] hover:text-white'
-                        : 'text-text-muted hover:bg-[#edf3fa] hover:text-[#1e293b]',
+                      : 'text-text-secondary hover:bg-bg-surface-elevated hover:text-text-primary',
                   )
                 }
               >
@@ -160,10 +157,8 @@ export function Sidebar({
               onClick={toggleTheme}
               title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               className={clsx(
-                'mx-auto p-2 rounded-xl transition-colors bg-bg-surface-elevated',
-                isDark
-                  ? 'text-amber-400 hover:bg-[#1f334f]'
-                  : 'text-text-muted hover:text-[#0b1c30]',
+                'mx-auto p-2 rounded-xl transition-colors bg-bg-surface-elevated text-text-muted dark:text-amber-400',
+                'hover:text-text-primary hover:bg-bg-surface-subtle dark:hover:text-amber-300',
               )}
             >
               {isDark ? (
@@ -178,12 +173,7 @@ export function Sidebar({
                 'flex items-center justify-between px-3 py-2 rounded-xl transition-colors bg-bg-surface-elevated',
               )}
             >
-              <span
-                className={clsx(
-                  'text-[11px] font-medium',
-                  isDark ? 'text-slate-300' : 'text-text-muted',
-                )}
-              >
+              <span className="text-[11px] font-medium text-text-secondary">
                 Tema visual
               </span>
               <button
@@ -193,10 +183,8 @@ export function Sidebar({
                   isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
                 }
                 className={clsx(
-                  'p-1 rounded-md transition-colors',
-                  isDark
-                    ? 'text-amber-400 hover:bg-[#1f334f]'
-                    : 'text-text-muted hover:text-[#0b1c30]',
+                  'p-1 rounded-md transition-colors text-text-muted dark:text-amber-400',
+                  'hover:text-text-primary hover:bg-bg-surface-subtle dark:hover:text-amber-300',
                 )}
               >
                 {isDark ? (
@@ -213,7 +201,7 @@ export function Sidebar({
             className={clsx(
               'flex items-center justify-between rounded-xl transition-colors cursor-pointer',
               collapsed ? 'justify-center p-2' : 'justify-between p-2',
-              isDark ? 'hover:bg-[#152438]' : 'hover:bg-bg-surface-subtle',
+              'hover:bg-bg-surface-elevated',
             )}
           >
             <div
@@ -230,10 +218,7 @@ export function Sidebar({
               {!collapsed && (
                 <div className="flex flex-col min-w-0">
                   <span
-                    className={clsx(
-                      'text-xs font-semibold truncate leading-tight',
-                      isDark ? 'text-white' : 'text-[#1e293b]',
-                    )}
+                    className="text-xs font-semibold truncate leading-tight text-text-primary"
                   >
                     Dra. Sarah Jensen
                   </span>

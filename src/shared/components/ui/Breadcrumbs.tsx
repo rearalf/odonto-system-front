@@ -46,7 +46,7 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
               {index > 0 && (
                 <ChevronRight
                   aria-hidden="true"
-                  className="w-3.5 h-3.5 mx-1.5 shrink-0 text-text-secondary dark:text-slate-500"
+                  className="w-3.5 h-3.5 mx-1.5 shrink-0 text-text-muted"
                 />
               )}
 
@@ -61,12 +61,12 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
                 <NavLink
                   to={crumb.href}
                   key={crumb.href}
-                  className="flex items-center gap-1.5 rounded-sm text-text-secondary dark:text-slate-300 transition-colors hover:text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+                  className="flex items-center gap-1.5 rounded-sm text-text-secondary transition-colors hover:text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
                 >
                   {content}
                 </NavLink>
               ) : (
-                <span className="flex items-center gap-1.5 text-text-secondary dark:text-slate-300">
+                <span className="flex items-center gap-1.5 text-text-secondary">
                   {content}
                 </span>
               )}

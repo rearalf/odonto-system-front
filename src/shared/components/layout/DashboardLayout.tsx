@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { clsx } from 'clsx';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 
@@ -8,7 +9,7 @@ export function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-bg-app">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -22,9 +23,7 @@ export function DashboardLayout() {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main
-          className={`flex-1 overflow-y-auto p-6 pt-20 ${
-            collapsed ? 'lg:pl-22' : 'lg:pl-72'
-          }`}
+          className={clsx('flex-1 overflow-y-auto p-6 pt-20', collapsed ? 'lg:pl-22' : 'lg:pl-72')}
         >
           <Outlet />
         </main>

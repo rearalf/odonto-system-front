@@ -1,22 +1,10 @@
-import type { TextareaHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
+import type { TextAreaFieldProps } from './types/TextAreaField';
 
-type TextAreaFieldProps = Omit<
-  TextareaHTMLAttributes<HTMLTextAreaElement>,
-  'className'
-> & {
-  label: string;
-  required?: boolean;
-  optional?: boolean;
-  help?: string;
-  error?: string;
-  rows?: number;
-};
-
-export const TextAreaField = ({
+const TextAreaField = ({
   label,
   required,
   optional,
@@ -48,3 +36,5 @@ export const TextAreaField = ({
     </div>
   );
 };
+
+export default TextAreaField;

@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
-import type { DateFieldProps } from './DateField.types';
+import type { DateFieldProps } from './types/DateField';
 
 const DateField = ({
   label,

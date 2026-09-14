@@ -1,22 +1,8 @@
-import type { LucideIcon } from 'lucide-react';
-import type { InputHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
-
-type InputFieldProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'className'
-> & {
-  label: string;
-  required?: boolean;
-  optional?: boolean;
-  badge?: string;
-  leftIcon?: LucideIcon;
-  help?: string;
-  error?: string;
-};
+import type { InputFieldProps } from './types/InputField';
 
 const InputField = ({
   label,

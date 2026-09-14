@@ -1,5 +1,5 @@
 import { Badge } from '../Badge';
-import type { FieldLabelProps } from './FieldLabel.types';
+import type { FieldLabelProps } from './types/FieldLabel';
 
 const FieldLabel = ({
   label,

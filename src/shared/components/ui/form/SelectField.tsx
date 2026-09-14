@@ -1,25 +1,11 @@
 import { ChevronDown } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import type { ReactNode, SelectHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
+import type { SelectFieldProps } from './types/SelectField';
 
-type SelectFieldProps = Omit<
-  SelectHTMLAttributes<HTMLSelectElement>,
-  'className'
-> & {
-  label: string;
-  required?: boolean;
-  optional?: boolean;
-  leftIcon?: LucideIcon;
-  help?: string;
-  error?: string;
-  children: ReactNode;
-};
-
-export const SelectField = ({
+const SelectField = ({
   label,
   required,
   optional,
@@ -71,3 +57,5 @@ export const SelectField = ({
     </div>
   );
 };
+
+export default SelectField;

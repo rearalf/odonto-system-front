@@ -1,20 +1,14 @@
 import { Camera, Trash2, UserRound } from 'lucide-react';
 import { useEffect, useMemo, useRef } from 'react';
 import type { ChangeEvent } from 'react';
-
-type AvatarWithBadgeProps = {
-  size?: 'md' | 'lg';
-  file?: File | null;
-  onFileSelect?: (file: File) => void;
-  onFileClear?: () => void;
-};
+import type { AvatarWithBadgeProps } from './types/AvatarWithBadge';
 
 const sizeClasses = {
   md: 'h-20 w-20',
   lg: 'h-24 w-24',
 } as const;
 
-export const AvatarWithBadge = ({
+const AvatarWithBadge = ({
   size = 'lg',
   file,
   onFileSelect,
@@ -96,3 +90,5 @@ export const AvatarWithBadge = ({
     </div>
   );
 };
+
+export default AvatarWithBadge;

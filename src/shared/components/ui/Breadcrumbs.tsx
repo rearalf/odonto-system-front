@@ -1,10 +1,7 @@
 import { NavLink, useMatches } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import type {
-  BreadcrumbItem,
-  BreadcrumbHandle,
-  BreadcrumbsProps,
-} from '@/shared/types/breadcrumbs';
+import type { BreadcrumbItem, BreadcrumbHandle } from '@/shared/types/breadcrumbs';
+import type { BreadcrumbsProps } from './types/Breadcrumbs';
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   const matches = useMatches();

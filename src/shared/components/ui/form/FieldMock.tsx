@@ -1,19 +1,10 @@
-import type { LucideIcon } from 'lucide-react';
 import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
+import type { FieldMockProps } from './types/FieldMock';
 
-export type FieldMockProps = {
-  label: string;
-  placeholder: string;
-  badge?: string;
-  leftIcon: LucideIcon;
-  help?: string;
-  error?: string;
-};
-
-export const FieldMock = ({
+const FieldMock = ({
   label,
   placeholder,
   badge,
@@ -29,10 +20,15 @@ export const FieldMock = ({
         className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-text-subtle"
       />
       {/* Aquí se integrará la librería externa de DatePicker / Mask Input */}
-      <div tabIndex={0} className={clsx(fieldBaseClass, fieldColorClass(error), 'pl-11')}>
+      <div
+        tabIndex={0}
+        className={clsx(fieldBaseClass, fieldColorClass(error), 'pl-11')}
+      >
         <span className="text-text-subtle">{placeholder}</span>
       </div>
     </div>
     <FieldHelp help={help} error={error} />
   </div>
 );
+
+export default FieldMock;

@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import type { BadgeProps } from './Badge.types';
+import type { BadgeProps } from './types/Badge';
 
 const variantClasses = {
   default: 'bg-bg-surface-subtle text-text-secondary',

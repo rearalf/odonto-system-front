@@ -1,4 +1,4 @@
-import type { FieldHelpProps } from './FieldHelp.types';
+import type { FieldHelpProps } from './types/FieldHelp';
 
 const FieldHelp = ({ help, error, id }: FieldHelpProps) => {
   const message = error ?? help;

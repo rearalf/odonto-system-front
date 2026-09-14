@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { format, subYears } from 'date-fns';
 import { Calendar, CreditCard, User, Users, IdCard } from 'lucide-react';
 import Breadcrumbs from '@/shared/components/ui/Breadcrumbs';
+import { Badge } from '@/shared/components/ui/Badge';
 import { FieldMock } from '@/shared/components/ui/form/FieldMock';
 import InputField from '@/shared/components/ui/form/InputField';
 import { SelectField } from '@/shared/components/ui/form/SelectField';
@@ -27,15 +28,27 @@ export default function PatientCreatePage() {
       </p>
 
       <div className="mt-6 rounded-xl border border-border-default bg-bg-surface p-8 shadow-sm">
-        <div className="flex">
-          <div className="bg-bg-surface-elevated p-2 rounded-lg text-primary">
-            <IdCard />
+        <div className="mb-4 flex gap-4 items-center">
+          <div className="flex gap-4 items-center flex-1">
+            <div className="bg-bg-surface-elevated p-2 rounded-lg text-primary">
+              <IdCard size={32} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl font-semibold text-text-primary">
+                1. Información Personal del Paciente
+              </h2>
+              <p className="mt-1 text-sm text-text-muted">
+                Filiación legal requerida según normativa sanitaria vigente.
+              </p>
+            </div>
           </div>
-          <h2 className="text-xl font-semibold text-text-primary">
-            1. Información Personal del Paciente
-          </h2>
+          <Badge variant="primary" size="md">
+            OBLIGATORIO
+          </Badge>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <hr className='border-border-strong mb-4' />
+        <PhotoUploadCard />
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
           <InputField
             id="primer-nombre"
             label="Primer Nombre"
@@ -91,9 +104,7 @@ export default function PatientCreatePage() {
         </div>
       </div>
 
-      <div className="mt-6">
-        <PhotoUploadCard />
-      </div>
+      <div className="mt-6"></div>
     </div>
   );
 }

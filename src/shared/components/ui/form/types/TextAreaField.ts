@@ -1,4 +1,5 @@
 import type { TextareaHTMLAttributes } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 export type TextAreaFieldProps = Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -7,6 +8,7 @@ export type TextAreaFieldProps = Omit<
   label: string;
   required?: boolean;
   optional?: boolean;
+  leftIcon?: LucideIcon;
   help?: string;
   error?: string;
   rows?: number;

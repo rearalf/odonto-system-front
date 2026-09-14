@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 
 export type InputFieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -10,6 +10,7 @@ export type InputFieldProps = Omit<
   optional?: boolean;
   badge?: string;
   leftIcon?: LucideIcon;
+  prefix?: ReactNode;
   help?: string;
   error?: string;
 };

@@ -9,7 +9,7 @@ export function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-bg-app">
+    <div className="flex h-dvh bg-bg-app">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -23,7 +23,7 @@ export function DashboardLayout() {
           onToggleCollapse={() => setCollapsed((v) => !v)}
         />
         <main
-          className={clsx('flex-1 overflow-y-auto p-6 pt-20', collapsed ? 'lg:pl-22' : 'lg:pl-72')}
+          className={clsx('flex-1 overflow-y-auto p-4 pt-20 sm:p-6', collapsed ? 'md:pl-18' : 'md:pl-64')}
         >
           <Outlet />
         </main>

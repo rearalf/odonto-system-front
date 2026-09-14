@@ -38,12 +38,12 @@ const AvatarWithBadge = ({
   const handleClear = () => onFileClear?.();
 
   const badgeClass =
-    'absolute right-0 bottom-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-bg-surface-subtle shadow-md transition';
+    'absolute right-0 bottom-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-bg-surface-subtle shadow-md transition';
 
   return (
     <div className="relative shrink-0">
       <div
-        className={`${sizeClasses[size]} flex items-center justify-center overflow-hidden rounded-full bg-bg-surface-elevated`}
+        className={`${sizeClasses[size]} flex items-center justify-center overflow-hidden rounded-full bg-bg-chrome`}
       >
         {previewUrl ? (
           <img

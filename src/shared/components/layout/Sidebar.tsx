@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -31,6 +31,20 @@ const links = [
   { to: '/settings', label: 'Configuración', icon: Settings },
 ];
 
+// El drawer móvil solo es un drawer por debajo de md; ahí, cerrado, se aísla con inert
+const useIsDesktop = () => {
+  const [isDesktop, setIsDesktop] = useState(
+    () => window.matchMedia('(min-width: 768px)').matches,
+  );
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px)');
+    const onChange = () => setIsDesktop(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  return isDesktop;
+};
+
 export function Sidebar({
   open = false,
   onClose,
@@ -43,6 +57,7 @@ export function Sidebar({
   const theme = useThemeStore((s) => s.theme);
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
   const isDark = theme === 'dark';
+  const isDesktop = useIsDesktop();
 
   // Cerrar con tecla Escape
   useEffect(() => {
@@ -61,14 +76,16 @@ export function Sidebar({
         <div
           aria-hidden="true"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
         />
       )}
-      {/* ponytail: enlaces del sidebar traducido siguen enfocables con Tab en mobile cerrado; focus trap si se vuelve necesario */}
+      {/* ponytail: sin tab-trap ni scroll-lock al abrir el drawer; inert cubre el foco perdido */}
       <aside
+        aria-hidden={!open && !isDesktop}
+        inert={!open && !isDesktop}
         className={clsx(
-          'fixed left-0 top-0 h-screen border-r z-50 flex flex-col justify-between select-none transition duration-200 lg:translate-x-0',
-          collapsed ? 'w-16' : 'w-64',
+          'fixed left-0 top-0 h-dvh border-r z-50 flex flex-col justify-between select-none transition duration-200 md:translate-x-0',
+          collapsed ? 'w-18' : 'w-64',
           open ? 'translate-x-0' : '-translate-x-full',
           'bg-bg-chrome border-border-sidebar text-text-secondary',
         )}
@@ -86,11 +103,11 @@ export function Sidebar({
               <ToothIcon className="w-5 h-5 text-white" />
             </div>
             {!collapsed && (
-              <div className="flex flex-col">
-                <span className="text-sm font-bold leading-tight text-text-primary">
+              <div className="flex min-w-0 flex-col">
+                <span className="text-title-md font-bold leading-tight text-text-primary truncate">
                   DentalCare
                 </span>
-                <span className="text-[10px] text-text-subtle leading-tight">
+                <span className="text-label-sm text-text-subtle leading-tight truncate">
                   Gestión Odontológica
                 </span>
               </div>
@@ -102,10 +119,10 @@ export function Sidebar({
             <div className="px-4 pb-3">
               <div
                 className={clsx(
-                  'flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border border-border-subtle text-text-secondary bg-bg-surface-subtle',
+                  'flex items-center gap-2 px-3 py-1.5 rounded-lg text-label-sm font-medium transition-colors cursor-pointer border border-border-subtle text-text-secondary bg-bg-surface-subtle',
                 )}
               >
-                <span className="text-xs text-primary font-bold leading-none">
+                <span className="text-label-md text-primary font-bold leading-none">
                   +
                 </span>
                 <span className="truncate">
@@ -126,7 +143,7 @@ export function Sidebar({
                 title={collapsed ? label : undefined}
                 className={({ isActive }) =>
                   clsx(
-                    'flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all duration-150 group relative',
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-label-md transition-all duration-150 group relative',
                     collapsed ? 'justify-center' : 'justify-start',
                     isActive
                       ? 'bg-primary text-white font-medium shadow-sm'
@@ -139,7 +156,7 @@ export function Sidebar({
                   {label}
                 </span>
                 {collapsed && (
-                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-[#0b1c30] text-white text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
+                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-[#0b1c30] text-white text-label-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
                     {label}
                   </span>
                 )}
@@ -157,7 +174,7 @@ export function Sidebar({
               onClick={toggleTheme}
               title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               className={clsx(
-                'mx-auto p-2 rounded-xl transition-colors bg-bg-surface-elevated text-text-muted dark:text-amber-400',
+                'mx-auto p-2.5 rounded-xl transition-colors bg-bg-surface-elevated text-text-muted dark:text-amber-400',
                 'hover:text-text-primary hover:bg-bg-surface-subtle dark:hover:text-amber-300',
               )}
             >
@@ -173,7 +190,7 @@ export function Sidebar({
                 'flex items-center justify-between px-3 py-2 rounded-xl transition-colors bg-bg-surface-elevated',
               )}
             >
-              <span className="text-[11px] font-medium text-text-secondary">
+              <span className="text-label-sm font-medium text-text-secondary">
                 Tema visual
               </span>
               <button
@@ -183,7 +200,7 @@ export function Sidebar({
                   isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
                 }
                 className={clsx(
-                  'p-1 rounded-md transition-colors text-text-muted dark:text-amber-400',
+                  'p-1.5 rounded-md transition-colors text-text-muted dark:text-amber-400',
                   'hover:text-text-primary hover:bg-bg-surface-subtle dark:hover:text-amber-300',
                 )}
               >
@@ -218,11 +235,11 @@ export function Sidebar({
               {!collapsed && (
                 <div className="flex flex-col min-w-0">
                   <span
-                    className="text-xs font-semibold truncate leading-tight text-text-primary"
+                    className="text-label-md font-semibold truncate leading-tight text-text-primary"
                   >
                     Dra. Sarah Jensen
                   </span>
-                  <span className="text-[10px] text-text-subtle truncate leading-tight">
+                  <span className="text-label-sm text-text-subtle truncate leading-tight">
                     Administradora Clínica
                   </span>
                 </div>

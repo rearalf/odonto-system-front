@@ -1,3 +1,4 @@
+import { Badge } from '../Badge';
 import type { FieldLabelProps } from './FieldLabel.types';
 
 const FieldLabel = ({
@@ -16,11 +17,7 @@ const FieldLabel = ({
     {optional && (
       <span className="font-normal text-text-subtle">(Opcional)</span>
     )}
-    {badge && (
-      <span className="rounded-full bg-primary-light px-2.5 py-0.5 text-xs font-medium text-primary">
-        {badge}
-      </span>
-    )}
+    {badge && <Badge variant="primary" size="sm">{badge}</Badge>}
   </label>
 );
 

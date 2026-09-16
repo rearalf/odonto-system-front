@@ -131,6 +131,27 @@
   --color-primary-active: var(--brand-800);
   --color-primary-light: var(--brand-100);          /* Badges / acentos suaves */
 
+  /* Botón secundario (apoyo & navegación) */
+  --color-secondary: var(--brand-50);               /* Superficie tenue */
+  --color-secondary-hover: var(--brand-100);
+  --color-secondary-text: var(--brand-700);
+  --color-secondary-border: var(--brand-200);
+
+  /* Botón ghost (neutral de escape) */
+  --color-ghost-hover: #f1f5f9;
+
+  /* Botón destructive (eliminación) */
+  --color-destructive: #dc2626;
+  --color-destructive-hover: #b91c1c;
+  --color-destructive-active: #991b1b;
+
+  /* Botón success (validación) */
+  --color-success-active: #047857;
+
+  /* Estado disabled */
+  --color-disabled-bg: #e2e8f0;
+  --color-disabled-text: #94a3b8;
+
   /* Componentes funcionales */
   --color-switch-track-off: #cbd5e1;
   --color-switch-track-on: var(--brand-600);
@@ -206,6 +227,27 @@
   --color-primary-hover: var(--brand-400);          /* #38bdf8 */
   --color-primary-active: var(--brand-300);         /* #7dd3fc */
   --color-primary-light: rgba(14, 165, 233, 0.15);  /* Chips / badges oscuros */
+
+  /* Botón secundario (apoyo & navegación en oscuro) */
+  --color-secondary: #1e293b;
+  --color-secondary-hover: #334155;
+  --color-secondary-text: #38bdf8;
+  --color-secondary-border: #334155;
+
+  /* Botón ghost (neutral de escape en oscuro) */
+  --color-ghost-hover: #1e293b;
+
+  /* Botón destructive (eliminación en oscuro) */
+  --color-destructive: #ef4444;
+  --color-destructive-hover: #dc2626;
+  --color-destructive-active: #b91c1c;
+
+  /* Botón success (validación en oscuro) */
+  --color-success-active: #065f46;
+
+  /* Estado disabled en oscuro */
+  --color-disabled-bg: #1e293b;
+  --color-disabled-text: #475569;
 
   /* Componentes funcionales */
   --color-switch-track-off: #334155;

@@ -104,6 +104,7 @@
   --text-code: 0.8125rem;                                  /* 13 px fijo */
   --text-code--line-height: 1.125rem;                      /* 18 px */
   --text-code--letter-spacing: 0em;
+  --text-code--font-variant-numeric: tabular-nums;
 
   /* Canvas & Contenedores */
   --color-bg-app: var(--neutral-canvas);            /* Canvas de la app */

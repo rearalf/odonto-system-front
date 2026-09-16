@@ -1,4 +1,4 @@
-import { Badge } from '../Badge';
+import Badge from '../badge';
 import type { FieldLabelProps } from './types/FieldLabel';
 
 const FieldLabel = ({

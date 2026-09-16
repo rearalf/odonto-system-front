@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import type { SwitchProps } from './types/Switch';
+import type { SwitchProps } from './types';
 
 const Switch = ({
   checked,
@@ -27,7 +27,7 @@ const Switch = ({
       aria-hidden="true"
       className={clsx(
         'pointer-events-none h-5 w-5 rounded-full bg-switch-thumb shadow transition-transform duration-150',
-        checked ? 'translate-x-[22px]' : 'translate-x-0.5',
+        checked ? 'translate-x-5.5' : 'translate-x-0.5',
       )}
     />
   </button>

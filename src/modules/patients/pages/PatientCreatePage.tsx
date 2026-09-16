@@ -1,76 +1,47 @@
-import { useState } from 'react';
-import { format, subYears } from 'date-fns';
-import type { LucideIcon } from 'lucide-react';
 import {
-  Activity,
-  Bell,
-  Brain,
-  Briefcase,
-  Calendar,
-  CheckCircle2,
-  ClipboardList,
-  CreditCard,
-  Droplets,
-  HeartPulse,
-  Home,
-  IdCard,
-  PersonStanding,
-  Phone,
-  RefreshCw,
-  ShieldPlus,
-  Soup,
-  Stethoscope,
   TriangleAlert,
-  User,
+  ClipboardList,
+  CheckCircle2,
+  Stethoscope,
+  CreditCard,
+  Briefcase,
+  Activity,
+  Calendar,
+  IdCard,
+  Phone,
   Users,
-  Wind,
+  Home,
+  User,
+  Bell,
 } from 'lucide-react';
 
-import Breadcrumbs from '@/shared/components/ui/Breadcrumbs';
-import { Badge } from '@/shared/components/ui/Badge';
-import Switch from '@/shared/components/ui/Switch';
-import { ToothIcon } from '@/shared/components/ui/ToothIcon';
-import FieldMock from '@/shared/components/ui/form/FieldMock';
-import SelectField from '@/shared/components/ui/form/SelectField';
-import InputField from '@/shared/components/ui/form/InputField';
-import MaskedInputField from '@/shared/components/ui/form/MaskedInputField';
-import DateField from '@/shared/components/ui/form/DateField';
-import TextAreaField from '@/shared/components/ui/form/TextAreaField';
+import { Button, Breadcrumbs, Badge } from '@/shared/components/ui';
+import { ToothIcon } from '@/shared/components/ui/Icons/ToothIcon';
+import {
+  MaskedInputField,
+  TextAreaField,
+  SelectField,
+  InputField,
+  FieldMock,
+  DateField,
+  Switch,
+} from '@/shared/components/ui/form';
 
 import { PhotoUploadCard } from '@/modules/patients/components/PhotoUploadCard';
+import { usePatientCreate } from '@/modules/patients/hooks/usePatientCreate';
 
-import { calculateAge } from '@/shared/utils/date';
-import Button from '@/shared/components/ui/Button';
-
-const SISTEMAS_ANATOMICOS: { id: string; nombre: string; icono: LucideIcon }[] =
-  [
-    { id: 'nervioso', nombre: 'S. Nervioso Central', icono: Brain },
-    { id: 'cardiovascular', nombre: 'S. Cardiovascular', icono: HeartPulse },
-    { id: 'endocrino', nombre: 'S. Endocrino', icono: RefreshCw },
-    {
-      id: 'musculoesqueletico',
-      nombre: 'S. Musculoesquelético',
-      icono: PersonStanding,
-    },
-    { id: 'respiratorio', nombre: 'S. Respiratorio', icono: Wind },
-    { id: 'urinario', nombre: 'S. Urinario', icono: Droplets },
-    { id: 'genitourinario', nombre: 'S. Genitourinario', icono: ShieldPlus },
-    { id: 'gastrointestinal', nombre: 'S. Gastrointestinal', icono: Soup },
-  ];
-
-export default function PatientCreatePage() {
-  const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
-  const [birthDate, setBirthDate] = useState(maxBirthDate);
-  const [odontogramaCompletado, setOdontogramaCompletado] = useState(true);
-  const [revisiones, setRevisiones] = useState<boolean[]>(
-    Array(SISTEMAS_ANATOMICOS.length).fill(false),
-  );
-  const age = calculateAge(birthDate);
-
-  const toggleRevision = (index: number) =>
-    setRevisiones((prev) =>
-      prev.map((revisado, i) => (i === index ? !revisado : revisado)),
-    );
+function PatientCreatePage() {
+  const {
+    SISTEMAS_ANATOMICOS,
+    maxBirthDate,
+    birthDate,
+    setBirthDate,
+    odontogramaCompletado,
+    setOdontogramaCompletado,
+    revisiones,
+    age,
+    toggleRevision,
+  } = usePatientCreate();
 
   return (
     <div>
@@ -398,3 +369,5 @@ export default function PatientCreatePage() {
     </div>
   );
 }
+
+export default PatientCreatePage;

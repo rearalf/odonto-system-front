@@ -79,7 +79,6 @@ export function Sidebar({
           className="fixed inset-0 z-30 bg-black/50 md:hidden"
         />
       )}
-      {/* ponytail: sin tab-trap ni scroll-lock al abrir el drawer; inert cubre el foco perdido */}
       <aside
         aria-hidden={!open && !isDesktop}
         inert={!open && !isDesktop}

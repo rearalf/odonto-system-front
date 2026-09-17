@@ -11,6 +11,7 @@ import {
   type PatientSystemDtoKey,
 } from '@/modules/patients/constants/SistemasAnatomicos';
 import { calculateAge } from '@/shared/utils/date';
+import { patientApi } from '@/modules/patients/api/patientApi';
 
 export function usePatientCreate() {
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
@@ -76,7 +77,7 @@ export function usePatientCreate() {
   const toggleSistema = (dtoKey: PatientSystemDtoKey) =>
     setValue(dtoKey, !getValues(dtoKey));
 
-const onSubmit = form.handleSubmit((data) => {
+const onSubmit = form.handleSubmit(async (data) => {
     const formData = new FormData();
     if (data.profilePicture) {
       formData.append('profilePicture', data.profilePicture);
@@ -85,7 +86,7 @@ const onSubmit = form.handleSubmit((data) => {
       if (key === 'profilePicture' || value === '' || value == null) continue;
       formData.append(key, String(value));
     }
-    
+    return patientApi.create(formData);
   });
 
   return {

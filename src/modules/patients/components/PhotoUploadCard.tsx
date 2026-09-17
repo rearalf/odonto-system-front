@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import AvatarWithBadge from '@/shared/components/ui/AvatarWithBadge';
 
-export const PhotoUploadCard = () => {
-  const [file, setFile] = useState<File | null>(null);
+interface PhotoUploadCardProps {
+  file?: File | null;
+  onFileChange?: (file: File | null) => void;
+}
+
+export const PhotoUploadCard = ({ file, onFileChange }: PhotoUploadCardProps) => {
+  const [internalFile, setInternalFile] = useState<File | null>(null);
+  const currentFile = onFileChange ? file ?? null : internalFile;
+  const setCurrentFile = (next: File | null) =>
+    onFileChange ? onFileChange(next) : setInternalFile(next);
 
   return (
     <section className="flex flex-col items-start gap-6 rounded-2xl border border-border-subtle bg-bg-surface-subtle p-6 shadow-sm sm:flex-row sm:items-center">
       <AvatarWithBadge
-        file={file}
-        onFileSelect={setFile}
-        onFileClear={() => setFile(null)}
+        file={currentFile}
+        onFileSelect={setCurrentFile}
+        onFileClear={() => setCurrentFile(null)}
       />
 
       <div className="flex-1">

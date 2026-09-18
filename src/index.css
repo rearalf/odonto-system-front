@@ -35,12 +35,12 @@
   --neutral-900: #0f172a;
 
   /* Medianoche clínica (modo oscuro) */
-  --dark-bg: #080e1d;      /* canvas profundo */
-  --dark-chrome: #0c1220;  /* navbar / sidebar */
-  --dark-card: #141b2e;    /* tarjetas */
-  --dark-high: #1c2540;    /* hover / select / dropdowns */
-  --dark-subtle: #0f172a;  /* inputs / chips (hundidos) */
-  --dark-border: #253248;  /* bordes estructurales */
+  --dark-bg: #080e1d; /* canvas profundo */
+  --dark-chrome: #0c1220; /* navbar / sidebar */
+  --dark-card: #141b2e; /* tarjetas */
+  --dark-high: #1c2540; /* hover / select / dropdowns */
+  --dark-subtle: #0f172a; /* inputs / chips (hundidos) */
+  --dark-border: #253248; /* bordes estructurales */
 }
 
 /* ==========================================================================
@@ -51,67 +51,70 @@
    ========================================================================== */
 @theme {
   /* Tipografía (base del design system) */
-  --font-sans: 'Inter', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans:
+    'Inter', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-display:
+    'Plus Jakarta Sans', 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* Escala tipográfica semántica (fluid).
      Rango de reflujo: móvil (~360px) -> escritorio (>=1440px).
      https://tailwindcss.com/docs/font-size */
-  --text-display: clamp(1.875rem, 4.5vw, 2.25rem);         /* 30 -> 36 px */
-  --text-display--line-height: 2.75rem;                    /* 44 px */
+  --text-display: clamp(1.875rem, 4.5vw, 2.25rem); /* 30 -> 36 px */
+  --text-display--line-height: 2.75rem; /* 44 px */
   --text-display--letter-spacing: -0.02em;
 
-  --text-headline-lg: clamp(1.5rem, 2.5vw, 1.75rem);       /* 24 -> 28 px */
-  --text-headline-lg--line-height: 2.25rem;                /* 36 px */
+  --text-headline-lg: clamp(1.5rem, 2.5vw, 1.75rem); /* 24 -> 28 px */
+  --text-headline-lg--line-height: 2.25rem; /* 36 px */
   --text-headline-lg--letter-spacing: -0.02em;
 
-  --text-headline-md: clamp(1.25rem, 2vw, 1.375rem);       /* 20 -> 22 px */
-  --text-headline-md--line-height: 1.75rem;                /* 28 px */
+  --text-headline-md: clamp(1.25rem, 2vw, 1.375rem); /* 20 -> 22 px */
+  --text-headline-md--line-height: 1.75rem; /* 28 px */
   --text-headline-md--letter-spacing: -0.01em;
 
-  --text-headline-sm: clamp(1.0625rem, 1.5vw, 1.125rem);   /* 17 -> 18 px */
-  --text-headline-sm--line-height: 1.5rem;                 /* 24 px */
+  --text-headline-sm: clamp(1.0625rem, 1.5vw, 1.125rem); /* 17 -> 18 px */
+  --text-headline-sm--line-height: 1.5rem; /* 24 px */
   --text-headline-sm--letter-spacing: 0em;
 
-  --text-title-md: clamp(0.9375rem, 1.25vw, 1rem);         /* 15 -> 16 px */
-  --text-title-md--line-height: 1.375rem;                  /* 22 px */
+  --text-title-md: clamp(0.9375rem, 1.25vw, 1rem); /* 15 -> 16 px */
+  --text-title-md--line-height: 1.375rem; /* 22 px */
   --text-title-md--letter-spacing: -0.005em;
 
-  --text-body-lg: clamp(0.875rem, 1.25vw, 1rem);           /* 14 -> 16 px */
-  --text-body-lg--line-height: 1.5rem;                     /* 24 px */
+  --text-body-lg: clamp(0.875rem, 1.25vw, 1rem); /* 14 -> 16 px */
+  --text-body-lg--line-height: 1.5rem; /* 24 px */
   --text-body-lg--letter-spacing: 0em;
 
-  --text-body-md: 0.875rem;                                /* 14 px fijo (piso de legibilidad) */
-  --text-body-md--line-height: 1.25rem;                    /* 20 px */
+  --text-body-md: 0.875rem; /* 14 px fijo (piso de legibilidad) */
+  --text-body-md--line-height: 1.25rem; /* 20 px */
   --text-body-md--letter-spacing: 0em;
 
-  --text-body-sm: 0.75rem;                                 /* 12 px fijo */
-  --text-body-sm--line-height: 1rem;                       /* 16 px */
+  --text-body-sm: 0.75rem; /* 12 px fijo */
+  --text-body-sm--line-height: 1rem; /* 16 px */
   --text-body-sm--letter-spacing: 0.01em;
 
-  --text-label-lg: clamp(0.8125rem, 1vw, 0.875rem);        /* 13 -> 14 px */
-  --text-label-lg--line-height: 1.125rem;                  /* 18 px */
+  --text-label-lg: clamp(0.8125rem, 1vw, 0.875rem); /* 13 -> 14 px */
+  --text-label-lg--line-height: 1.125rem; /* 18 px */
   --text-label-lg--letter-spacing: 0.01em;
 
-  --text-label-md: 0.75rem;                                /* 12 px fijo */
-  --text-label-md--line-height: 1rem;                      /* 16 px */
+  --text-label-md: 0.75rem; /* 12 px fijo */
+  --text-label-md--line-height: 1rem; /* 16 px */
   --text-label-md--letter-spacing: 0.02em;
 
-  --text-label-sm: 0.6875rem;                              /* 11 px fijo (piso mínimo legal) */
-  --text-label-sm--line-height: 0.875rem;                  /* 14 px */
+  --text-label-sm: 0.6875rem; /* 11 px fijo (piso mínimo legal) */
+  --text-label-sm--line-height: 0.875rem; /* 14 px */
   --text-label-sm--letter-spacing: 0.03em;
 
-  --text-code: 0.8125rem;                                  /* 13 px fijo */
-  --text-code--line-height: 1.125rem;                      /* 18 px */
+  --text-code: 0.8125rem; /* 13 px fijo */
+  --text-code--line-height: 1.125rem; /* 18 px */
   --text-code--letter-spacing: 0em;
   --text-code--font-variant-numeric: tabular-nums;
 
   /* Canvas & Contenedores */
-  --color-bg-app: var(--neutral-canvas);            /* Canvas de la app */
-  --color-bg-chrome: var(--neutral-0);              /* Navbar / Sidebar */
-  --color-bg-surface: var(--neutral-0);             /* Tarjetas y paneles */
-  --color-bg-surface-elevated: #eef4fb;             /* Hover / dropdowns / tarjeta Tema */
-  --color-bg-surface-subtle: #f1f5f9;               /* Inputs / chips (hundidos) */
+  --color-bg-app: var(--neutral-canvas); /* Canvas de la app */
+  --color-bg-chrome: var(--neutral-0); /* Navbar / Sidebar */
+  --color-bg-surface: var(--neutral-0); /* Tarjetas y paneles */
+  --color-bg-surface-elevated: #eef4fb; /* Hover / dropdowns / tarjeta Tema */
+  --color-bg-surface-subtle: #f1f5f9; /* Inputs / chips (hundidos) */
 
   /* Tipografía */
   --color-text-primary: var(--neutral-900);
@@ -127,13 +130,13 @@
   --color-border-strong: var(--neutral-500);
 
   /* Marca interactiva (celeste) */
-  --color-primary: var(--brand-600);                /* Botones / links primarios */
+  --color-primary: var(--brand-600); /* Botones / links primarios */
   --color-primary-hover: var(--brand-700);
   --color-primary-active: var(--brand-800);
-  --color-primary-light: var(--brand-100);          /* Badges / acentos suaves */
+  --color-primary-light: var(--brand-100); /* Badges / acentos suaves */
 
   /* Botón secundario (apoyo & navegación) */
-  --color-secondary: var(--brand-50);               /* Superficie tenue */
+  --color-secondary: var(--brand-50); /* Superficie tenue */
   --color-secondary-hover: var(--brand-100);
   --color-secondary-text: var(--brand-700);
   --color-secondary-border: var(--brand-200);
@@ -204,17 +207,17 @@
    ========================================================================== */
 [data-theme='dark'] {
   /* Canvas & Contenedores */
-  --color-bg-app: var(--dark-bg);                   /* #080e1d Fondo general profundo */
-  --color-bg-chrome: var(--dark-chrome);            /* #0c1220 Navbar / Sidebar */
-  --color-bg-surface: var(--dark-card);             /* #141b2e Tarjetas de secciones */
-  --color-bg-surface-elevated: var(--dark-high);    /* #1c2540 Hover / dropdowns */
-  --color-bg-surface-subtle: var(--dark-subtle);    /* #0f172a Inputs / chips */
+  --color-bg-app: var(--dark-bg); /* #080e1d Fondo general profundo */
+  --color-bg-chrome: var(--dark-chrome); /* #0c1220 Navbar / Sidebar */
+  --color-bg-surface: var(--dark-card); /* #141b2e Tarjetas de secciones */
+  --color-bg-surface-elevated: var(--dark-high); /* #1c2540 Hover / dropdowns */
+  --color-bg-surface-subtle: var(--dark-subtle); /* #0f172a Inputs / chips */
 
   /* Tipografía */
   --color-text-primary: #f8fafc;
-  --color-text-secondary: var(--neutral-300);       /* #cbd5e1 Labels de campos */
-  --color-text-muted: var(--neutral-400);           /* #94a3b8 Metadata */
-  --color-text-subtle: var(--neutral-500);          /* #64748b Placeholders */
+  --color-text-secondary: var(--neutral-300); /* #cbd5e1 Labels de campos */
+  --color-text-muted: var(--neutral-400); /* #94a3b8 Metadata */
+  --color-text-subtle: var(--neutral-500); /* #64748b Placeholders */
   --color-text-inverse: #ffffff;
 
   /* Bordes & Divisores */
@@ -224,10 +227,10 @@
   --color-border-strong: #475569;
 
   /* Marca interactiva (celeste de alta visibilidad) */
-  --color-primary: var(--brand-500);                /* #0ea5e9 */
-  --color-primary-hover: var(--brand-400);          /* #38bdf8 */
-  --color-primary-active: var(--brand-300);         /* #7dd3fc */
-  --color-primary-light: rgba(14, 165, 233, 0.15);  /* Chips / badges oscuros */
+  --color-primary: var(--brand-500); /* #0ea5e9 */
+  --color-primary-hover: var(--brand-400); /* #38bdf8 */
+  --color-primary-active: var(--brand-300); /* #7dd3fc */
+  --color-primary-light: rgba(14, 165, 233, 0.15); /* Chips / badges oscuros */
 
   /* Botón secundario (apoyo & navegación en oscuro) */
   --color-secondary: #1e293b;
@@ -267,4 +270,213 @@
     0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 
   --primary-focus: rgba(56, 189, 248, 0.35);
+}
+
+/* ==========================================================================
+   4. TOASTS (sonner) — Clinical Precision
+   Tarjeta tintada por variante + acento lateral de 4px + icono en pill
+   circular (micro-indicador del .md). Tintes derivados con color-mix de los
+   tokens --color-* de estado, que ya flipean con [data-theme='dark'].
+   Selectores de mayor especificidad que los definidos por sonner en ambos
+   temas para garantizar precedencia.
+   ========================================================================== */
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true'] {
+  background: var(--color-bg-surface) !important;
+  border: 1px solid var(--color-border-subtle);
+  border-inline-start: 4px solid var(--color-text-subtle);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-elevated);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-title] {
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-title-md);
+  font-weight: 600;
+  line-height: var(--text-title-md--line-height);
+  letter-spacing: 0;
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-description] {
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-sm);
+  font-weight: 400;
+  line-height: var(--text-body-sm--line-height);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-icon] {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 6px;
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-icon]
+  svg {
+  margin: 0;
+}
+
+/* Variantes: tarjeta tintada + borde tintado + acento lateral en color pleno */
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='success'] {
+  background: color-mix(
+    in srgb,
+    var(--color-success) 7%,
+    var(--color-bg-surface)
+  );
+  border-color: color-mix(in srgb, var(--color-success) 25%, transparent);
+  border-inline-start-color: var(--color-success);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='warning'] {
+  background: color-mix(
+    in srgb,
+    var(--color-warning) 7%,
+    var(--color-bg-surface)
+  );
+  border-color: color-mix(in srgb, var(--color-warning) 25%, transparent);
+  border-inline-start-color: var(--color-warning);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='error'] {
+  background: color-mix(
+    in srgb,
+    var(--color-error) 7%,
+    var(--color-bg-surface)
+  );
+  border-color: color-mix(in srgb, var(--color-error) 25%, transparent);
+  border-inline-start-color: var(--color-error);
+}
+
+[data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-type='info'] {
+  background: color-mix(in srgb, var(--color-info) 7%, var(--color-bg-surface));
+  border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
+  border-inline-start-color: var(--color-info);
+}
+
+[data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-type='loading'] {
+  background: color-mix(in srgb, var(--color-info) 7%, var(--color-bg-surface));
+  border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
+  border-inline-start-color: var(--color-info);
+}
+
+/* Pill del icono (micro-indicador) */
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='success']
+  [data-icon] {
+  background: color-mix(
+    in srgb,
+    var(--color-success) 14%,
+    var(--color-bg-surface)
+  );
+  color: var(--color-success);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='warning']
+  [data-icon] {
+  background: color-mix(
+    in srgb,
+    var(--color-warning) 14%,
+    var(--color-bg-surface)
+  );
+  color: var(--color-warning);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='error']
+  [data-icon] {
+  background: color-mix(
+    in srgb,
+    var(--color-error) 14%,
+    var(--color-bg-surface)
+  );
+  color: var(--color-error);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='info']
+  [data-icon] {
+  background: color-mix(
+    in srgb,
+    var(--color-info) 14%,
+    var(--color-bg-surface)
+  );
+  color: var(--color-info);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-type='loading']
+  [data-icon] {
+  background: color-mix(
+    in srgb,
+    var(--color-info) 14%,
+    var(--color-bg-surface)
+  );
+  color: var(--color-info);
+}
+
+/* Loader de la variante loading: centrado en el pill (32px) y con el color sky */
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-icon]
+  .sonner-loading-wrapper {
+  inset: 8px;
+  color: var(--brand-600);
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  [data-icon]
+  .sonner-loading-bar {
+  background: currentColor;
+}
+
+/* Botón de cierre — dentro del flujo, al final de la fila (derecha) */
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  button[data-close-button] {
+  position: static;
+  transform: none;
+  order: 2;
+  flex-shrink: 0;
+  margin-inline-start: 12px;
+  background: var(--color-bg-surface-subtle);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-subtle);
+  width: 28px;
+  height: 28px;
+}
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  button[data-close-button]
+  svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-sonner-toaster][data-sonner-theme]
+  [data-sonner-toast][data-styled='true']
+  button[data-close-button]:hover {
+  background: var(--color-ghost-hover);
+  border-color: var(--color-border-default);
+  color: var(--color-text-secondary);
 }

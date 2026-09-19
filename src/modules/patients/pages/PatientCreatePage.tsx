@@ -37,9 +37,11 @@ function PatientCreatePage() {
     register,
     control,
     errors,
+    isSubmitting,
     onSubmit,
     setBirthDate,
     setCompleteOdontogram,
+    handleCancel,
     setFoto,
     sistemas,
     birthDate,
@@ -390,9 +392,13 @@ function PatientCreatePage() {
         </section>
 
         <div className="flex gap-4 mb-8 mt-6 justify-end">
-          <Button variant="destructive">Descartar</Button>
-          <Button type="submit">Guardar paciente</Button>
-        </div>
+            <Button variant="destructive" onClick={handleCancel}>
+              Descartar
+            </Button>
+            <Button type="submit" loading={isSubmitting}>
+              Guardar paciente
+            </Button>
+          </div>
       </form>
     </div>
   );

@@ -12,9 +12,16 @@ import {
 } from '@/modules/patients/constants/SistemasAnatomicos';
 import { calculateAge } from '@/shared/utils/date';
 import { patientApi } from '@/modules/patients/api/patientApi';
+import {
+  showApiError,
+  showLoading,
+  showSuccess,
+} from '@/shared/components/feedback';
+import { useNavigate } from 'react-router-dom';
 
 export function usePatientCreate() {
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
+  const navigate = useNavigate();
 
   const form = useForm<PatientCreateFormValues>({
     resolver: zodResolver(PatientCreateSchema),
@@ -77,7 +84,7 @@ export function usePatientCreate() {
   const toggleSistema = (dtoKey: PatientSystemDtoKey) =>
     setValue(dtoKey, !getValues(dtoKey));
 
-const onSubmit = form.handleSubmit(async (data) => {
+  const onSubmit = form.handleSubmit(async (data) => {
     const formData = new FormData();
     if (data.profilePicture) {
       formData.append('profilePicture', data.profilePicture);
@@ -86,16 +93,34 @@ const onSubmit = form.handleSubmit(async (data) => {
       if (key === 'profilePicture' || value === '' || value == null) continue;
       formData.append(key, String(value));
     }
-    return patientApi.create(formData);
+    const toastId = showLoading('Guardando paciente…', {
+      description: 'Creando el expediente clínico',
+    });
+    try {
+      await patientApi.create(formData);
+      showSuccess('Paciente guardado', {
+        id: toastId,
+        description: 'Paciente creado correctamente',
+      });
+      navigate('/patients');
+    } catch (error) {
+      showApiError(error, { id: toastId });
+    }
   });
+
+  const handleCancel = () => {
+    navigate('/patients');
+  };
 
   return {
     register,
     control,
     errors,
+    isSubmitting: formState.isSubmitting,
     onSubmit,
     setBirthDate,
     setCompleteOdontogram,
+    handleCancel,
     setFoto,
     sistemas,
     birthDate,

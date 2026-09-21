@@ -1,3 +1,5 @@
+'use no memo';
+
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, subYears } from 'date-fns';

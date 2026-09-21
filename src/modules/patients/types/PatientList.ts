@@ -13,6 +13,33 @@ export type PatientListItem = {
   hasSystemicRisk: boolean;
 };
 
+import type { PatientSystemDtoKey } from '@/modules/patients/constants/SistemasAnatomicos';
+import type { GenderType } from '@/modules/patients/enums/GenderType';
+
+export type PatientDetail = {
+  id: number;
+  person: {
+    id: number;
+    firstName: string;
+    middleName: string | null;
+    lastName: string;
+    profilePictureUrl: string | null;
+    phone: string;
+    address: string | null;
+    occupation: string | null;
+  };
+  birthDate: string;
+  gender: GenderType;
+  medicalHistory: string | null;
+  allergicReactions: string | null;
+  currentSystemicTreatment: string | null;
+  labResults: string | null;
+  completeOdontogram: boolean;
+  systemicReview: Record<PatientSystemDtoKey, boolean> & {
+    systemEvaluationNotes: string | null;
+  };
+};
+
 export type PaginatedMeta = {
   total_count: number;
   total_pages: number;

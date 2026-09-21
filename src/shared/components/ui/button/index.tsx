@@ -1,11 +1,17 @@
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import type { ButtonProps } from './types';
-import { iconOnlySizeClasses, sizeClasses, variantClasses } from './classes';
+import {
+  colorClasses,
+  iconOnlySizeClasses,
+  sizeClasses,
+  variantClasses,
+} from './classes';
 
 export const Button = ({
   children,
-  variant = 'primary',
+  variant = 'solid',
+  color = 'primary',
   size = 'md',
   loading = false,
   disabled = false,
@@ -30,7 +36,7 @@ export const Button = ({
         isIconOnly ? iconOnlySizeClasses[size] : sizeClasses[size],
         isDisabled
           ? 'cursor-not-allowed bg-disabled-bg text-disabled-text'
-          : variantClasses[variant],
+          : cn(variantClasses[variant], colorClasses[color][variant]),
         className,
       )}
       {...rest}

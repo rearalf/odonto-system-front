@@ -392,7 +392,7 @@ function PatientCreatePage() {
         </section>
 
         <div className="flex gap-4 mb-8 mt-6 justify-end">
-            <Button variant="destructive" onClick={handleCancel}>
+            <Button variant="solid" color="error" onClick={handleCancel}>
               Descartar
             </Button>
             <Button type="submit" loading={isSubmitting}>

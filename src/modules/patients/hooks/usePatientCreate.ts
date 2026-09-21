@@ -18,10 +18,12 @@ import {
   showSuccess,
 } from '@/shared/components/feedback';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function usePatientCreate() {
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const form = useForm<PatientCreateFormValues>({
     resolver: zodResolver(PatientCreateSchema),
@@ -102,6 +104,7 @@ export function usePatientCreate() {
         id: toastId,
         description: 'Paciente creado correctamente',
       });
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
       navigate('/patients');
     } catch (error) {
       showApiError(error, { id: toastId });

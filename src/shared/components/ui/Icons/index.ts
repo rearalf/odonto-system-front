@@ -1,2 +1,2 @@
 export { default as ToothIcon } from './ToothIcon';
-export { default as WhatsApp } from './WhatsApp';
+export { default as WhatsAppIcon } from './WhatsApp';

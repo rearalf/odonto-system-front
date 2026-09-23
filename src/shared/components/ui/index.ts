@@ -5,3 +5,4 @@ export { default as Avatar } from './avatar';
 export { default as Badge } from './badge';
 export { default as Table } from './table';
 export * from './form';
+export * from './Icons';

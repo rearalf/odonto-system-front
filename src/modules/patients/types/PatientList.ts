@@ -1,18 +1,3 @@
-export type PatientListItem = {
-  id: number;
-  fullName: string;
-  phone: string;
-  avatarUrl: string | null;
-  birthday: string;
-  age: number;
-  gender: string;
-  hasAllergies: boolean;
-  allergicReactions: string | null;
-  medicalHistory: string | null;
-  completeOdontogram: boolean;
-  hasSystemicRisk: boolean;
-};
-
 import type { PatientSystemDtoKey } from '@/modules/patients/constants/SistemasAnatomicos';
 import type { GenderType } from '@/modules/patients/enums/GenderType';
 
@@ -38,6 +23,21 @@ export type PatientDetail = {
   systemicReview: Record<PatientSystemDtoKey, boolean> & {
     systemEvaluationNotes: string | null;
   };
+};
+
+export type PatientListItem = {
+  id: number;
+  fullName: string;
+  phone: string;
+  avatarUrl: string | null;
+  birthday: string;
+  age: number;
+  gender: string;
+  hasAllergies: boolean;
+  allergicReactions: string | null;
+  medicalHistory: string | null;
+  completeOdontogram: boolean;
+  hasSystemicRisk: boolean;
 };
 
 export type PaginatedMeta = {

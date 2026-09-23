@@ -28,17 +28,63 @@ export interface SistemaAnatomico {
 }
 
 export const SISTEMAS_ANATOMICOS: SistemaAnatomico[] = [
-  { id: 'nervioso', nombre: 'S. Nervioso Central', icono: Brain, dtoKey: 'hasSncIssues' },
-  { id: 'cardiovascular', nombre: 'S. Cardiovascular', icono: HeartPulse, dtoKey: 'hasSvcIssues' },
-  { id: 'endocrino', nombre: 'S. Endocrino', icono: RefreshCw, dtoKey: 'hasSeIssues' },
+  {
+    id: 'nervioso',
+    nombre: 'S. Nervioso Central',
+    icono: Brain,
+    dtoKey: 'hasSncIssues',
+  },
+  {
+    id: 'cardiovascular',
+    nombre: 'S. Cardiovascular',
+    icono: HeartPulse,
+    dtoKey: 'hasSvcIssues',
+  },
+  {
+    id: 'endocrino',
+    nombre: 'S. Endocrino',
+    icono: RefreshCw,
+    dtoKey: 'hasSeIssues',
+  },
   {
     id: 'musculoesqueletico',
     nombre: 'S. Musculoesquelético',
     icono: PersonStanding,
     dtoKey: 'hasSmeIssues',
   },
-  { id: 'respiratorio', nombre: 'S. Respiratorio', icono: Wind, dtoKey: 'hasSrIssues' },
-  { id: 'urinario', nombre: 'S. Urinario', icono: Droplets, dtoKey: 'hasSuIssues' },
-  { id: 'genitourinario', nombre: 'S. Genitourinario', icono: ShieldPlus, dtoKey: 'hasSguIssues' },
-  { id: 'gastrointestinal', nombre: 'S. Gastrointestinal', icono: Soup, dtoKey: 'hasSgiIssues' },
+  {
+    id: 'respiratorio',
+    nombre: 'S. Respiratorio',
+    icono: Wind,
+    dtoKey: 'hasSrIssues',
+  },
+  {
+    id: 'urinario',
+    nombre: 'S. Urinario',
+    icono: Droplets,
+    dtoKey: 'hasSuIssues',
+  },
+  {
+    id: 'genitourinario',
+    nombre: 'S. Genitourinario',
+    icono: ShieldPlus,
+    dtoKey: 'hasSguIssues',
+  },
+  {
+    id: 'gastrointestinal',
+    nombre: 'S. Gastrointestinal',
+    icono: Soup,
+    dtoKey: 'hasSgiIssues',
+  },
 ];
+
+export const SYSTEM_CODES: Record<PatientSystemDtoKey, string> = {
+  hasSncIssues: 'SNC',
+  hasSvcIssues: 'SVC',
+  hasSeIssues: 'SE',
+  hasSmeIssues: 'SME',
+  hasSrIssues: 'SR',
+  hasSuIssues: 'SU',
+  hasSguIssues: 'SGU',
+  hasSgiIssues: 'SGI',
+};

@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { useState } from 'react';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
@@ -12,10 +13,23 @@ const TextAreaField = ({
   help,
   error,
   rows = 4,
+  maxLength,
   id,
+  onChange,
+  value,
   ...textareaProps
 }: TextAreaFieldProps) => {
   const messageId = id ? `${id}-message` : undefined;
+  const [length, setLength] = useState(value?.length ?? 0);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    setLength(newValue.length);
+    onChange?.(e);
+  };
+
+  const isOverLimit = maxLength && length > maxLength;
+  const errorMessage = isOverLimit ? `Máximo ${maxLength} caracteres` : error;
 
   return (
     <div>
@@ -34,19 +48,32 @@ const TextAreaField = ({
         )}
         <textarea
           id={id}
-          aria-invalid={error ? true : undefined}
+          aria-invalid={errorMessage ? true : undefined}
           aria-describedby={messageId}
           rows={rows}
+          maxLength={maxLength}
+          value={value}
+          onChange={handleChange}
           className={clsx(
             fieldBaseClass,
-            fieldColorClass(error),
+            fieldColorClass(errorMessage),
             Icon && 'pl-11',
             'resize-y',
           )}
           {...textareaProps}
         />
       </div>
-      <FieldHelp help={help} error={error} id={messageId} />
+      {maxLength && (
+        <div
+          className={clsx(
+            'text-right text-sm mt-1',
+            isOverLimit ? 'text-error' : 'text-text-subtle',
+          )}
+        >
+          {length} / {maxLength}
+        </div>
+      )}
+      <FieldHelp help={help} error={errorMessage} id={messageId} />
     </div>
   );
 };

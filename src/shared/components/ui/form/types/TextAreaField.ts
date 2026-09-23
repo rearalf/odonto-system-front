@@ -12,4 +12,5 @@ export type TextAreaFieldProps = Omit<
   help?: string;
   error?: string;
   rows?: number;
+  maxLength?: number;
 };

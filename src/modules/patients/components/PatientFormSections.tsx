@@ -192,6 +192,7 @@ const PatientFormSections = ({
               label="Dirección Completa de Residencia"
               leftIcon={Home}
               rows={3}
+              maxLength={100}
               placeholder="Dirección completa (calle, número, piso, puerta, código postal y ciudad de residencia)..."
               error={errors.address?.message}
               {...register('address')}
@@ -302,6 +303,7 @@ const PatientFormSections = ({
             id="alergias-adversas"
             label="Alergias conocidas"
             rows={3}
+            maxLength={500}
             placeholder="Indique alergias conocidas (ej. Penicilina, látex, AINEs, anestésicos locales con vasoconstrictor)..."
             error={errors.allergicReactions?.message}
             {...register('allergicReactions')}
@@ -313,6 +315,7 @@ const PatientFormSections = ({
             id="antecedentes-medicos"
             label="Antecedentes Médicos y Quirúrgicos Generales"
             rows={4}
+            maxLength={1000}
             placeholder="Describa cirugías previas, hospitalizaciones, patologías crónicas o antecedentes familiares de interés odontológico..."
             error={errors.medicalHistory?.message}
             {...register('medicalHistory')}
@@ -321,6 +324,7 @@ const PatientFormSections = ({
             id="tratamiento-sistemico"
             label="Tratamiento Sistémico Actual (Farmacología)"
             rows={4}
+            maxLength={1000}
             placeholder="Medicamentos actuales: anticoagulantes orales, antihipertensivos, bifosfonatos, corticoides, dosis y frecuencia..."
             error={errors.currentSystemicTreatment?.message}
             {...register('currentSystemicTreatment')}
@@ -329,6 +333,7 @@ const PatientFormSections = ({
             id="examenes-laboratorio"
             label="Resultados y Exámenes de Laboratorio"
             rows={4}
+            maxLength={1000}
             placeholder="Hemogramas, tiempos de coagulación (INR), glucemia basal, HbA1c o paneles virales recientes..."
             error={errors.labResults?.message}
             {...register('labResults')}
@@ -337,6 +342,7 @@ const PatientFormSections = ({
             id="notas-clinicas"
             label="Notas y Observaciones Clínicas Adicionales"
             rows={4}
+            maxLength={1000}
             placeholder="Hallazgos en mucosa oral, hábitos parafuncionales (bruxismo), hábitos tabáquicos o consideraciones anestésicas..."
             error={errors.systemEvaluationNotes?.message}
             {...register('systemEvaluationNotes')}

@@ -1,8 +1,8 @@
 'use no memo';
 
-import { PatientFormSections } from '@/modules/patients/components/PatientFormSections';
-import { usePatientEdit } from '@/modules/patients/hooks/usePatientEdit';
 import { Breadcrumbs } from '@/shared/components/ui';
+import { usePatientEdit } from '@/modules/patients/hooks/usePatientEdit';
+import PatientFormSections from '@/modules/patients/components/PatientFormSections';
 
 export default function PatientEditPage() {
   const formProps = usePatientEdit();

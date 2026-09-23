@@ -1,8 +1,8 @@
 'use no memo';
 
 import { Breadcrumbs } from '@/shared/components/ui';
-import { PatientFormSections } from '@/modules/patients/components/PatientFormSections';
 import { usePatientCreate } from '@/modules/patients/hooks/usePatientCreate';
+import PatientFormSections from '@/modules/patients/components/PatientFormSections';
 
 function PatientCreatePage() {
   const formProps = usePatientCreate();

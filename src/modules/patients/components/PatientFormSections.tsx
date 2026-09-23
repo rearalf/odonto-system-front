@@ -22,12 +22,12 @@ import {
   TextAreaField,
   SelectField,
   InputField,
+  ToothIcon,
   DateField,
   Switch,
   Button,
   Badge,
 } from '@/shared/components/ui';
-import { ToothIcon } from '@/shared/components/ui/Icons/ToothIcon';
 
 import { PhotoUploadCard } from '@/modules/patients/components/PhotoUploadCard';
 import type { usePatientCreate } from '@/modules/patients/hooks/usePatientCreate';
@@ -38,7 +38,7 @@ export type PatientFormSectionsProps = ReturnType<typeof usePatientCreate> & {
   cancelLabel?: string;
 };
 
-export function PatientFormSections({
+const PatientFormSections = ({
   register,
   control,
   errors,
@@ -56,7 +56,7 @@ export function PatientFormSections({
   maxBirthDate,
   submitLabel = 'Guardar paciente',
   cancelLabel = 'Descartar',
-}: PatientFormSectionsProps) {
+}: PatientFormSectionsProps) => {
   return (
     <form onSubmit={onSubmit} noValidate>
       <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
@@ -96,6 +96,7 @@ export function PatientFormSections({
             optional
             leftIcon={User}
             placeholder="Ej. Eduardo"
+            error={errors.middleName?.message}
             {...register('middleName')}
           />
           <InputField
@@ -182,6 +183,7 @@ export function PatientFormSections({
             label="Ocupación / Profesión"
             leftIcon={Briefcase}
             placeholder="Ej. Ingeniero de Software"
+            error={errors.occupation?.message}
             {...register('occupation')}
           />
           <div className="md:col-span-2">
@@ -191,6 +193,7 @@ export function PatientFormSections({
               leftIcon={Home}
               rows={3}
               placeholder="Dirección completa (calle, número, piso, puerta, código postal y ciudad de residencia)..."
+              error={errors.address?.message}
               {...register('address')}
             />
           </div>
@@ -224,8 +227,7 @@ export function PatientFormSections({
         <p className="text-body-md text-text-muted">
           Indica si el odontograma inicial del paciente ya fue completado
           durante la consulta diagnóstica de valoración de ingreso o si queda
-          formalmente en estado de triaje pendiente para el odontólogo
-          asignado.
+          formalmente en estado de triaje pendiente para el odontólogo asignado.
         </p>
         <hr className="my-4 border-border-strong" />
         <div className="mt-4 flex flex-col gap-4 rounded-xl border border-border-default bg-bg-surface-elevated p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -301,6 +303,7 @@ export function PatientFormSections({
             label="Alergias conocidas"
             rows={3}
             placeholder="Indique alergias conocidas (ej. Penicilina, látex, AINEs, anestésicos locales con vasoconstrictor)..."
+            error={errors.allergicReactions?.message}
             {...register('allergicReactions')}
           />
         </div>
@@ -311,6 +314,7 @@ export function PatientFormSections({
             label="Antecedentes Médicos y Quirúrgicos Generales"
             rows={4}
             placeholder="Describa cirugías previas, hospitalizaciones, patologías crónicas o antecedentes familiares de interés odontológico..."
+            error={errors.medicalHistory?.message}
             {...register('medicalHistory')}
           />
           <TextAreaField
@@ -318,6 +322,7 @@ export function PatientFormSections({
             label="Tratamiento Sistémico Actual (Farmacología)"
             rows={4}
             placeholder="Medicamentos actuales: anticoagulantes orales, antihipertensivos, bifosfonatos, corticoides, dosis y frecuencia..."
+            error={errors.currentSystemicTreatment?.message}
             {...register('currentSystemicTreatment')}
           />
           <TextAreaField
@@ -325,6 +330,7 @@ export function PatientFormSections({
             label="Resultados y Exámenes de Laboratorio"
             rows={4}
             placeholder="Hemogramas, tiempos de coagulación (INR), glucemia basal, HbA1c o paneles virales recientes..."
+            error={errors.labResults?.message}
             {...register('labResults')}
           />
           <TextAreaField
@@ -332,6 +338,7 @@ export function PatientFormSections({
             label="Notas y Observaciones Clínicas Adicionales"
             rows={4}
             placeholder="Hallazgos en mucosa oral, hábitos parafuncionales (bruxismo), hábitos tabáquicos o consideraciones anestésicas..."
+            error={errors.systemEvaluationNotes?.message}
             {...register('systemEvaluationNotes')}
           />
         </div>
@@ -395,4 +402,6 @@ export function PatientFormSections({
       </div>
     </form>
   );
-}
+};
+
+export default PatientFormSections;

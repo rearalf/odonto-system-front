@@ -14,6 +14,10 @@ export default function PatientEditPage() {
           { label: 'Inicio', href: '/' },
           { label: 'Pacientes', href: '/patients' },
           {
+            label: `Ficha del Paciente ${formProps.patientName ?? ''}`,
+            href: '/patients/' + formProps.id,
+          },
+          {
             label: `Editar ${formProps.patientName ?? 'ficha del Paciente'}`,
           },
         ]}

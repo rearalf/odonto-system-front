@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Copy, Pencil, Phone, Trash2 } from 'lucide-react';
+import { Copy, Eye, Phone, Trash2 } from 'lucide-react';
 
 import { Avatar, Badge, Button } from '@/shared/components/ui';
 import type { TableColumn } from '@/shared/components/ui/table/types';
@@ -114,12 +114,12 @@ export const PATIENT_LIST_COLUMNS: TableColumn<PatientListItem>[] = [
   {
     key: 'id',
     header: 'Acciones',
-    align: 'right',
+    align: 'center',
     render: (patient) => (
       <div className="flex items-center justify-end gap-2">
-        <Link to={`/patients/${patient.id}/edit`} aria-label="Editar paciente">
+        <Link to={`/patients/${patient.id}`} aria-label="Ver detalles del paciente">
           <Button variant="ghost" color="info">
-            <Pencil className="h-4 w-4" aria-hidden="true" />
+            <Eye className="h-4 w-4" aria-hidden="true" />
           </Button>
         </Link>
         <Button

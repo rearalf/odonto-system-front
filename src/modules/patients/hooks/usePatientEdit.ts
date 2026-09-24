@@ -165,7 +165,7 @@ export function usePatientEdit() {
   });
 
   const handleCancel = () => {
-    navigate('/patients');
+    navigate('/patients/' + id);
   };
 
   const patientName = data
@@ -189,5 +189,6 @@ export function usePatientEdit() {
     foto,
     age,
     maxBirthDate,
+    id,
   };
 }

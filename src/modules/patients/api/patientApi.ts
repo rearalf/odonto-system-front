@@ -15,6 +15,7 @@ export const patientApi = {
   create: (formData: FormData) => http.post('/patients', formData),
   get: (id: string) => http.get<PatientDetail>(`/patients/${id}`),
   update: (id: string, formData: FormData) => http.patch(`/patients/${id}`, formData),
+  remove: (id: number) => http.delete(`/patients/${id}`),
   list: ({ page, perPage, search }: PatientListParams) =>
     http.get<PaginatedResponse<PatientListItem>>('/patients', {
       params: {

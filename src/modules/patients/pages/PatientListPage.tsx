@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Filter, Plus, Search } from 'lucide-react';
-import { Breadcrumbs, Button, InputField, Table } from '@/shared/components/ui';
-import { PATIENT_LIST_COLUMNS } from '@/modules/patients/constants/patientListColumns';
-import { usePatientSearch } from '@/modules/patients/hooks/usePatientSearch';
+import { Filter, Plus, Search, Trash2 } from 'lucide-react';
+import { Breadcrumbs, Button, InputField, Modal, Table } from '@/shared/components/ui';
+import { buildPatientListColumns } from '@/modules/patients/constants/patientListColumns';
+import { usePatientListPage } from '@/modules/patients/hooks/usePatientListPage';
 
 export default function PatientListPage() {
   const {
@@ -18,7 +18,14 @@ export default function PatientListPage() {
     setSearchInput,
     handleSubmit,
     handleClear,
-  } = usePatientSearch();
+    selectedPatient,
+    isDeleteModalOpen,
+    isDeleting,
+    deletingId,
+    requestDelete,
+    cancelDelete,
+    handleConfirmDelete,
+  } = usePatientListPage();
 
   const emptyState = search ? (
     <div>
@@ -120,7 +127,10 @@ export default function PatientListPage() {
 
       <div className="mt-6">
         <Table
-          columns={PATIENT_LIST_COLUMNS}
+          columns={buildPatientListColumns({
+            onDelete: requestDelete,
+            deletingId,
+          })}
           rows={patients}
           total={total}
           page={page}
@@ -133,6 +143,41 @@ export default function PatientListPage() {
           onPageSizeChange={onPerPageChange}
         />
       </div>
+
+      <Modal
+        open={isDeleteModalOpen}
+        onOpenChange={(open) => !open && cancelDelete()}
+        title="Eliminar paciente"
+        description={
+          selectedPatient &&
+          `¿Deseas eliminar a ${selectedPatient.fullName}? Esta acción no se puede deshacer.`
+        }
+        icon={
+          <span className="bg-error/10 p-2 rounded-full text-error">
+            <Trash2 className="h-5 w-5" aria-hidden="true" />
+          </span>
+        }
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={cancelDelete}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              color="error"
+              loading={isDeleting}
+              onClick={handleConfirmDelete}
+            >
+              Eliminar
+            </Button>
+          </>
+        }
+      />
     </>
   );
 }

@@ -7,7 +7,7 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
-import type { TableColumn, TableColumnAlign, TableProps } from './types';
+import type { TableColumn, TableColumnAlign, TableProps } from '../types/Table';
 import {
   getNextSortDirection,
   getPageRange,

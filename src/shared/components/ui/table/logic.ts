@@ -1,4 +1,4 @@
-import type { SortDirection } from './types';
+import type { SortDirection } from '../types/Table';
 
 export const getTotalPages = (total: number, pageSize: number) =>
   pageSize > 0 ? Math.ceil(total / pageSize) : 0;

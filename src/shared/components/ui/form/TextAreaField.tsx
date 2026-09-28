@@ -20,11 +20,19 @@ const TextAreaField = ({
   ...textareaProps
 }: TextAreaFieldProps) => {
   const messageId = id ? `${id}-message` : undefined;
-  const [length, setLength] = useState(value?.length ?? 0);
+
+  const getValueLength = (input: TextAreaFieldProps['value']) => {
+    if (typeof input === 'string') return input.length;
+    if (typeof input === 'number') return String(input).length;
+    if (Array.isArray(input)) return input.join('').length;
+    return 0;
+  };
+
+  const [length, setLength] = useState(() => getValueLength(value));
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
-    setLength(newValue.length);
+    setLength(getValueLength(newValue));
     onChange?.(e);
   };
 

@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
+  Stethoscope,
   Calendar,
   Settings,
   Sun,
@@ -24,6 +25,7 @@ const ToothIcon = ({ className }: { className?: string }) => (
 const links = [
   { to: '/', label: 'Dashboard / Panel', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
+  { to: '/doctors', label: 'Doctores', icon: Stethoscope },
   { to: '/appointments', label: 'Agenda de Citas', icon: Calendar },
   { to: '/odontogram', label: 'Odontograma', icon: ToothIcon },
   { to: '/treatments', label: 'Tratamientos', icon: FlaskConical },

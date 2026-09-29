@@ -9,7 +9,9 @@ const TextAreaField = ({
   label,
   required,
   optional,
+  badge,
   leftIcon: Icon,
+  labelEnd,
   help,
   error,
   rows = 4,
@@ -41,12 +43,16 @@ const TextAreaField = ({
 
   return (
     <div>
-      <FieldLabel
-        label={label}
-        required={required}
-        optional={optional}
-        htmlFor={id}
-      />
+      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
+        <FieldLabel
+          label={label}
+          required={required}
+          optional={optional}
+          badge={badge}
+          htmlFor={id}
+        />
+        {labelEnd}
+      </div>
       <div className="relative">
         {Icon && (
           <Icon

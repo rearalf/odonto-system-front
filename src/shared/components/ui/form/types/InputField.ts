@@ -1,6 +1,8 @@
 import type { LucideIcon } from 'lucide-react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
 
+export type ValidationState = 'valid' | 'invalid' | 'pending';
+
 export type InputFieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'className'
@@ -13,4 +15,5 @@ export type InputFieldProps = Omit<
   prefix?: ReactNode;
   help?: string;
   error?: string;
+  validationState?: ValidationState;
 };

@@ -1,22 +1,43 @@
+import { X, Loader2, CircleCheck } from 'lucide-react';
 import { clsx } from 'clsx';
 import FieldLabel, { fieldBaseClass } from './FieldLabel';
 import { fieldColorClass } from './fieldColors';
 import FieldHelp from './FieldHelp';
-import type { InputFieldProps } from './types/InputField';
+import type { InputFieldProps, ValidationState } from './types/InputField';
+
+const validationIcons: Record<ValidationState, typeof CircleCheck> = {
+  valid: CircleCheck,
+  invalid: X,
+  pending: Loader2,
+};
+
+const validationColors: Record<ValidationState, string> = {
+  valid: 'text-green-500',
+  invalid: 'text-red-500',
+  pending: 'text-blue-500 animate-spin',
+};
 
 const InputField = ({
   label,
   required,
   optional,
   badge,
-  leftIcon: Icon,
+  leftIcon: LeftIcon,
   prefix,
   help,
   error,
   id,
+  validationState,
   ...inputProps
 }: InputFieldProps) => {
   const messageId = id ? `${id}-message` : undefined;
+  const showValidationIcon = validationState !== undefined;
+  const ValidationIcon = showValidationIcon
+    ? validationIcons[validationState]
+    : null;
+  const validationColor = showValidationIcon
+    ? validationColors[validationState]
+    : '';
 
   return (
     <div>
@@ -28,8 +49,8 @@ const InputField = ({
         htmlFor={id}
       />
       <div className="relative">
-        {Icon && (
-          <Icon
+        {LeftIcon && (
+          <LeftIcon
             aria-hidden="true"
             className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-text-subtle"
           />
@@ -46,16 +67,28 @@ const InputField = ({
         )}
         <input
           id={id}
-          aria-invalid={error ? true : undefined}
+          aria-invalid={
+            error ? true : validationState === 'invalid' ? true : undefined
+          }
           aria-describedby={messageId}
           className={clsx(
             fieldBaseClass,
             fieldColorClass(error),
-            Icon && 'pl-11',
+            LeftIcon && 'pl-11',
             prefix && 'pl-16',
+            showValidationIcon && 'pr-11',
           )}
           {...inputProps}
         />
+        {showValidationIcon && ValidationIcon && (
+          <ValidationIcon
+            aria-hidden="true"
+            className={clsx(
+              'pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2',
+              validationColor,
+            )}
+          />
+        )}
       </div>
       <FieldHelp help={help} error={error} id={messageId} />
     </div>

@@ -12,7 +12,7 @@ export interface UseMultiSelectReturn {
   open: boolean;
   setOpen: (open: boolean) => void;
   focused: boolean;
-  wrapperRef: React.RefObject<HTMLDivElement>;
+  wrapperRef: React.RefObject<HTMLDivElement | null>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
   handleClick: () => void;
   handleFocus: () => void;

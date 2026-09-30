@@ -15,6 +15,7 @@ const MaskedInputField = ({
   help,
   error,
   id,
+  ref,
   ...inputProps
 }: MaskedInputFieldProps) => {
   const messageId = id ? `${id}-message` : undefined;
@@ -56,6 +57,7 @@ const MaskedInputField = ({
             prefix && 'pl-20',
           )}
           {...(inputProps as IMaskInputProps<HTMLInputElement>)}
+          inputRef={ref}
         />
       </div>
       <FieldHelp help={help} error={error} id={messageId} />

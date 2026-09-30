@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import type { IMaskInputProps } from 'react-imask';
 
 export type MaskedInputFieldProps = Omit<
@@ -15,4 +15,5 @@ export type MaskedInputFieldProps = Omit<
   prefix?: ReactNode;
   help?: string;
   error?: string;
+  ref?: Ref<HTMLInputElement>;
 };

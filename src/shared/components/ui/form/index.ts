@@ -1,6 +1,7 @@
 export { default as MaskedInputField } from './MaskedInputField';
 export { default as TextAreaField } from './TextAreaField';
 export { default as SelectField } from './SelectField';
+export { default as MultiSelectField } from './MultiSelectField';
 export { default as FieldLabel } from './FieldLabel';
 export { default as InputField } from './InputField';
 export { default as DateField } from './DateField';

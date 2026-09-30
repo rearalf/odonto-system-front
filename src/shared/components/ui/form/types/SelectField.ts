@@ -11,5 +11,6 @@ export type SelectFieldProps = Omit<
   leftIcon?: LucideIcon;
   help?: string;
   error?: string;
+  className?: string;
   children: ReactNode;
 };

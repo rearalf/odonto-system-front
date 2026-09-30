@@ -1,31 +1,49 @@
-import { useState } from 'react';
 import {
   Badge,
+  Button,
   InputField,
+  // FieldLabel,
   Breadcrumbs,
+  SelectField,
   TextAreaField,
   MaskedInputField,
-  Button,
-  SelectField,
-  MultiSelectField,
-  FieldLabel,
+  // MultiSelectField,
 } from '@/shared/components/ui';
 import {
   BriefcaseMedical,
   GraduationCap,
   IdCard,
   Info,
-  Link,
-  Plus,
+  // Link,
+  // Plus,
   Star,
-  ToggleRight,
+  // ToggleRight,
   Trash,
   User,
-  UserCog,
+  // UserCog,
 } from 'lucide-react';
+import { useDoctorCreate } from '@/modules/doctors/hooks/useDoctorCreate';
+// TODO: se usará más adelante
+// import { Controller } from 'react-hook-form';
 
 export default function DoctorCreatePage() {
-  const [roles, setRoles] = useState<string[]>([]);
+  const {
+    register,
+    errors,
+    isSubmitting,
+    onSubmit,
+    handleCancel,
+    specialties = [],
+    specialtiesOptions = [],
+    isSpecialtiesLoading,
+    // roles,
+    // setRoles,
+    // rolesOptions = [],
+    // isRolesLoading,
+    handleSpecialtyAdd,
+    handleSpecialtyRemove,
+    handleSpecialtySetPrimary,
+  } = useDoctorCreate();
 
   return (
     <>
@@ -40,7 +58,7 @@ export default function DoctorCreatePage() {
         apertura oficial.
       </p>
 
-      <form noValidate>
+      <form onSubmit={onSubmit} noValidate>
         <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
           <div className="mb-4 flex items-center gap-4 flex-wrap justify-center lg:justify-between">
             <div className="flex items-center gap-4">
@@ -68,6 +86,8 @@ export default function DoctorCreatePage() {
               required
               leftIcon={User}
               placeholder="Ej. Carlos"
+              error={errors.firstName?.message}
+              {...register('firstName')}
             />
             <InputField
               id="segundo-nombre"
@@ -75,6 +95,8 @@ export default function DoctorCreatePage() {
               optional
               leftIcon={User}
               placeholder="Ej. Eduardo"
+              error={errors.middleName?.message}
+              {...register('middleName')}
             />
             <InputField
               id="apellidos"
@@ -82,11 +104,9 @@ export default function DoctorCreatePage() {
               required
               leftIcon={User}
               placeholder="Ej. Gómez Mendoza"
+              error={errors.lastName?.message}
+              {...register('lastName')}
             />
-            {/* <Controller
-              control={control}
-              name="phone"
-              render={({ field }) => ( */}
             <MaskedInputField
               id="telefono"
               label="Teléfono Celular Primario"
@@ -96,9 +116,9 @@ export default function DoctorCreatePage() {
               mask="0000 0000"
               placeholder="#### ####"
               unmask
+              error={errors.phone?.message}
+              {...register('phone')}
             />
-            {/* )}
-            /> */}
           </div>
         </section>
 
@@ -121,17 +141,19 @@ export default function DoctorCreatePage() {
           <hr className="mb-4 border-border-strong" />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <TextAreaField
-              id="direccion"
+              id="calificacion"
               label="Título Académico Principal / Posgrados"
               leftIcon={GraduationCap}
               rows={3}
-              maxLength={100}
+              maxLength={255}
               placeholder="Especialista en Cirugía Oral y Maxilofacial, MSc Implantología Clínica Avanzada (U. de Chile)..."
               labelEnd={
                 <Badge variant="info" size="md" className="mb-3 md:mb-0">
                   Máx. 255 caracteres
                 </Badge>
               }
+              error={errors.qualification?.message}
+              {...register('qualification')}
             />
 
             <section className="flex flex-col items-start gap-6 rounded-2xl border border-border-subtle bg-bg-surface-elevated p-6 shadow-sm">
@@ -144,7 +166,7 @@ export default function DoctorCreatePage() {
                   tratar en los módulos de Odontograma y Presupuesto
                 </p>
                 <Badge variant="info" size="sm" className="mt-2 text-center">
-                  Especialidades añadidas: 3 de 20 máx.
+                  Especialidades añadidas: {specialties.length} de 20 máx.
                 </Badge>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 w-full items-center">
@@ -154,68 +176,103 @@ export default function DoctorCreatePage() {
                     label="Seleccionar especialidad"
                     required
                     leftIcon={GraduationCap}
+                    onChange={(e) => handleSpecialtyAdd(e.target.value)}
+                    disabled={isSpecialtiesLoading}
+                    defaultValue=""
+                    error={errors.specialties?.message}
                   >
-                    <option value="" disabled selected>
-                      Seleccionar especialidad
+                    <option value="" disabled>
+                      {isSpecialtiesLoading
+                        ? 'Cargando...'
+                        : 'Seleccionar especialidad'}
                     </option>
-                    <option value="ortodoncia">Ortodoncia</option>
-                    <option value="endodoncia">Endodoncia</option>
-                    <option value="periodoncia">Periodoncia</option>
-                    <option value="cirugia-oral">Cirugía Oral</option>
-                    <option value="implantologia">Implantología</option>
-                    <option value="odontopediatria">Odontopediatría</option>
-                    <option value="prostodoncia">Prótesis Dental</option>
-                    <option value="radiologia">Radiología Oral</option>
+                    {specialtiesOptions.map((opt) => (
+                      <option
+                        key={opt.id}
+                        value={opt.value}
+                        disabled={specialties.some(
+                          (s) => s.specialtyId === opt.id,
+                        )}
+                      >
+                        {opt.label}
+                      </option>
+                    ))}
                   </SelectField>
                 </div>
-                <Button icon={<Plus />}>Añadir </Button>
               </div>
-              <div className="flex flex-col gap-4 w-full">
-                <div className="flex flex-wrap items-center justify-center lg:justify-between p-6 rounded-lg bg-bg-surface shadow-sm gap-6 text-text-primary">
-                  <div className="flex items-center gap-4 flex-col md:flex-row">
-                    <div className="p-2 rounded-lg bg-bg-surface-subtle text-on-surface-variant flex items-center justify-center">
-                      <GraduationCap />
-                    </div>
-                    <div className="flex flex-col gap-3 text-center md:text-left md:gap-0.5">
-                      <div className="flex flex-col items-center gap-2 sm:flex-row">
-                        <span className="text-label-lg">
-                          Geriatría Odontológica
-                        </span>
-                        <Badge
-                          variant="primary"
-                          size="sm"
-                          className="py-1! px-3! text-left"
-                        >
-                          <Star size={16} />
-                          Especialidad principal
-                        </Badge>
+              <div className="flex flex-col gap-4 w-full max-h-96 overflow-auto">
+                {specialties.length === 0 ? (
+                  <div className="text-center text-text-muted py-8">
+                    No hay especialidades añadidas
+                  </div>
+                ) : (
+                  specialties.map((item) => {
+                    const opt = specialtiesOptions.find(
+                      (o) => o.id === item.specialtyId,
+                    );
+                    const isPrimary = item.isPrimary;
+                    return (
+                      <div
+                        key={item.specialtyId}
+                        className="grid justify-items-center lg:flex lg:justify-between p-6 rounded-lg bg-bg-surface shadow-sm gap-6 text-text-primary"
+                      >
+                        <div className="flex items-center gap-4 flex-col md:flex-row">
+                          <div className="p-2 rounded-lg bg-bg-surface-elevated text-primary flex items-center justify-center">
+                            <GraduationCap />
+                          </div>
+                          <div className="flex flex-col gap-3 text-center md:text-left md:gap-0.5">
+                            <div className="flex flex-col items-center gap-2 sm:flex-row">
+                              <span className="text-label-lg">
+                                {opt?.label}
+                              </span>
+                              {isPrimary && (
+                                <Badge
+                                  variant="primary"
+                                  size="sm"
+                                  className="py-1! px-3! text-left"
+                                >
+                                  <Star size={16} />
+                                  Especialidad principal
+                                </Badge>
+                              )}
+                            </div>
+                            <span className="font-body-sm text-body-sm text-on-surface-variant">
+                              {opt?.description}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            color={isPrimary ? 'primary' : 'info'}
+                            size="sm"
+                            title={
+                              isPrimary
+                                ? 'Especialidad principal'
+                                : 'Marcar como principal'
+                            }
+                            onClick={() =>
+                              handleSpecialtySetPrimary(item.specialtyId)
+                            }
+                          >
+                            <Star />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            color="error"
+                            title="Eliminar especialidad"
+                            size="sm"
+                            onClick={() =>
+                              handleSpecialtyRemove(item.specialtyId)
+                            }
+                          >
+                            <Trash />
+                          </Button>
+                        </div>
                       </div>
-                      <span className="font-body-sm text-body-sm text-on-surface-variant">
-                        Se ocupa de los problemas dentales y orales relacionados
-                        con el envejecimiento y el cuidado dental de personas
-                        mayores.
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      color="info"
-                      size="sm"
-                      title="Marcar como principal"
-                    >
-                      <Star />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      color="error"
-                      title="Eliminar especialidad"
-                      size="sm"
-                    >
-                      <Trash />
-                    </Button>
-                  </div>
-                </div>
+                    );
+                  })
+                )}
               </div>
               <div className="flex flex-col gap-2 items-center text-center text-body-sm md:flex-row md:text-left bg-amber-50 text-warning rounded-md font-medium p-4">
                 <Info size={18} />
@@ -229,7 +286,7 @@ export default function DoctorCreatePage() {
           </div>
         </section>
 
-        <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
+        {/* <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
           <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <div className="rounded-lg bg-bg-surface-elevated p-2 text-primary shrink-0">
@@ -257,11 +314,14 @@ export default function DoctorCreatePage() {
             <hr className="mb-4 border-border-strong" />
             <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
               <InputField
+                id="correo"
                 label="Correo"
                 required
                 placeholder="dra.jensen@dentalcare.com"
                 type="email"
-                validationState="valid"
+                // validationState="valid"
+                // {...register('email')}
+                // error={errors.email?.message}
               />
 
               <div className="bg-bg-surface-subtle p-4 rounded-md flex gap-4 flex-col md:flex-row items-center md:items-start text-center md:text-left">
@@ -299,8 +359,8 @@ export default function DoctorCreatePage() {
                   { value: 'recepcionista', label: 'Recepcionista' },
                   { value: 'higienista', label: 'Higienista Dental' },
                 ]}
-                value={roles}
-                onChange={setRoles}
+                value={[]}
+                onChange={() => {}}
               />
               <div className="flex flex-col gap-2 items-center text-center text-body-sm md:flex-row md:text-left text-text-muted rounded-md font-medium p-4">
                 <Info size={18} className="text-primary" />
@@ -310,13 +370,19 @@ export default function DoctorCreatePage() {
               </div>
             </div>
           </div>
-        </section>
-
+        </section> */}
         <div className="flex gap-4 mb-8 mt-6 justify-end">
-          <Button variant="solid" color="error">
+          <Button
+            variant="solid"
+            color="error"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
             Descartar
           </Button>
-          <Button type="submit">Registrar Doctor</Button>
+          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+            {isSubmitting ? 'Registrando...' : 'Registrar Doctor'}
+          </Button>
         </div>
       </form>
     </>

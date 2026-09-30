@@ -4,3 +4,8 @@ export type PaginatedMeta = {
   page: number;
   per_page: number;
 };
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  meta: PaginatedMeta | null;
+};

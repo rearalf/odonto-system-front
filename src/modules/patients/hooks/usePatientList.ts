@@ -25,7 +25,7 @@ export function usePatientList() {
 
   return {
     patients: query.data?.data ?? [],
-    total: query.data?.meta.total_count ?? 0,
+    total: query.data?.meta?.total_count ?? 0,
     isLoading: query.isFetching,
     page,
     perPage,

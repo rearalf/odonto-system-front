@@ -1,19 +1,13 @@
 import { http } from '@/shared/services/http';
 import type { PaginatedResponse } from '@/shared/types/pagination';
-import type { PatientDetail, PatientListItem } from '../types/PatientList';
+import type { PatientResponse } from '../types/Patient';
+import type { PatientListItem, PatientListParams } from '../types/PatientList';
 
-export type PatientListParams = {
-  page: number;
-  perPage: number;
-  search?: string;
-};
-
+/**
+ * CAPA 1 — Red pura. Sin React, sin React Query, sin toasts.
+ * POST, PATCH y GET por id devuelven el mismo `PatientResponse`.
+ */
 export const patientApi = {
-  create: (formData: FormData) => http.post('/patients', formData),
-  get: (id: string) => http.get<PatientDetail>(`/patients/${id}`),
-  update: (id: string, formData: FormData) =>
-    http.patch(`/patients/${id}`, formData),
-  remove: (id: number) => http.delete(`/patients/${id}`),
   list: ({ page, perPage, search }: PatientListParams) =>
     http.get<PaginatedResponse<PatientListItem>>('/patients', {
       params: {
@@ -23,4 +17,14 @@ export const patientApi = {
         ...(search ? { search } : {}),
       },
     }),
+
+  get: (id: string) => http.get<PatientResponse>(`/patients/${id}`),
+
+  create: (formData: FormData) =>
+    http.post<PatientResponse>('/patients', formData),
+
+  update: (id: string, formData: FormData) =>
+    http.patch<PatientResponse>(`/patients/${id}`, formData),
+
+  remove: (id: number) => http.delete<void>(`/patients/${id}`),
 };

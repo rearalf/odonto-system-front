@@ -1,16 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
-import { patientApi } from '@/modules/patients/api/patientApi';
+import { usePatientListQuery } from '@/modules/patients/hooks/queries/usePatientListQuery';
 
+/**
+ * CAPA 2 (orquestador) — estado de vista del listado + la query.
+ * Aqui vive el useState de paginacion/busqueda; la red vive en el primitivo.
+ */
 export function usePatientList() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState('');
 
-  const query = useQuery({
-    queryKey: ['patients', page, perPage, search],
-    queryFn: () => patientApi.list({ page, perPage, search: search || undefined }),
+  const query = usePatientListQuery({
+    page,
+    perPage,
+    search: search || undefined,
   });
 
   const applySearch = useCallback((next: string) => {

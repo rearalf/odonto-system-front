@@ -7,7 +7,12 @@ export type PatientNavTab =
   | 'presupuestos-pagos'
   | 'consentimientos-rx';
 
-export type PatientDetail = {
+/**
+ * View-model de la ficha: `PatientResponse` (capa 1, DTO crudo) ya
+ * normalizado a strings y con nulls resueltos a '-' para la UI.
+ * Es lo unico que consumen los componentes.
+ */
+export type PatientDetailView = {
   id: number;
   fullName: string;
   avatarUrl: string | null;

@@ -40,7 +40,8 @@ export function buildPatientListColumns({
       header: 'Teléfono',
       align: 'center',
       render: (patient) => {
-        const digits = patient.phone.replace(/\D/g, '');
+        // el backend devuelve phone como numero
+        const digits = String(patient.phone ?? '').replace(/\D/g, '');
         const formatted = `${digits.slice(0, 4)} ${digits.slice(4, 8)}`;
         return (
           <div className="flex items-center gap-2">

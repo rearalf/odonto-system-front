@@ -14,10 +14,10 @@ import {
   SYSTEM_CODES,
   SISTEMAS_ANATOMICOS,
 } from '@/modules/patients/constants/SistemasAnatomicos';
-import type { PatientDetail } from '@/modules/patients/types/PatientDetail';
+import type { PatientDetailView } from '@/modules/patients/types/PatientDetail';
 
 interface FichaGeneralTabProps {
-  patient: PatientDetail;
+  patient: PatientDetailView;
 }
 
 export default function FichaGeneralTab({ patient }: FichaGeneralTabProps) {

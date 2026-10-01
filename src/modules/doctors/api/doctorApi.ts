@@ -3,12 +3,10 @@ import type { PaginatedResponse } from '@/shared/types/pagination';
 import type { DoctorListItem, DoctorListParams } from '../types/DoctorList';
 import type { DoctorDetail } from '../types/DoctorDetail';
 
+/**
+ * CAPA 1 — Red pura. Sin React, sin React Query, sin toasts.
+ */
 export const doctorApi = {
-  create: (formData: FormData) => http.post('/doctors', formData),
-  get: (id: string) => http.get<DoctorDetail>(`/doctors/${id}`),
-  update: (id: string, formData: FormData) =>
-    http.patch(`/doctors/${id}`, formData),
-  remove: (id: number) => http.delete(`/doctors/${id}`),
   list: ({ page, perPage, search }: DoctorListParams) =>
     http.get<PaginatedResponse<DoctorListItem>>('/doctors', {
       params: {
@@ -18,4 +16,14 @@ export const doctorApi = {
         ...(search ? { search } : {}),
       },
     }),
+
+  get: (id: string) => http.get<DoctorDetail>(`/doctors/${id}`),
+
+  create: (formData: FormData) =>
+    http.post<DoctorDetail>('/doctors', formData),
+
+  update: (id: string, formData: FormData) =>
+    http.patch<DoctorDetail>(`/doctors/${id}`, formData),
+
+  remove: (id: number) => http.delete<void>(`/doctors/${id}`),
 };

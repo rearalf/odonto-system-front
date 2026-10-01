@@ -1,34 +1,40 @@
 'use no memo';
 
+import { useCallback } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { useCallback, useState } from 'react';
-import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   DoctorCreateSchema,
   type DoctorCreateFormValues,
 } from '@/modules/doctors/schemas/DoctorCreateSchema';
-import { type Specialty } from '@/modules/doctors/api/specialtiesApi';
-import { useSpecialtiesForSelect } from '@/modules/doctors/hooks/useSpecialties';
+import { useDoctorCreateMutation } from '@/modules/doctors/hooks/mutations/useDoctorCreateMutation';
+import { useSpecialtiesForSelect } from '@/modules/doctors/hooks/queries/useSpecialtiesQuery';
+import { doctorKeys } from '@/modules/doctors/hooks/doctorKeys';
+import type { Specialty } from '@/modules/doctors/types/Specialty';
 import {
   showApiError,
   showLoading,
   showSuccess,
 } from '@/shared/components/feedback';
-import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
-import { useDoctorCreateMutation } from '@/modules/doctors/hooks/useDoctorCreateMutation';
 
+// TODO: se usará más adelante — roles pasa a ser parte del formulario (RHF),
+// no un useState local. El catálogo vendría de rolesApi/useRolesForSelect.
+
+type SpecialtyItem = { specialtyId: number; isPrimary: boolean };
+
+/**
+ * CAPA 2 (orquestador) — alta de doctor.
+ * RHF + armado de FormData + feedback + navegacion. La red vive en
+ * `useDoctorCreateMutation` (POST /doctors) y `useSpecialtiesForSelect`
+ * (GET /specialties).
+ */
 export function useDoctorCreate() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const createDoctor = useDoctorCreateMutation();
-
-  // TODO: se usará más adelante — roles pasa a ser parte del formulario (RHF),
-  // no un useState local. El catálogo vendría de rolesApi/useRolesForSelect.
-  // const { roles: rolesData, isLoading: isRolesLoading } = useRolesForSelect();
 
   const form = useForm<DoctorCreateFormValues>({
     resolver: zodResolver(DoctorCreateSchema),
@@ -37,9 +43,6 @@ export function useDoctorCreate() {
       middleName: '',
       qualification: '',
       specialties: [],
-      // TODO: se usará más adelante
-      // email: '',
-      // roles: [],
     },
   });
 
@@ -47,18 +50,15 @@ export function useDoctorCreate() {
   const { errors } = formState;
 
   const foto = useWatch({ control, name: 'profilePicture' });
-  const specialties =
-    useWatch({ control, name: 'specialties' }) ??
-    ([] as { specialtyId: number; isPrimary: boolean }[]);
+  const specialties = useWatch({ control, name: 'specialties' }) ?? [];
 
   const {
-    specialties: specialtiesData,
+    data: specialtiesData,
     isLoading: isSpecialtiesLoading,
   } = useSpecialtiesForSelect();
 
   const setSpecialties = useCallback(
-    (items: { specialtyId: number; isPrimary: boolean }[]) =>
-      setValue('specialties', items),
+    (items: SpecialtyItem[]) => setValue('specialties', items),
     [setValue],
   );
 
@@ -66,13 +66,10 @@ export function useDoctorCreate() {
     (value: string) => {
       const option = specialtiesData?.find((s: Specialty) => s.name === value);
       if (option) {
-        const currentSpecialties: {
-          specialtyId: number;
-          isPrimary: boolean;
-        }[] = form.getValues('specialties') ?? [];
-        if (!currentSpecialties.some((s) => s.specialtyId === option.id)) {
+        const current = form.getValues('specialties') ?? [];
+        if (!current.some((s) => s.specialtyId === option.id)) {
           setSpecialties([
-            ...currentSpecialties,
+            ...current,
             { specialtyId: option.id, isPrimary: false },
           ]);
         }
@@ -83,21 +80,17 @@ export function useDoctorCreate() {
 
   const handleSpecialtyRemove = useCallback(
     (specialtyId: number) => {
-      const currentSpecialties: { specialtyId: number; isPrimary: boolean }[] =
-        form.getValues('specialties') ?? [];
-      setSpecialties(
-        currentSpecialties.filter((s) => s.specialtyId !== specialtyId),
-      );
+      const current = form.getValues('specialties') ?? [];
+      setSpecialties(current.filter((s) => s.specialtyId !== specialtyId));
     },
     [form, setSpecialties],
   );
 
   const handleSpecialtySetPrimary = useCallback(
     (specialtyId: number) => {
-      const currentSpecialties: { specialtyId: number; isPrimary: boolean }[] =
-        form.getValues('specialties') ?? [];
+      const current = form.getValues('specialties') ?? [];
       setSpecialties(
-        currentSpecialties.map((s) => ({
+        current.map((s) => ({
           ...s,
           isPrimary: s.specialtyId === specialtyId,
         })),
@@ -116,7 +109,6 @@ export function useDoctorCreate() {
       if (data.profilePicture) {
         formData.append('profilePicture', data.profilePicture);
       }
-
       if (data.firstName) formData.append('firstName', data.firstName);
       if (data.middleName) formData.append('middleName', data.middleName);
       if (data.lastName) formData.append('lastName', data.lastName);
@@ -126,9 +118,6 @@ export function useDoctorCreate() {
       if (data.specialties && data.specialties.length > 0) {
         formData.append('specialties', JSON.stringify(data.specialties));
       }
-      // TODO: se usará más adelante
-      // if (data.email) formData.append('email', data.email);
-      // if (data.roles?.length) formData.append('roles', JSON.stringify(data.roles));
 
       const toastId = showLoading('Guardando doctor…', {
         description: 'Creando el registro del doctor',
@@ -140,7 +129,7 @@ export function useDoctorCreate() {
           id: toastId,
           description: 'Doctor creado correctamente',
         });
-        queryClient.invalidateQueries({ queryKey: ['doctors'] });
+        queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
         navigate('/doctors');
       } catch (error) {
         showApiError(error, { id: toastId });

@@ -1,12 +1,12 @@
 import axios, { type AxiosRequestConfig } from 'axios';
 import { normalizeError } from './apiError';
 
+// `multipart/form-data; boundary=...` solo cuando el body es FormData, y
+// `application/json` solo para objeto plano. Forzar el header aqui rompe el
+// boundary de los POST/PATCH con archivo.
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL + '/api',
   timeout: 15_000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 instance.interceptors.response.use(

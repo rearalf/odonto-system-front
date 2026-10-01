@@ -12,16 +12,6 @@ export interface DoctorListItem {
   updatedAt: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: {
-    page: number;
-    perPage: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
 export interface DoctorListParams {
   page: number;
   perPage: number;

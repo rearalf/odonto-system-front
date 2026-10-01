@@ -1,0 +1,9 @@
+import { useMutation } from '@tanstack/react-query';
+
+import { doctorApi } from '@/modules/doctors/api/doctorApi';
+
+export function useDoctorCreateMutation() {
+  return useMutation({
+    mutationFn: (formData: FormData) => doctorApi.create(formData),
+  });
+}

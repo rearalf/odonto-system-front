@@ -9,11 +9,7 @@ import {
   DoctorCreateSchema,
   type DoctorCreateFormValues,
 } from '@/modules/doctors/schemas/DoctorCreateSchema';
-import { doctorApi } from '@/modules/doctors/api/doctorApi';
-import {
-  specialtiesApi,
-  type Specialty,
-} from '@/modules/doctors/api/specialtiesApi';
+import { type Specialty } from '@/modules/doctors/api/specialtiesApi';
 import { useSpecialtiesForSelect } from '@/modules/doctors/hooks/useSpecialties';
 import {
   showApiError,
@@ -22,10 +18,13 @@ import {
 } from '@/shared/components/feedback';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useDoctorCreateMutation } from '@/modules/doctors/hooks/useDoctorCreateMutation';
 
 export function useDoctorCreate() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const createDoctor = useDoctorCreateMutation();
 
   // TODO: se usará más adelante — roles pasa a ser parte del formulario (RHF),
   // no un useState local. El catálogo vendría de rolesApi/useRolesForSelect.
@@ -55,16 +54,7 @@ export function useDoctorCreate() {
   const {
     specialties: specialtiesData,
     isLoading: isSpecialtiesLoading,
-    refetch: refetchSpecialties,
   } = useSpecialtiesForSelect();
-
-  const fetchSpecialties = (params?: {
-    page?: number;
-    perPage?: number;
-    search?: string;
-  }) => {
-    return specialtiesApi.list({ pagination: true, ...params });
-  };
 
   const setSpecialties = useCallback(
     (items: { specialtyId: number; isPrimary: boolean }[]) =>
@@ -145,7 +135,7 @@ export function useDoctorCreate() {
       });
 
       try {
-        await doctorApi.create(formData);
+        await createDoctor.mutateAsync(formData);
         showSuccess('Doctor guardado', {
           id: toastId,
           description: 'Doctor creado correctamente',
@@ -167,7 +157,7 @@ export function useDoctorCreate() {
     register,
     control,
     errors,
-    isSubmitting: formState.isSubmitting,
+    isSubmitting: formState.isSubmitting || createDoctor.isPending,
     onSubmit,
     handleCancel,
     setFoto,
@@ -182,8 +172,6 @@ export function useDoctorCreate() {
         description: s.description,
       })) ?? [],
     isSpecialtiesLoading,
-    fetchSpecialties,
-    refetchSpecialties,
     // TODO: se usará más adelante
     // rolesOptions:
     //   rolesData?.map((r: Role) => ({ id: r.id, label: r.name })) ?? [],

@@ -200,11 +200,11 @@ export default function DoctorCreatePage() {
                   </SelectField>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 w-full max-h-96 overflow-auto">
+              <ul className="flex flex-col list-none gap-4 w-full max-h-96 overflow-auto p-0 m-0">
                 {specialties.length === 0 ? (
-                  <div className="text-center text-text-muted py-8">
+                  <li className="text-center text-text-muted py-8">
                     No hay especialidades añadidas
-                  </div>
+                  </li>
                 ) : (
                   specialties.map((item) => {
                     const opt = specialtiesOptions.find(
@@ -212,7 +212,7 @@ export default function DoctorCreatePage() {
                     );
                     const isPrimary = item.isPrimary;
                     return (
-                      <div
+                      <li
                         key={item.specialtyId}
                         className="grid justify-items-center lg:flex lg:justify-between p-6 rounded-lg bg-bg-surface shadow-sm gap-6 text-text-primary"
                       >
@@ -231,7 +231,7 @@ export default function DoctorCreatePage() {
                                   size="sm"
                                   className="py-1! px-3! text-left"
                                 >
-                                  <Star size={16} />
+                                  <Star size={16} aria-hidden="true" />
                                   Especialidad principal
                                 </Badge>
                               )}
@@ -242,38 +242,38 @@ export default function DoctorCreatePage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            color={isPrimary ? 'primary' : 'info'}
-                            size="sm"
-                            title={
-                              isPrimary
-                                ? 'Especialidad principal'
-                                : 'Marcar como principal'
-                            }
-                            onClick={() =>
-                              handleSpecialtySetPrimary(item.specialtyId)
-                            }
-                          >
-                            <Star />
-                          </Button>
+                          {!isPrimary && (
+                            <Button
+                              variant="ghost"
+                              color="info"
+                              size="sm"
+                              title="Marcar como principal"
+                              aria-label="Marcar como principal"
+                              onClick={() =>
+                                handleSpecialtySetPrimary(item.specialtyId)
+                              }
+                            >
+                              <Star aria-hidden="true" />
+                            </Button>
+                          )}
                           <Button
                             variant="ghost"
                             color="error"
                             title="Eliminar especialidad"
+                            aria-label="Eliminar especialidad"
                             size="sm"
                             onClick={() =>
                               handleSpecialtyRemove(item.specialtyId)
                             }
                           >
-                            <Trash />
+                            <Trash aria-hidden="true" />
                           </Button>
                         </div>
-                      </div>
+                      </li>
                     );
                   })
                 )}
-              </div>
+              </ul>
               <div className="flex flex-col gap-2 items-center text-center text-body-sm md:flex-row md:text-left bg-amber-50 text-warning rounded-md font-medium p-4">
                 <Info size={18} />
                 <p>

@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 import {
   DoctorCreateSchema,
@@ -12,7 +11,6 @@ import {
 } from '@/modules/doctors/schemas/DoctorCreateSchema';
 import { useDoctorCreateMutation } from '@/modules/doctors/hooks/mutations/useDoctorCreateMutation';
 import { useSpecialtiesForSelect } from '@/modules/doctors/hooks/queries/useSpecialtiesQuery';
-import { doctorKeys } from '@/modules/doctors/hooks/doctorKeys';
 import type { Specialty } from '@/modules/doctors/types/Specialty';
 import {
   showApiError,
@@ -25,15 +23,8 @@ import {
 
 type SpecialtyItem = { specialtyId: number; isPrimary: boolean };
 
-/**
- * CAPA 2 (orquestador) — alta de doctor.
- * RHF + armado de FormData + feedback + navegacion. La red vive en
- * `useDoctorCreateMutation` (POST /doctors) y `useSpecialtiesForSelect`
- * (GET /specialties).
- */
 export function useDoctorCreate() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const createDoctor = useDoctorCreateMutation();
 
   const form = useForm<DoctorCreateFormValues>({
@@ -52,10 +43,8 @@ export function useDoctorCreate() {
   const foto = useWatch({ control, name: 'profilePicture' });
   const specialties = useWatch({ control, name: 'specialties' }) ?? [];
 
-  const {
-    data: specialtiesData,
-    isLoading: isSpecialtiesLoading,
-  } = useSpecialtiesForSelect();
+  const { data: specialtiesData, isLoading: isSpecialtiesLoading } =
+    useSpecialtiesForSelect();
 
   const setSpecialties = useCallback(
     (items: SpecialtyItem[]) => setValue('specialties', items),
@@ -129,7 +118,6 @@ export function useDoctorCreate() {
           id: toastId,
           description: 'Doctor creado correctamente',
         });
-        queryClient.invalidateQueries({ queryKey: doctorKeys.lists() });
         navigate('/doctors');
       } catch (error) {
         showApiError(error, { id: toastId });

@@ -1,14 +1,15 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { patientApi } from '@/modules/patients/api/patientApi';
+import { patientKeys } from '@/modules/patients/hooks/patientKeys';
 
-/**
- * CAPA 2 (primitivo) — POST /patients.
- * Solo useMutation: sin toasts, sin navigate, sin invalidateQueries.
- * El orquestador `usePatientCreate` maneja el feedback.
- */
 export function usePatientCreateMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (formData: FormData) => patientApi.create(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
+    },
   });
 }

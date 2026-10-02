@@ -5,7 +5,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, parseISO, subYears } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 import {
   PatientCreateSchema,
@@ -18,7 +17,6 @@ import {
 import { calculateAge } from '@/shared/utils/date';
 import { usePatientDetailQuery } from '@/modules/patients/hooks/queries/usePatientDetailQuery';
 import { usePatientUpdateMutation } from '@/modules/patients/hooks/mutations/usePatientUpdateMutation';
-import { patientKeys } from '@/modules/patients/hooks/patientKeys';
 import type { PatientResponse } from '@/modules/patients/types/Patient';
 import {
   showApiError,
@@ -55,16 +53,10 @@ function toFormValues(detail: PatientResponse): PatientCreateFormValues {
   };
 }
 
-/**
- * CAPA 2 (orquestador) — edicion de paciente.
- * RHF + FormData + feedback + navegacion. La lectura vive en
- * `usePatientDetailQuery` y la escritura en `usePatientUpdateMutation`.
- */
 export function usePatientEdit() {
   const { id } = useParams<{ id: string }>();
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const updatePatient = usePatientUpdateMutation();
 
   const { data, isError, error } = usePatientDetailQuery(id);
@@ -161,8 +153,6 @@ export function usePatientEdit() {
         id: toastId,
         description: 'Los cambios se guardaron correctamente',
       });
-      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: patientKeys.detail(id) });
       navigate(`/patients/${id}`);
     } catch (error) {
       showApiError(error, { id: toastId });

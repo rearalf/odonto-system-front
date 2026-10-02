@@ -1,14 +1,15 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { patientApi } from '@/modules/patients/api/patientApi';
+import { patientKeys } from '@/modules/patients/hooks/patientKeys';
 
-/**
- * CAPA 2 (primitivo) — DELETE /patients/:id.
- * Solo useMutation: sin toasts, sin navigate, sin invalidateQueries.
- * El orquestador `usePatientListPage` maneja el feedback.
- */
 export function usePatientDeleteMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (id: number) => patientApi.remove(id),
+    onSuccess: (_data, _variables: number) => {
+      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
+    },
   });
 }

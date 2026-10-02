@@ -1,23 +1,12 @@
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { usePatientSearch } from './usePatientSearch';
 import { usePatientDeleteMutation } from './mutations/usePatientDeleteMutation';
-import { patientKeys } from './patientKeys';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
-import {
-  showApiError,
-  showSuccess,
-} from '@/shared/components/feedback';
+import { showApiError, showSuccess } from '@/shared/components/feedback';
 
-/**
- * CAPA 2 (orquestador) — pagina de listado.
- * Compone la query de lectura y la mutation de delete (feedback + invalidacion
- * viven aqui, no en los primitivos).
- */
 export function usePatientListPage() {
   const list = usePatientSearch();
-  const queryClient = useQueryClient();
   const deleteMutation = usePatientDeleteMutation();
   const [selectedPatient, setSelectedPatient] =
     useState<PatientListItem | null>(null);
@@ -34,7 +23,6 @@ export function usePatientListPage() {
       showSuccess('Paciente eliminado', {
         description: 'El paciente se eliminó correctamente',
       });
-      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
       setSelectedPatient(null);
     } catch (error) {
       showApiError(error);
@@ -46,9 +34,7 @@ export function usePatientListPage() {
     selectedPatient,
     isDeleteModalOpen: selectedPatient !== null,
     isDeleting: deleteMutation.isPending,
-    deletingId: deleteMutation.isPending
-      ? deleteMutation.variables
-      : undefined,
+    deletingId: deleteMutation.isPending ? deleteMutation.variables : undefined,
     requestDelete,
     cancelDelete,
     handleConfirmDelete,

@@ -4,7 +4,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, subYears } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 import {
   PatientCreateSchema,
@@ -16,22 +15,15 @@ import {
 } from '@/modules/patients/constants/SistemasAnatomicos';
 import { calculateAge } from '@/shared/utils/date';
 import { usePatientCreateMutation } from '@/modules/patients/hooks/mutations/usePatientCreateMutation';
-import { patientKeys } from '@/modules/patients/hooks/patientKeys';
 import {
   showApiError,
   showLoading,
   showSuccess,
 } from '@/shared/components/feedback';
 
-/**
- * CAPA 2 (orquestador) — alta de paciente.
- * RHF + armado de FormData + feedback + navegacion. La red vive en
- * `usePatientCreateMutation` (POST /patients).
- */
 export function usePatientCreate() {
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const createPatient = usePatientCreateMutation();
 
   const form = useForm<PatientCreateFormValues>({
@@ -114,7 +106,6 @@ export function usePatientCreate() {
         id: toastId,
         description: 'Paciente creado correctamente',
       });
-      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
       navigate('/patients');
     } catch (error) {
       showApiError(error, { id: toastId });

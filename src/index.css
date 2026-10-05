@@ -112,6 +112,7 @@
   /* Canvas & Contenedores */
   --color-bg-app: var(--neutral-canvas); /* Canvas de la app */
   --color-bg-chrome: var(--neutral-0); /* Navbar / Sidebar */
+  --color-sidebar-bg: #0b1c30; /* Fondo sidebar collapsed */
   --color-bg-surface: var(--neutral-0); /* Tarjetas y paneles */
   --color-bg-surface-elevated: #eef4fb; /* Hover / dropdowns / tarjeta Tema */
   --color-bg-surface-subtle: #f1f5f9; /* Inputs / chips (hundidos) */

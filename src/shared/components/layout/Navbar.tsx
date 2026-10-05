@@ -102,7 +102,7 @@ export const Navbar = ({
               src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150"
             />
             {/* Punto verde de conexión */}
-            <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#22c55e] rounded-full ring-2 ring-white" />
+            <span className="absolute bottom-0 right-0 w-2 h-2 bg-success-active rounded-full ring-2 ring-white" />
           </div>
 
           <span className="text-label-md font-medium hidden lg:inline transition-colors text-text-secondary">

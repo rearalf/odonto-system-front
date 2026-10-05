@@ -157,7 +157,7 @@ export function Sidebar({
                   {label}
                 </span>
                 {collapsed && (
-                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-[#0b1c30] text-white text-label-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
+                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-sidebar-bg text-white text-label-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
                     {label}
                   </span>
                 )}

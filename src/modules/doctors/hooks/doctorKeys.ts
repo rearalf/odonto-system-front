@@ -3,9 +3,12 @@ import type { DoctorListParams } from '../types/DoctorList';
 /**
  * Factory de query keys del modulo doctors.
  *
- *   lists()   -> ['doctors', 'list']            invalida todos los listados
- *   list(p)   -> ['doctors', 'list', p]         una pagina concreta
- *   detail(id)-> ['doctors', 'detail', id]      un doctor concreto
+ * Sin esto, `invalidateQueries({ queryKey: ['doctors', 5] })` refresca tambien
+ * la pagina 5 del listado (prefijo), porque ambos comparten array.
+ *
+ *   lists()  -> ['doctors', 'list']             invalida todos los listados
+ *   list(p)  -> ['doctors', 'list', p]          una pagina concreta
+ *   detail(id)-> ['doctors', 'detail', id]      una ficha concreta
  */
 export const doctorKeys = {
   all: ['doctors'] as const,
@@ -14,10 +17,4 @@ export const doctorKeys = {
     [...doctorKeys.lists(), params] as const,
   details: () => [...doctorKeys.all, 'detail'] as const,
   detail: (id: string) => [...doctorKeys.details(), id] as const,
-};
-
-export const specialtyKeys = {
-  all: ['specialties'] as const,
-  list: (params?: unknown) =>
-    params ? ([...specialtyKeys.all, params] as const) : specialtyKeys.all,
 };

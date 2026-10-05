@@ -1,15 +1,11 @@
 export interface DoctorListItem {
   id: number;
-  firstName: string;
-  middleName: string | null;
-  lastName: string;
+  fullName: string;
   phone: string;
+  avatarUrl: string | null;
+  primarySpecialty: string;
+  specialtyCount: number;
   qualification: string | null;
-  profilePicture: string | null;
-  specialties: string[];
-  userId: number | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface DoctorListParams {

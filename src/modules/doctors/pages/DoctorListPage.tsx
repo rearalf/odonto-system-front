@@ -1,27 +1,138 @@
 import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import { Breadcrumbs } from '@/shared/components/ui';
+import { Filter, Plus, Search } from 'lucide-react';
+import { Breadcrumbs, Button, InputField, Table } from '@/shared/components/ui';
+import { useDoctorSearch } from '@/modules/doctors/hooks/useDoctorSearch';
+import { buildDoctorListColumns } from '@/modules/doctors/constants/doctorListColumns';
 
 export default function DoctorListPage() {
-  return (
+  const {
+    doctors,
+    total,
+    isLoading,
+    page,
+    perPage,
+    search,
+    searchInput,
+    onPageChange,
+    onPerPageChange,
+    setSearchInput,
+    handleSubmit,
+    handleClear,
+  } = useDoctorSearch();
+
+  const emptyState = search ? (
     <div>
+      <p className="text-body-md text-text-muted">
+        No se encontraron doctores para &ldquo;{search}&rdquo;.
+      </p>
+      <button
+        type="button"
+        onClick={handleClear}
+        className="mt-4 text-label-lg font-medium text-primary hover:text-primary-hover"
+      >
+        Limpiar búsqueda
+      </button>
+    </div>
+  ) : (
+    <div>
+      <p className="text-body-md text-text-muted">
+        No hay doctores registrados aún.
+      </p>
+      <Link
+        to="/doctors/new"
+        className="inline-block mt-4 text-label-lg font-medium text-primary hover:text-primary-hover"
+      >
+        Crear primer doctor →
+      </Link>
+    </div>
+  );
+
+  return (
+    <>
       <Breadcrumbs />
-      <div className="flex items-center justify-between">
-        <h1 className="text-headline-lg font-bold text-text-primary">Doctores</h1>
+
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="mt-4 text-headline-lg font-bold text-text-primary">
+            Doctores
+          </h1>
+          <p className="mt-1 text-body-md text-text-muted">
+            Gestión de doctores registrados
+          </p>
+        </div>
         <Link
           to="/doctors/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-label-md font-medium text-white"
+          className="inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 text-label-lg font-medium text-text-inverse bg-primary rounded-lg hover:bg-primary-hover sm:w-auto"
         >
-          <Plus className="h-4 w-4" />
-          Nuevo Doctor
+          <Plus className="w-4 h-4" />
+          Nuevo doctor
         </Link>
-      </div>
+      </section>
 
-      <div className="mt-6 p-6 bg-bg-surface rounded-xl border border-border-default">
-        <p className="text-body-md text-text-muted">
-          Listado de doctores (pendiente)
-        </p>
+      <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
+        <div className="mb-4 flex items-center gap-4">
+          <div className="rounded-lg bg-bg-surface-elevated p-2 text-primary shrink-0">
+            <Filter aria-hidden="true" size={24} />
+          </div>
+          <div>
+            <h2 className="text-headline-md font-semibold text-text-primary">
+              Filtros
+            </h2>
+            <p className="text-body-md text-text-muted">
+              Busque y filtre doctores registrados.
+            </p>
+          </div>
+        </div>
+        <hr className="mb-4 border-border-strong" />
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6 items-center lg:flex-row lg:items-end justify-center"
+        >
+          <div className="flex-1 w-full">
+            <InputField
+              id="buscar-doctor"
+              label="Buscar"
+              leftIcon={Search}
+              placeholder="Nombre..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-3 flex-wrap w-full justify-center lg:w-auto">
+            <Button
+              type="submit"
+              className="w-full md:w-auto"
+              icon={<Search className="h-4 w-4" />}
+            >
+              Buscar
+            </Button>
+            <Button
+              type="button"
+              className="w-full md:w-auto"
+              variant="ghost"
+              onClick={handleClear}
+            >
+              Limpiar filtros
+            </Button>
+          </div>
+        </form>
+      </section>
+
+      <div className="mt-6">
+        <Table
+          columns={buildDoctorListColumns()}
+          rows={doctors}
+          total={total}
+          page={page}
+          pageSize={perPage}
+          onPageChange={onPageChange}
+          rowKey={(doctor) => doctor.id}
+          isLoading={isLoading}
+          emptyState={emptyState}
+          pageSizeOptions={[10, 20, 50]}
+          onPageSizeChange={onPerPageChange}
+        />
       </div>
-    </div>
+    </>
   );
 }

@@ -124,14 +124,15 @@ function Table<T>({
               rows.map((row, rowIndex) => (
                 <tr key={rowKey ? rowKey(row, rowIndex) : rowIndex} className={tableClasses.row}>
                   {columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className={cn(
-                        tableClasses.td,
-                        column.align !== undefined && alignClasses[column.align],
-                        column.className,
-                      )}
-                    >
+<td
+                        key={column.key}
+                        className={cn(
+                          tableClasses.td,
+                          column.align !== undefined && alignClasses[column.align],
+                          column.numeric && 'tabular-nums',
+                          column.className,
+                        )}
+                      >
                       {column.render
                         ? column.render(row)
                         : defaultRender(row[column.key])}

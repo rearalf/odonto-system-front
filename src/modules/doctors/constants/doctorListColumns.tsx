@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Copy, Eye, Phone, Trash2 } from 'lucide-react';
 
-import { Button, type TableColumn } from '@/shared/components/ui';
+import { Avatar, Button, type TableColumn } from '@/shared/components/ui';
 import type { DoctorListItem } from '@/modules/doctors/types/DoctorList';
 
 export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
@@ -13,6 +13,7 @@ export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
       render: (doctor) => {
         return (
           <div className="flex items-center gap-3">
+            <Avatar name={doctor.fullName} />
             <span className="font-medium text-text-primary">
               {doctor.fullName}
             </span>
@@ -29,7 +30,7 @@ export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
         const digits = String(doctor.phone ?? '').replace(/\D/g, '');
         const formatted = `${digits.slice(0, 4)} ${digits.slice(4, 8)}`;
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Link
               to={`tel:${digits}`}
               aria-label={`Llamar a ${doctor.fullName}`}
@@ -69,18 +70,6 @@ export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
       align: 'center',
       render: (doctor) => {
         return <span>{doctor.primarySpecialty}</span>;
-      },
-    },
-    {
-      key: 'qualification',
-      header: 'Titulo / Especialidad',
-      align: 'center',
-      render: (doctor) => {
-        const qual = doctor.qualification;
-        if (!qual) {
-          return <span className="text-text-secondary">—</span>;
-        }
-        return <span>{qual}</span>;
       },
     },
     {

@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { specialtiesApi } from '@/modules/doctors/api/specialtiesApi';
 import { specialtyKeys } from '@/modules/doctors/hooks/specialtyKeys';
-import type { SpecialtyListParams } from '@/modules/doctors/types/Specialty';
+import type { ListParams } from '@/shared/types/baseInterfaces';
 
-export function useSpecialtiesQuery(params?: SpecialtyListParams) {
+export function useSpecialtiesQuery(params?: ListParams) {
   return useQuery({
     queryKey: specialtyKeys.list(params),
     queryFn: () => specialtiesApi.list(params ?? {}),

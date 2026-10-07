@@ -1,18 +1,10 @@
 import { http } from '@/shared/services/http';
 import type { PaginatedResponse } from '@/shared/types/pagination';
-import type { Specialty, SpecialtyListParams } from '../types/Specialty';
+import type { Specialty } from '../types/Specialty';
+import type { ListParams } from '@/shared/types/baseInterfaces';
 
-/**
- * CAPA 1 — Red pura. Sin React, sin React Query, sin toasts.
- * `pagination: false` devuelve `{ data, meta: null }`.
- */
 export const specialtiesApi = {
-  list: ({
-    page,
-    perPage,
-    search,
-    pagination = true,
-  }: SpecialtyListParams) =>
+  list: ({ page, perPage, search, pagination = true }: ListParams) =>
     http.get<PaginatedResponse<Specialty>>('/specialties', {
       params: {
         ...(pagination

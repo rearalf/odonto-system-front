@@ -1,8 +1,7 @@
-import type { SpecialtyListParams } from '../types/Specialty';
+import type { ListParams } from '@/shared/types/baseInterfaces';
 
 export const specialtyKeys = {
   all: ['specialties'] as const,
   lists: () => [...specialtyKeys.all, 'list'] as const,
-  list: (params?: SpecialtyListParams) =>
-    [...specialtyKeys.lists(), params] as const,
+  list: (params?: ListParams) => [...specialtyKeys.lists(), params] as const,
 };

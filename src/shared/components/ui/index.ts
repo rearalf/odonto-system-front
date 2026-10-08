@@ -3,6 +3,7 @@ export { default as Breadcrumbs } from './Breadcrumbs';
 export { default as Button } from './button';
 export { default as Avatar } from './avatar';
 export { default as Modal } from './modal';
+export { default as NavTabs } from './NavTabs';
 export { default as Badge } from './badge';
 export { default as Table } from './table';
 export type * from './types';

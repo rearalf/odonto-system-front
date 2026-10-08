@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Copy, Eye, Phone, Trash2 } from 'lucide-react';
 
 import { Avatar, Button, type TableColumn } from '@/shared/components/ui';
-import type { DoctorListItem } from '@/modules/doctors/types/DoctorList';
+import type { DoctorListItem } from '../types/Doctor';
 
 export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
   return [

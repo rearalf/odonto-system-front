@@ -265,7 +265,9 @@ export default function DoctorDetailPage() {
             onTabChange={setActiveTab}
           />
 
-          {activeTab === 'informacion-general' && <InformacionGeneralTab />}
+          {activeTab === 'informacion-general' && (
+            <InformacionGeneralTab doctor={doctor} />
+          )}
           {activeTab === 'especialidades-acreditaciones' && (
             <EspecialidadesTab />
           )}

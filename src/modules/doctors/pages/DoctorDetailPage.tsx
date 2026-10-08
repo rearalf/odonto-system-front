@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
+import { format, parseISO } from 'date-fns';
 import {
   BadgeCheck,
+  CalendarClock,
   Copy,
-  DoorOpen,
   Loader2,
-  PanelTopBottomDashedIcon,
   Phone,
   PhoneCall,
   RefreshCw,
   SquarePen,
-  ThumbsUp,
   Users,
+  UserX,
 } from 'lucide-react';
 import {
   Avatar,
@@ -187,87 +187,71 @@ export default function DoctorDetailPage() {
                     <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-primary font-bold">
                       #DOC-{String(doctor.id).padStart(3, '0')}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-text-muted">
+                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-primary">
                       PERSON ID: #{doctor.personId}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-text-muted">
+                    {/* <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-text-muted">
                       TIPO: ODONTÓLOGO (4)
+                    </span> */}
+                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-primary">
+                      ESPECIALIDADES: {doctor.specialties.length}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-primary-light text-primary font-semibold">
-                      REGISTRO CLÍNICO INSTITUCIONAL
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-success font-medium">
-                      SEDE CENTRAL
+                    <span className="px-2 py-0.5 rounded bg-bg-surface-subtle text-primary">
+                      ALTA: {format(parseISO(doctor.createdAt), 'dd/MM/yyyy')}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-bg-surface-subtle p-3 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 bg-bg-surface-subtle p-3 rounded-lg">
                 <div className="flex flex-col px-3 py-2 bg-bg-surface/60 rounded">
                   <span className="text-label-sm text-text-muted flex items-center justify-between gap-2">
-                    PACIENTES
-                    <Users
+                    CITAS DE HOY
+                    <CalendarClock
                       size={15}
                       className="text-primary shrink-0"
                       aria-hidden="true"
                     />
                   </span>
                   <span className="text-headline-md font-bold text-text-primary leading-none mt-1 tabular-nums">
-                    128
+                    0
                   </span>
                   <span className="text-body-sm text-success mt-1">
-                    Activos / Mes
+                    0 completadas
                   </span>
                 </div>
 
                 <div className="flex flex-col px-3 py-2 bg-bg-surface/60 rounded">
                   <span className="text-label-sm text-text-muted flex items-center justify-between gap-2">
-                    CONTROLES
-                    <PanelTopBottomDashedIcon
-                      className="w-[15px] h-[15px] text-primary shrink-0"
+                    Tasa de Ausentismo
+                    <UserX
+                      size={15}
+                      className="text-danger shrink-0"
                       aria-hidden="true"
                     />
                   </span>
                   <span className="text-headline-md font-bold text-primary leading-none mt-1 tabular-nums">
-                    64
+                    0 %
                   </span>
                   <span className="text-body-sm text-text-muted mt-1">
-                    Ajustes Ortodoncia
+                    Basado en histórico (No-Shows)
                   </span>
                 </div>
 
                 <div className="flex flex-col px-3 py-2 bg-bg-surface/60 rounded">
                   <span className="text-label-sm text-text-muted flex items-center justify-between gap-2">
-                    BOX ASIGNADO
-                    <DoorOpen
+                    Total Pacientes
+                    <Users
                       size={15}
                       className="text-primary shrink-0"
                       aria-hidden="true"
                     />
                   </span>
                   <span className="text-headline-md font-bold text-text-primary mt-1 truncate">
-                    BOX 01
+                    0
                   </span>
                   <span className="text-body-sm text-success mt-1">
-                    Disponible Hoy
-                  </span>
-                </div>
-
-                <div className="flex flex-col px-3 py-2 bg-bg-surface/60 rounded">
-                  <span className="text-label-sm text-text-muted flex items-center justify-between gap-2">
-                    NPS CLÍNICO
-                    <ThumbsUp
-                      size={15}
-                      className="text-success shrink-0"
-                      aria-hidden="true"
-                    />
-                  </span>
-                  <span className="text-headline-md font-bold text-success leading-none mt-1 tabular-nums">
-                    99.1%
-                  </span>
-                  <span className="text-body-sm text-text-muted mt-1">
-                    Calidad Asistencial
+                    +0 este mes
                   </span>
                 </div>
               </div>

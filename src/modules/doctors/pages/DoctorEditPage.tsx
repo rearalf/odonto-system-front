@@ -1,20 +1,37 @@
-import { useParams } from 'react-router-dom';
 import { Breadcrumbs } from '@/shared/components/ui';
+import { useDoctorEdit } from '@/modules/doctors/hooks/useDoctorEdit';
+import DoctorForm from '@/modules/doctors/components/DoctorForm';
 
 export default function DoctorEditPage() {
-  const { id } = useParams();
+  const formProps = useDoctorEdit();
 
   return (
-    <div>
-      <Breadcrumbs />
-      <h1 className="text-headline-lg font-bold text-text-primary">
-        Editar Doctor #{id}
+    <>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Doctores', href: '/doctors' },
+          {
+            label: `Ficha del Doctor ${formProps.fullName ?? ''}`,
+            href: '/doctors/' + formProps.id,
+          },
+          { label: 'Editar' },
+        ]}
+      />
+
+      <h1 className="mt-4 text-headline-lg font-bold text-text-primary">
+        Editar Doctor
       </h1>
-      <div className="mt-6 p-6 bg-bg-surface rounded-xl border border-border-default">
-        <p className="text-body-md text-text-muted">
-          Formulario de edición (pendiente)
-        </p>
-      </div>
-    </div>
+      <p className="mt-1 text-body-md text-text-muted">
+        Actualice la información del doctor. Los campos marcados con (
+        <span className="text-orange-400">*</span>) son obligatorios.
+      </p>
+
+      <DoctorForm
+        {...formProps}
+        submitLabel="Guardar cambios"
+        submittingLabel="Guardando..."
+      />
+    </>
   );
 }

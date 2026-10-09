@@ -160,6 +160,7 @@ export default function InformacionGeneralTab({
           </div>
           <p className="text-[18px] font-bold text-text-primary tracking-tight leading-snug">
             {val(doctor.qualification)}
+            {doctor.qualification}
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border-subtle">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-bg-surface border border-border-subtle text-text-primary text-label-sm">

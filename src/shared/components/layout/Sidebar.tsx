@@ -4,12 +4,8 @@ import {
   LayoutDashboard,
   Users,
   Stethoscope,
-  Calendar,
-  Settings,
   Sun,
   Moon,
-  FlaskConical,
-  Receipt,
   ChevronDown,
 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -26,11 +22,11 @@ const links = [
   { to: '/', label: 'Dashboard / Panel', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
   { to: '/doctors', label: 'Doctores', icon: Stethoscope },
-  { to: '/appointments', label: 'Agenda de Citas', icon: Calendar },
-  { to: '/odontogram', label: 'Odontograma', icon: ToothIcon },
-  { to: '/treatments', label: 'Tratamientos', icon: FlaskConical },
-  { to: '/billing', label: 'Facturación', icon: Receipt },
-  { to: '/settings', label: 'Configuración', icon: Settings },
+  // { to: '/appointments', label: 'Agenda de Citas', icon: Calendar },
+  // { to: '/odontogram', label: 'Odontograma', icon: ToothIcon },
+  // { to: '/treatments', label: 'Tratamientos', icon: FlaskConical },
+  // { to: '/billing', label: 'Facturación', icon: Receipt },
+  // { to: '/settings', label: 'Configuración', icon: Settings },
 ];
 
 // El drawer móvil solo es un drawer por debajo de md; ahí, cerrado, se aísla con inert
@@ -235,9 +231,7 @@ export function Sidebar({
               />
               {!collapsed && (
                 <div className="flex flex-col min-w-0">
-                  <span
-                    className="text-label-md font-semibold truncate leading-tight text-text-primary"
-                  >
+                  <span className="text-label-md font-semibold truncate leading-tight text-text-primary">
                     Dra. Sarah Jensen
                   </span>
                   <span className="text-label-sm text-text-subtle truncate leading-tight">

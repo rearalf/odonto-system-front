@@ -1,8 +1,15 @@
 import { Link } from 'react-router-dom';
-import { Filter, Plus, Search } from 'lucide-react';
-import { Breadcrumbs, Button, InputField, Table } from '@/shared/components/ui';
-import { useDoctorSearch } from '@/modules/doctors/hooks/useDoctorSearch';
-import { buildDoctorListColumns } from '@/modules/doctors/constants/doctorListColumns';
+import { Filter, Plus, Search, Trash2 } from 'lucide-react';
+
+import {
+  Modal,
+  Table,
+  Button,
+  InputField,
+  Breadcrumbs,
+} from '@/shared/components/ui';
+import useDoctorSearch from '@/modules/doctors/hooks/useDoctorSearch';
+import buildDoctorListColumns from '@/modules/doctors/constants/doctorListColumns';
 
 export default function DoctorListPage() {
   const {
@@ -13,11 +20,18 @@ export default function DoctorListPage() {
     perPage,
     search,
     searchInput,
+    isDeleteModalOpen,
+    isDeleting,
+    deletingId,
+    selectedDoctor,
     onPageChange,
     onPerPageChange,
     setSearchInput,
     handleSubmit,
     handleClear,
+    cancelDelete,
+    requestDelete,
+    handleConfirmDelete,
   } = useDoctorSearch();
 
   const emptyState = search ? (
@@ -120,7 +134,10 @@ export default function DoctorListPage() {
 
       <div className="mt-6">
         <Table
-          columns={buildDoctorListColumns()}
+          columns={buildDoctorListColumns({
+            onDelete: requestDelete,
+            deletingId,
+          })}
           rows={doctors}
           total={total}
           page={page}
@@ -133,6 +150,41 @@ export default function DoctorListPage() {
           onPageSizeChange={onPerPageChange}
         />
       </div>
+
+      <Modal
+        open={isDeleteModalOpen}
+        onOpenChange={(open) => !open && cancelDelete()}
+        title="Eliminar doctor"
+        description={
+          selectedDoctor &&
+          `¿Deseas eliminar a ${selectedDoctor.fullName}? Esta acción no se puede deshacer.`
+        }
+        icon={
+          <span className="bg-error/10 p-2 rounded-full text-error">
+            <Trash2 className="h-5 w-5" aria-hidden="true" />
+          </span>
+        }
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={cancelDelete}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              color="error"
+              loading={isDeleting}
+              onClick={handleConfirmDelete}
+            >
+              Eliminar
+            </Button>
+          </>
+        }
+      />
     </>
   );
 }

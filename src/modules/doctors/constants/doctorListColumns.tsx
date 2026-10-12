@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Copy, Eye, Phone, Trash2 } from 'lucide-react';
 
-import { Avatar, Button, type TableColumn } from '@/shared/components/ui';
 import type { DoctorListItem } from '../types/Doctor';
+import { Avatar, Button, type TableColumn } from '@/shared/components/ui';
 
-export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
+function buildDoctorListColumns({
+  onDelete,
+  deletingId,
+}: {
+  onDelete: (patient: DoctorListItem) => void;
+  deletingId: number | undefined;
+}): TableColumn<DoctorListItem>[] {
   return [
     {
       key: 'fullName',
@@ -91,10 +97,10 @@ export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
               variant="ghost"
               color="error"
               type="button"
-              aria-label="Eliminar paciente"
-              // onClick={() => onDelete(doctor)}
-              // disabled={deletingId !== undefined}
-              // loading={deletingId === doctor.id}
+              aria-label={`Eliminar a ${doctor.fullName}`}
+              onClick={() => onDelete?.(doctor)}
+              disabled={deletingId !== undefined}
+              loading={deletingId === doctor.id}
             >
               <Trash2 className="h-4 w-4" aria-hidden="true" />
             </Button>
@@ -104,3 +110,5 @@ export function buildDoctorListColumns(): TableColumn<DoctorListItem>[] {
     },
   ];
 }
+
+export default buildDoctorListColumns;

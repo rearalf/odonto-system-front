@@ -9,6 +9,7 @@ import {
   DoctorCreateSchema,
   type DoctorCreateFormValues,
 } from '@/modules/doctors/schemas/DoctorCreateSchema';
+import { DOCTOR_FORM_KEYS } from '@/modules/doctors/constants/formKeys';
 import { useDoctorDetailQuery } from '@/modules/doctors/hooks/queries/useDoctorDetailQuery';
 import { useDoctorUpdateMutation } from '@/modules/doctors/hooks/mutations/useDoctorUpdateMutation';
 import { useSpecialtiesForSelect } from '@/modules/doctors/hooks/queries/useSpecialtiesQuery';
@@ -62,7 +63,15 @@ export function useDoctorEdit() {
   const { errors } = formState;
 
   useEffect(() => {
-    if (data) form.reset(toFormValues(data));
+    if (!data) return;
+    const currentValues = form.getValues();
+    const newValues = toFormValues(data);
+
+    const hasChanges = DOCTOR_FORM_KEYS.some(
+      (key) => currentValues[key] !== newValues[key],
+    );
+
+    if (hasChanges) form.reset(newValues);
   }, [data, form]);
 
   useEffect(() => {
@@ -135,7 +144,7 @@ export function useDoctorEdit() {
         id: toastId,
         description: 'Los cambios se guardaron correctamente',
       });
-      // navigate(`/doctors/${id}`);
+      navigate(`/doctors/${id}`);
     } catch (err) {
       showApiError(err, { id: toastId });
     }

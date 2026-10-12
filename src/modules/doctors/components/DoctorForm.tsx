@@ -1,3 +1,4 @@
+import { Controller } from 'react-hook-form';
 import {
   Badge,
   Button,
@@ -23,7 +24,7 @@ export type DoctorFormProps = ReturnType<typeof useDoctorCreate> & {
 };
 
 const DoctorForm = ({
-  register,
+  control,
   errors,
   onSubmit,
   isSubmitting,
@@ -60,44 +61,68 @@ const DoctorForm = ({
         </div>
         <hr className="mb-4 border-border-strong" />
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <InputField
-            id="primer-nombre"
-            label="Primer Nombre"
-            required
-            leftIcon={User}
-            placeholder="Ej. Carlos"
-            error={errors.firstName?.message}
-            {...register('firstName')}
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="primer-nombre"
+                label="Primer Nombre"
+                required
+                leftIcon={User}
+                placeholder="Ej. Carlos"
+                error={errors.firstName?.message}
+                {...field}
+              />
+            )}
           />
-          <InputField
-            id="segundo-nombre"
-            label="Segundo Nombre"
-            optional
-            leftIcon={User}
-            placeholder="Ej. Eduardo"
-            error={errors.middleName?.message}
-            {...register('middleName')}
+          <Controller
+            name="middleName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="segundo-nombre"
+                label="Segundo Nombre"
+                optional
+                leftIcon={User}
+                placeholder="Ej. Eduardo"
+                error={errors.middleName?.message}
+                {...field}
+              />
+            )}
           />
-          <InputField
-            id="apellidos"
-            label="Apellidos Completos"
-            required
-            leftIcon={User}
-            placeholder="Ej. Gómez Mendoza"
-            error={errors.lastName?.message}
-            {...register('lastName')}
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="apellidos"
+                label="Apellidos Completos"
+                required
+                leftIcon={User}
+                placeholder="Ej. Gómez Mendoza"
+                error={errors.lastName?.message}
+                {...field}
+              />
+            )}
           />
-          <MaskedInputField
-            id="telefono"
-            label="Teléfono Celular Primario"
-            required
-            inputMode="tel"
-            prefix="+503"
-            mask="0000 0000"
-            placeholder="#### ####"
-            unmask
-            error={errors.phone?.message}
-            {...register('phone')}
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <MaskedInputField
+                id="telefono"
+                label="Teléfono Celular Primario"
+                required
+                inputMode="tel"
+                prefix="+503"
+                mask="0000 0000"
+                placeholder="#### ####"
+                unmask
+                error={errors.phone?.message}
+                {...field}
+              />
+            )}
           />
         </div>
       </section>
@@ -120,20 +145,26 @@ const DoctorForm = ({
         </div>
         <hr className="mb-4 border-border-strong" />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
-          <TextAreaField
-            id="calificacion"
-            label="Título Académico Principal / Posgrados"
-            leftIcon={GraduationCap}
-            rows={3}
-            maxLength={255}
-            placeholder="Especialista en Cirugía Oral y Maxilofacial, MSc Implantología Clínica Avanzada (U. de Chile)..."
-            labelEnd={
-              <Badge variant="info" size="md" className="mb-3 md:mb-0">
-                Máx. 255 caracteres
-              </Badge>
-            }
-            error={errors.qualification?.message}
-            {...register('qualification')}
+          <Controller
+            name="qualification"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="calificacion"
+                label="Título Académico Principal / Posgrados"
+                leftIcon={GraduationCap}
+                rows={3}
+                maxLength={255}
+                placeholder="Especialista en Cirugía Oral y Maxilofacial, MSc Implantología Clínica Avanzada (U. de Chile)..."
+                labelEnd={
+                  <Badge variant="info" size="md" className="mb-3 md:mb-0">
+                    Máx. 255 caracteres
+                  </Badge>
+                }
+                error={errors.qualification?.message}
+                {...field}
+              />
+            )}
           />
 
           <section className="flex flex-col items-start gap-6 rounded-2xl border border-border-subtle bg-bg-surface-elevated p-6 shadow-sm">

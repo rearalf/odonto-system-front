@@ -5,6 +5,7 @@ export { default as MultiSelectField } from './MultiSelectField';
 export { default as FieldLabel } from './FieldLabel';
 export { default as InputField } from './InputField';
 export { default as DateField } from './DateField';
+export { default as TimeField } from './TimeField';
 export { default as FieldHelp } from './FieldHelp';
 export { default as FieldMock } from './FieldMock';
 export { default as Switch } from './switch/index';

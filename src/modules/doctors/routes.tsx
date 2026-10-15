@@ -1,12 +1,13 @@
 import type { RouteObject } from 'react-router-dom';
 import { lazy } from 'react';
-import { Stethoscope, UserPlus, FileText, Pencil } from 'lucide-react';
+import { Stethoscope, UserPlus, FileText, Pencil, CalendarDays } from 'lucide-react';
 import { DashboardLayout } from '@/shared/components/layout/DashboardLayout';
 
 const DoctorListPage = lazy(() => import('./pages/DoctorListPage'));
 const DoctorCreatePage = lazy(() => import('./pages/DoctorCreatePage'));
 const DoctorDetailPage = lazy(() => import('./pages/DoctorDetailPage'));
 const DoctorEditPage = lazy(() => import('./pages/DoctorEditPage'));
+const PlantillaSemanalEditPage = lazy(() => import('./pages/PlantillaSemanalEditPage'));
 
 export const doctorRoutes: RouteObject[] = [
   {
@@ -29,6 +30,11 @@ export const doctorRoutes: RouteObject[] = [
         path: ':id/edit',
         element: <DoctorEditPage />,
         handle: { name: 'Editar', icon: Pencil },
+      },
+      {
+        path: ':id/availability/edit',
+        element: <PlantillaSemanalEditPage />,
+        handle: { name: 'Editar Plantilla Semanal', icon: CalendarDays },
       },
     ],
   },

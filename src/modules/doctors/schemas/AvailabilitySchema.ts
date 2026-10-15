@@ -20,14 +20,12 @@ const availabilityBlockSchema = z.object({
     .refine(
       (val) => [15, 20, 30, 45, 60].includes(val),
       'Duración debe ser 15, 20, 30, 45 o 60 minutos',
-    )
-    .default(30),
+    ),
   maxPatientsPerSlot: z
     .number()
     .int('Debe ser un número entero')
-    .min(1, 'Debe ser al menos 1 paciente por turno')
-    .default(1),
-  isRecurring: z.boolean().default(true),
+    .min(1, 'Debe ser al menos 1 paciente por turno'),
+  isRecurring: z.boolean(),
   dayOfWeek: z.number().int().min(0).max(6),
 });
 
@@ -77,6 +75,6 @@ export function payloadToBlocks(payload: {
     slotDuration: b.slotDuration,
     maxPatientsPerSlot: b.maxPatientsPerSlot,
     isRecurring: b.isRecurring,
-    dayOfWeek: b.dayOfWeek,
+    dayOfWeek: b.dayOfWeek as DayOfWeek,
   }));
 }

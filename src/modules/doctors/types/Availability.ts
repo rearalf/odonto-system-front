@@ -9,12 +9,30 @@ export interface AvailabilityBlock {
   specificDate?: string | null;
 }
 
-export interface DoctorAvailabilityResponse {
-  blocks: AvailabilityBlock[];
-}
+export type DoctorAvailabilityResponse = AvailabilityBlock[];
 
 export interface BulkAvailabilityPayload {
   blocks: Omit<AvailabilityBlock, 'id'>[];
+}
+
+export interface CreateAvailabilityPayload {
+  startTime: string;
+  endTime: string;
+  slotDuration: number;
+  maxPatientsPerSlot: number;
+  isRecurring: boolean;
+  dayOfWeek: number;
+  specificDate?: string | null;
+}
+
+export interface UpdateAvailabilityPayload {
+  startTime?: string;
+  endTime?: string;
+  slotDuration?: number;
+  maxPatientsPerSlot?: number;
+  isRecurring?: boolean;
+  dayOfWeek?: number;
+  specificDate?: string | null;
 }
 
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;

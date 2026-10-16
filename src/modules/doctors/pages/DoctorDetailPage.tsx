@@ -15,31 +15,34 @@ import {
 import {
   Avatar,
   Badge,
-  Breadcrumbs,
   Button,
   NavTabs,
+  Breadcrumbs,
   WhatsAppIcon,
 } from '@/shared/components/ui';
+
 import { DoctorNavTabsOptions } from '../constants/doctorNavTabs';
 import { useDoctorDetail } from '../hooks/useDoctorDetail';
-import InformacionGeneralTab from '../components/tabs/InformacionGeneralTab';
-import EspecialidadesTab from '../components/tabs/EspecialidadesTab';
-import CuentaAccesoTab from '../components/tabs/CuentaAccesoTab';
-import AgendaBoxesTab from '../components/tabs/AgendaBoxesTab';
-import AuditoriaTab from '../components/tabs/AuditoriaTab';
+import {
+  HorarioTab,
+  AuditoriaTab,
+  CuentaAccesoTab,
+  EspecialidadesTab,
+  InformacionGeneralTab,
+} from '../components/tabs';
 
 export default function DoctorDetailPage() {
   const {
-    isLoading,
-    isError,
-    breadcrumbsItems,
-    activeTab,
-    setActiveTab,
-    doctor,
-    phoneDigits,
     phone,
-    handleCopyPhone,
+    doctor,
+    isError,
+    isLoading,
+    activeTab,
+    phoneDigits,
+    breadcrumbsItems,
     refetch,
+    setActiveTab,
+    handleCopyPhone,
   } = useDoctorDetail();
 
   return (
@@ -272,7 +275,7 @@ export default function DoctorDetailPage() {
             <EspecialidadesTab />
           )}
           {activeTab === 'cuenta-acceso' && <CuentaAccesoTab />}
-          {activeTab === 'agenda-boxes' && <AgendaBoxesTab />}
+          {activeTab === 'horario' && <HorarioTab doctorId={doctor.id} />}
           {activeTab === 'auditoria-trazabilidad' && <AuditoriaTab />}
         </>
       )}

@@ -23,8 +23,8 @@ export const DoctorNavTabsOptions = [
     icon: <ShieldCheck />,
   },
   {
-    key: 'agenda-boxes',
-    label: 'Agenda y Boxes Asignados',
+    key: 'horario',
+    label: 'Horario',
     icon: <CalendarClock />,
   },
   {

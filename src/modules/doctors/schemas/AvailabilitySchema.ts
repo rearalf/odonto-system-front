@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import type { DayOfWeek } from '@/modules/doctors/types/Availability';
 
-const timeStringRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+export const timeStringRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
 
-const availabilityBlockSchema = z.object({
+export const availabilityBlockSchema = z.object({
   startTime: z
     .string()
     .regex(timeStringRegex, 'Formato de hora inválido (HH:mm:ss)')
@@ -27,6 +27,7 @@ const availabilityBlockSchema = z.object({
     .min(1, 'Debe ser al menos 1 paciente por turno'),
   isRecurring: z.boolean(),
   dayOfWeek: z.number().int().min(0).max(6),
+  specificDate: z.string().nullable().optional(),
 });
 
 export const weeklyScheduleSchema = z.object({

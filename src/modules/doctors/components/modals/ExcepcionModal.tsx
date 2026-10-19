@@ -1,13 +1,9 @@
-import { AlertTriangle } from 'lucide-react';
-
 import {
   Button,
   DateField,
   TextAreaField,
   TimeField,
-  Switch,
   Modal,
-  Badge,
 } from '@/shared/components/ui';
 import { useExcepcionForm } from '@/modules/doctors/hooks/useExcepcionForm';
 import type { ExcepcionModalProps } from '@/modules/doctors/types/availabilityModal';
@@ -68,28 +64,6 @@ export function ExcepcionModal({
       }
     >
       <form id="excepcion-form" onSubmit={onSubmit} className="space-y-6">
-        <div className="flex items-center gap-3">
-          <Switch
-            id="isExcepcion"
-            checked={false}
-            disabled
-            onChange={() => {}}
-            aria-label="Excepción"
-          />
-          <label
-            htmlFor="isExcepcion"
-            className="font-medium text-text-primary"
-          >
-            Excepción (vacaciones, ausencia, etc.)
-          </label>
-          <Badge variant="warning" className="ml-auto">
-            <span className="flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3" />
-              Fecha única
-            </span>
-          </Badge>
-        </div>
-
         <div className="grid gap-4 sm:grid-cols-2">
           <DateField
             id="startDate"

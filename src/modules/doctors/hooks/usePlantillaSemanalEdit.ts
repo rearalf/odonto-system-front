@@ -37,7 +37,7 @@ export function usePlantillaSemanalEdit() {
     isLoading: isLoadingDoctor,
     isError: isErrorDoctor,
   } = useDoctorDetailQuery(doctorId);
-  const query = useDoctorAvailabilityQuery(doctorId);
+  const query = useDoctorAvailabilityQuery({ doctorId: Number(doctorId) });
 
   const {
     control,

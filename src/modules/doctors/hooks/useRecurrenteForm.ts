@@ -78,8 +78,9 @@ export function useRecurrenteForm({
         slotDuration: values.slotDuration,
         maxPatientsPerSlot: values.maxPatientsPerSlot,
         isRecurring: values.isRecurring,
+        dayOfWeek: values.dayOfWeek,
         ...(values.isRecurring
-          ? { dayOfWeek: values.dayOfWeek }
+          ? {}
           : { specificDate: values.specificDate }),
       };
 

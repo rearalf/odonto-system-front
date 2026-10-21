@@ -4,9 +4,7 @@ import { doctorAvailabilityApi } from '@/modules/doctors/api/doctorAvailabilityA
 import { availabilityKeys } from '@/modules/doctors/hooks/availabilityKeys';
 import type { AvailabilityListParams } from '@/modules/doctors/types/Availability';
 
-export function useDoctorAvailabilityQuery(
-  params: AvailabilityListParams | undefined,
-) {
+export function useDoctorAvailabilityQuery(params: AvailabilityListParams) {
   const { doctorId } = params ?? {};
 
   return useQuery({

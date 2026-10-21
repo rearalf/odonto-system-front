@@ -20,7 +20,7 @@ const NavTabs = <T extends string>({
         <Button
           key={tab.key}
           size="sm"
-          variant={activeTab === tab.key ? 'solid' : 'ghost'}
+          variant={activeTab === tab.key ? 'solid' : 'outline'}
           className="whitespace-nowrap"
           role="tab"
           aria-selected={activeTab === tab.key}

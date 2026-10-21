@@ -1,6 +1,6 @@
 export const modalClasses = {
   overlay:
-    'fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4',
+    'fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 mb-0',
   panel:
     'relative flex max-h-full w-full flex-col overflow-hidden rounded-xl border border-border-default bg-bg-surface shadow-modal',
   sizes: {

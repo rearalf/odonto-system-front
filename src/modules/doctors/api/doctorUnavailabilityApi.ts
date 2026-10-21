@@ -1,4 +1,5 @@
 import { http } from '@/shared/services/http';
+import type { PaginatedResponse } from '@/shared/types/pagination';
 import type {
   Unavailability,
   UnavailabilityListParams,
@@ -8,12 +9,20 @@ import type {
 
 export const doctorUnavailabilityApi = {
   list: (params: UnavailabilityListParams) =>
-    http.get<Unavailability[]>(`/doctors/${params.doctorId}/unavailability`, {
-      params: {
-        from: params.from,
-        to: params.to,
+    http.get<PaginatedResponse<Unavailability>>(
+      `/doctors/${params.doctorId}/unavailability`,
+      {
+        params: {
+          from: params.from,
+          to: params.to,
+          page: params.page,
+          per_page: params.per_page,
+          sort: params.sort,
+          order: params.order,
+          pagination: params.pagination,
+        },
       },
-    }),
+    ),
 
   create: (doctorId: string | number, payload: CreateUnavailabilityPayload) =>
     http.post<Unavailability>(`/doctors/${doctorId}/unavailability`, payload),

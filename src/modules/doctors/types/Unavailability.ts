@@ -12,6 +12,11 @@ export interface UnavailabilityListParams {
   doctorId: string | number;
   from?: string;
   to?: string;
+  page?: number;
+  per_page?: number;
+  sort?: 'startTime' | 'endTime' | 'createdAt';
+  order?: 'ASC' | 'DESC';
+  pagination?: boolean;
 }
 
 export interface CreateUnavailabilityPayload {
@@ -60,6 +65,13 @@ export interface UseUnavailabilityTabReturn {
   unavailabilityModal: UnavailabilityModalState;
   viewModal: UnavailabilityModalState;
   unavailabilityRowData: RowData[];
+  total: number;
+  page: number;
+  pageSize: number;
+  sortKey: 'startTime' | 'endTime' | 'createdAt';
+  sortDirection: 'asc' | 'desc';
+  from: string;
+  to: string;
   deleteUnavailMutation: {
     isPending: boolean;
     mutateAsync: (params: {
@@ -79,4 +91,8 @@ export interface UseUnavailabilityTabReturn {
   handleView: (row: RowData) => void;
   handleDelete: (row: RowData) => void;
   handleCloseViewModal: () => void;
+  handleSortChange: (key: string, direction: 'asc' | 'desc') => void;
+  handleFilterChange: (field: 'from' | 'to', value: string) => void;
+  handlePageChange: (page: number) => void;
+  handlePageSizeChange: (pageSize: number) => void;
 }

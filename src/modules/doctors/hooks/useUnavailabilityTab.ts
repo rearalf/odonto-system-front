@@ -11,7 +11,10 @@ import type {
   BlockType,
   Unavailability,
   UseUnavailabilityTabReturn,
+  UnavailabilityListParams,
 } from '../types/Unavailability';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 function useUnavailabilityTab(
   doctorId: string | number,
@@ -26,19 +29,41 @@ function useUnavailabilityTab(
     initialData?: Unavailability;
   }>({ isOpen: false });
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortKey, setSortKey] = useState<'startTime' | 'endTime' | 'createdAt'>(
+    'startTime',
+  );
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+
+  const queryParams: UnavailabilityListParams = {
+    doctorId,
+    from: from || undefined,
+    to: to || undefined,
+    page,
+    per_page: pageSize,
+    sort: sortKey,
+    order: sortDirection.toUpperCase() as 'ASC' | 'DESC',
+    pagination: true,
+  };
+
   const {
-    data: unavailability,
+    data: unavailabilityResponse,
     isLoading,
     isError,
     isRefetching,
     refetch,
-  } = useDoctorUnavailabilityQuery({ doctorId });
+  } = useDoctorUnavailabilityQuery(queryParams);
 
   const deleteUnavailMutation = useDoctorUnavailabilityDeleteMutation();
 
   const handleReloadPage = () => refetch();
 
-  const unavailabilityRowData: RowData[] = (unavailability ?? []).map((u) => ({
+  const unavailabilityData = unavailabilityResponse?.data ?? [];
+
+  const unavailabilityRowData: RowData[] = unavailabilityData.map((u) => ({
     id: u.id,
     startTime: u.startTime,
     endTime: u.endTime,
@@ -46,13 +71,13 @@ function useUnavailabilityTab(
     specificDate: u.startTime,
     reason: u.reason,
     type: 'excepcion' as BlockType,
-    day: new Date(u.startTime).toLocaleDateString('es-ES', {
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }),
+    day: format(new Date(u.startTime), 'EEE, dd/MM/yyyy', {
+      locale: es,
+    }).replace(/^\w/, (c) => c.toUpperCase()),
   }));
+
+  const total =
+    unavailabilityResponse?.meta?.total_count ?? unavailabilityRowData.length;
 
   const toUnavailability = (row: RowData): Unavailability => ({
     id: row.id,
@@ -107,6 +132,23 @@ function useUnavailabilityTab(
     handleCloseUnavailabilityModal();
   };
 
+  const handleSortChange = (key: string, direction: 'asc' | 'desc') => {
+    setSortKey(key as 'startTime' | 'endTime' | 'createdAt');
+    setSortDirection(direction);
+  };
+
+  const handleFilterChange = (field: 'from' | 'to', value: string) => {
+    if (field === 'from') setFrom(value);
+    else setTo(value);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  };
+
   return {
     isError,
     deleteId,
@@ -114,6 +156,13 @@ function useUnavailabilityTab(
     unavailabilityModal,
     viewModal,
     unavailabilityRowData,
+    total,
+    page,
+    pageSize,
+    sortKey,
+    sortDirection,
+    from,
+    to,
     deleteUnavailMutation,
     setDeleteId,
     openEditModal,
@@ -127,6 +176,10 @@ function useUnavailabilityTab(
     handleView,
     handleDelete,
     handleCloseViewModal,
+    handleSortChange,
+    handleFilterChange,
+    handlePageChange,
+    handlePageSizeChange,
   };
 }
 

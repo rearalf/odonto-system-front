@@ -1,8 +1,10 @@
+import type { AvailabilityListParams } from '@/modules/doctors/types/Availability';
+
 export const availabilityKeys = {
   all: ['doctors', 'availability'] as const,
   lists: () => [...availabilityKeys.all, 'list'] as const,
-  list: (doctorId: string | number) =>
-    [...availabilityKeys.lists(), doctorId] as const,
+  list: (params: AvailabilityListParams) =>
+    [...availabilityKeys.lists(), params] as const,
   details: () => [...availabilityKeys.all, 'detail'] as const,
   detail: (doctorId: string | number) =>
     [...availabilityKeys.details(), doctorId] as const,

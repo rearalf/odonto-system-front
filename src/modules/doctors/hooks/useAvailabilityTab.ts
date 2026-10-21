@@ -13,28 +13,55 @@ import type {
   BlockType,
   AvailabilityBlock,
   UseAvailabilityTabReturn,
+  AvailabilityListParams,
 } from '../types/Availability';
+import { useNavigate } from 'react-router-dom';
 
 function useAvailabilityTab(
   doctorId: string | number,
 ): UseAvailabilityTabReturn {
+  const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [recurrenteModal, setRecurrenteModal] = useState<{
     isOpen: boolean;
     initialData?: AvailabilityBlock;
   }>({ isOpen: false });
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortKey, setSortKey] = useState<
+    'dayOfWeek' | 'specificDate' | 'startTime' | 'endTime' | 'createdAt'
+  >('dayOfWeek');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [isRecurringFilter, setIsRecurringFilter] = useState<
+    boolean | undefined
+  >(undefined);
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+
+  const queryParams: AvailabilityListParams = {
+    doctorId,
+    isRecurring: isRecurringFilter,
+    from: from || undefined,
+    to: to || undefined,
+    page,
+    per_page: pageSize,
+    sort: sortKey,
+    order: sortDirection.toUpperCase() as 'ASC' | 'DESC',
+    pagination: true,
+  };
+
   const {
-    data: availability,
+    data: availabilityResponse,
     isLoading,
     isError,
     isRefetching,
     refetch,
-  } = useDoctorAvailabilityQuery(doctorId);
-
-  const handleReloadPage = () => refetch();
+  } = useDoctorAvailabilityQuery(queryParams);
 
   const deleteAvailMutation = useDoctorAvailabilityDeleteMutation();
+
+  const handleReloadPage = () => refetch();
 
   const dayNames = [
     'Domingo',
@@ -46,7 +73,9 @@ function useAvailabilityTab(
     'Sábado',
   ];
 
-  const recurrentesRows: RowData[] = (availability ?? []).map((b) => ({
+  const availabilityData = availabilityResponse?.data ?? [];
+
+  const recurrentesRows: RowData[] = availabilityData.map((b) => ({
     id: b.id ?? 0,
     startTime: b.startTime,
     endTime: b.endTime,
@@ -61,9 +90,12 @@ function useAvailabilityTab(
       : b.specificDate
         ? format(new Date(b.specificDate + 'T00:00:00'), 'eeee, dd/MM', {
             locale: es,
-          })
+          }).replace(/^\w/, (c) => c.toUpperCase())
         : '—',
   }));
+
+  const total =
+    availabilityResponse?.meta?.total_count ?? recurrentesRows.length;
 
   const handleDeleteRequest = (id: number) => setDeleteId(id);
   const handleCancelDelete = () => setDeleteId(null);
@@ -110,22 +142,67 @@ function useAvailabilityTab(
     handleRecurrenteModalClose();
   };
 
+  const handleSortChange = (key: string, direction: 'asc' | 'desc') => {
+    setSortKey(
+      key as
+        | 'dayOfWeek'
+        | 'specificDate'
+        | 'startTime'
+        | 'endTime'
+        | 'createdAt',
+    );
+    setSortDirection(direction);
+  };
+
+  const handleFilterChange = (
+    field: 'isRecurring' | 'from' | 'to',
+    value: boolean | undefined | string,
+  ) => {
+    if (field === 'isRecurring')
+      setIsRecurringFilter(value as boolean | undefined);
+    else if (field === 'from') setFrom(value as string);
+    else if (field === 'to') setTo(value as string);
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  };
+
+  const handlePlantilla = () =>
+    navigate(`/doctors/${doctorId}/availability/edit`);
+
   return {
     isError,
     deleteId,
     isLoading: isRefetching || isLoading,
-    setDeleteId,
     recurrenteModal,
     recurrentesRows,
+    total,
+    page,
+    pageSize,
+    sortKey,
+    sortDirection,
+    isRecurringFilter,
+    from,
+    to,
     deleteAvailMutation,
+    setDeleteId,
+    handlePlantilla,
+    openCreateModal,
+    openEditModal,
     handleReloadPage,
     handleDeleteRequest,
     handleCancelDelete,
     handleConfirmDelete,
-    openCreateModal,
-    openEditModal,
     handleRecurrenteModalClose,
     handleModalSuccess,
+    handleSortChange,
+    handleFilterChange,
+    handlePageChange,
+    handlePageSizeChange,
   };
 }
 

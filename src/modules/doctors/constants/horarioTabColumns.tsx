@@ -5,7 +5,10 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const formatDateTimeAMPM = (iso: string) =>
-  format(new Date(iso), 'dd/MM/yyyy, h:mm a', { locale: es });
+  format(new Date(iso), 'EEE dd/MM/yyyy, h:mm a', { locale: es }).replace(
+    /^\w/,
+    (c) => c.toUpperCase(),
+  );
 
 const truncate = (text: string, max = 40) =>
   text.length > max ? text.slice(0, max) + '…' : text;
@@ -30,12 +33,14 @@ export function buildRecurrentesColumns({
     {
       key: 'startTime',
       header: 'Hora Inicio',
+      sortable: true,
       align: 'center',
       render: (r) => formatTimeOnly(r.startTime),
     },
     {
       key: 'endTime',
       header: 'Hora Fin',
+      sortable: true,
       align: 'center',
       render: (r) => formatTimeOnly(r.endTime),
     },
@@ -93,11 +98,13 @@ export function createUnavailabilityTableColumns({
     {
       key: 'startTime',
       header: 'Fecha inicio',
+      sortable: true,
       render: (r) => formatDateTimeAMPM(r.startTime),
     },
     {
       key: 'endTime',
       header: 'Fecha fin',
+      sortable: true,
       render: (r) => formatDateTimeAMPM(r.endTime),
     },
     {

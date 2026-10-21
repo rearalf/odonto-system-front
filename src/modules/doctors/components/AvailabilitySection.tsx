@@ -1,42 +1,54 @@
 import {
   Plus,
-  Loader2,
+  Filter,
   Trash2,
+  Loader2,
   CalendarDays,
   CalendarClock,
   AlertTriangle,
 } from 'lucide-react';
 
 import { Button, Modal, Table } from '@/shared/components/ui';
+import { InputField, SelectField } from '@/shared/components/ui/form';
 import CreateAvailabilityModal from '../components/modals/CreateAvailabilityModal';
 import useAvailabilityTab from '../hooks/useAvailabilityTab';
-import { Link } from 'react-router-dom';
 import { buildRecurrentesColumns } from '../constants/horarioTabColumns';
 import type { RowData } from '../types/Availability';
 
 const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
   const {
-    deleteId,
-    recurrenteModal,
-    isLoading,
+    to,
+    from,
+    page,
+    total,
+    sortKey,
     isError,
+    pageSize,
+    deleteId,
+    isLoading,
+    sortDirection,
+    recurrenteModal,
     recurrentesRows,
+    isRecurringFilter,
     deleteAvailMutation,
-    handleReloadPage,
-    handleDeleteRequest,
-    handleCancelDelete,
-    handleConfirmDelete,
-    openCreateModal,
     openEditModal,
-    handleRecurrenteModalClose,
+    handlePlantilla,
+    openCreateModal,
+    handleReloadPage,
+    handleSortChange,
+    handlePageChange,
     handleModalSuccess,
+    handleFilterChange,
+    handleCancelDelete,
+    handleDeleteRequest,
+    handleConfirmDelete,
+    handlePageSizeChange,
+    handleRecurrenteModalClose,
   } = useAvailabilityTab(doctorId);
-
-  const handleDelete = (row: RowData) => handleDeleteRequest(row.id);
 
   const recurrentesColumns = buildRecurrentesColumns({
     onEdit: openEditModal,
-    onDelete: handleDelete,
+    onDelete: (row: RowData) => handleDeleteRequest(row.id),
   });
 
   if (isLoading) {
@@ -71,32 +83,101 @@ const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
   return (
     <>
       <section>
-        <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h3 className="text-headline-sm font-semibold text-text-primary">
-            Bloques Recurrentes ({recurrentesRows.length})
-          </h3>
-          <div className="flex gap-4">
-            <Link to={`/doctors/${doctorId}/availability/edit`}>
-              <Button variant="outline" size="sm">
-                <CalendarDays className="h-4 w-4 mr-2" aria-hidden="true" />
-                Editar plantilla semanal
-              </Button>
-            </Link>
-            <Button variant="solid" size="sm" onClick={openCreateModal}>
+        <h3 className="mb-8 text-headline-md font-semibold text-text-primary text-center md:text-left">
+          Bloques Recurrentes ({total})
+        </h3>
+
+        <div className="flex flex-col gap-6 xl:flex-row xl:justify-between xl:items-center mb-10 xl:mb-4">
+          <div className="mb-4 flex flex-col lg:flex-row gap-4 items-center">
+            <div className="w-full lg:w-auto">
+              <SelectField
+                label="Tipo"
+                value={
+                  isRecurringFilter === undefined
+                    ? ''
+                    : String(isRecurringFilter)
+                }
+                defaultValue=""
+                onChange={(e) =>
+                  handleFilterChange(
+                    'isRecurring',
+                    e.target.value === ''
+                      ? undefined
+                      : e.target.value === 'true',
+                  )
+                }
+              >
+                <option value="">Todos</option>
+                <option value="true">Recurrentes</option>
+                <option value="false">Fecha específica</option>
+              </SelectField>
+            </div>
+            <div className="w-full lg:w-48">
+              <InputField
+                type="date"
+                label="Desde"
+                value={from}
+                onChange={(e) => handleFilterChange('from', e.target.value)}
+              />
+            </div>
+            <div className="w-full lg:w-48">
+              <InputField
+                type="date"
+                label="Hasta"
+                value={to}
+                onChange={(e) => handleFilterChange('to', e.target.value)}
+              />
+            </div>
+            <Button
+              size="md"
+              variant="outline"
+              className="w-full lg:w-auto"
+              onClick={() => {
+                handleFilterChange('isRecurring', undefined);
+                handleFilterChange('from', '');
+                handleFilterChange('to', '');
+              }}
+              icon={<Filter className="h-4 w-4" aria-hidden="true" />}
+            >
+              Limpiar filtros
+            </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
+            <Button
+              size="md"
+              variant="outline"
+              onClick={handlePlantilla}
+              className="w-full xl:w-auto"
+            >
+              <CalendarDays className="h-4 w-4 mr-2" aria-hidden="true" />
+              Editar plantilla semanal
+            </Button>
+            <Button
+              size="md"
+              variant="solid"
+              onClick={openCreateModal}
+              className="w-full xl:w-auto"
+            >
               <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
               Agregar recurrente
             </Button>
           </div>
         </div>
+
         <Table
           columns={recurrentesColumns}
           rows={recurrentesRows}
-          total={recurrentesRows.length}
-          page={1}
-          pageSize={recurrentesRows.length}
-          onPageChange={() => {}}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+          onPageChange={handlePageChange}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
           rowKey={(row) => `recurrente-${row.id}`}
           isLoading={false}
+          pageSizeOptions={[10, 25, 50]}
+          onPageSizeChange={handlePageSizeChange}
           emptyState={
             <div className="text-center py-8">
               <CalendarClock

@@ -12,6 +12,18 @@ export interface AvailabilityBlock {
   specificDate?: string | null;
 }
 
+export interface AvailabilityListParams {
+  doctorId: string | number;
+  isRecurring?: boolean;
+  from?: string;
+  to?: string;
+  page?: number;
+  per_page?: number;
+  sort?: 'dayOfWeek' | 'specificDate' | 'startTime' | 'endTime' | 'createdAt';
+  order?: 'ASC' | 'DESC';
+  pagination?: boolean;
+}
+
 export type DoctorAvailabilityResponse = AvailabilityBlock[];
 
 export interface BulkAvailabilityPayload {
@@ -69,11 +81,23 @@ export interface UseAvailabilityTabReturn {
   isLoading: boolean;
   recurrenteModal: AvailabilityModalState;
   recurrentesRows: RowData[];
+  total: number;
+  page: number;
+  pageSize: number;
+  sortKey: 'dayOfWeek' | 'specificDate' | 'startTime' | 'endTime' | 'createdAt';
+  sortDirection: 'asc' | 'desc';
+  isRecurringFilter: boolean | undefined;
+  from: string;
+  to: string;
   deleteAvailMutation: {
     isPending: boolean;
-    mutateAsync: (params: { doctorId: string | number; id: number }) => Promise<void>;
+    mutateAsync: (params: {
+      doctorId: string | number;
+      id: number;
+    }) => Promise<void>;
   };
   setDeleteId: (id: number | null) => void;
+  handlePlantilla: () => void;
   openCreateModal: () => void;
   openEditModal: (block: RowData) => void;
   handleReloadPage: () => void;
@@ -82,4 +106,11 @@ export interface UseAvailabilityTabReturn {
   handleConfirmDelete: () => Promise<void>;
   handleRecurrenteModalClose: () => void;
   handleModalSuccess: () => void;
+  handleSortChange: (key: string, direction: 'asc' | 'desc') => void;
+  handleFilterChange: (
+    field: 'isRecurring' | 'from' | 'to',
+    value: boolean | undefined | string,
+  ) => void;
+  handlePageChange: (page: number) => void;
+  handlePageSizeChange: (pageSize: number) => void;
 }

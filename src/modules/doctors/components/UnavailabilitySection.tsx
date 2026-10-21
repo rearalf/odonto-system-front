@@ -4,9 +4,11 @@ import {
   Loader2,
   Plus,
   Trash2,
+  Filter,
 } from 'lucide-react';
 
 import { Button, Modal, Table } from '@/shared/components/ui';
+import { InputField } from '@/shared/components/ui/form';
 import useUnavailabilityTab from '../hooks/useUnavailabilityTab';
 import { createUnavailabilityTableColumns } from '../constants/horarioTabColumns';
 import {
@@ -16,23 +18,34 @@ import {
 
 const UnavailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
   const {
+    to,
+    from,
+    page,
+    total,
+    isError,
+    sortKey,
+    pageSize,
     deleteId,
-    unavailabilityModal,
     viewModal,
     isLoading,
-    isError,
+    sortDirection,
+    unavailabilityModal,
     unavailabilityRowData,
     deleteUnavailMutation,
-    openCreateModal,
-    openEditModal,
-    handleReloadPage,
-    handleModalSuccess,
-    handleCancelDelete,
-    handleConfirmDelete,
-    handleCloseUnavailabilityModal,
     handleView,
     handleDelete,
+    openEditModal,
+    openCreateModal,
+    handleSortChange,
+    handleReloadPage,
+    handlePageChange,
+    handleModalSuccess,
+    handleCancelDelete,
+    handleFilterChange,
+    handleConfirmDelete,
     handleCloseViewModal,
+    handlePageSizeChange,
+    handleCloseUnavailabilityModal,
   } = useUnavailabilityTab(doctorId);
 
   const excepcionesColumns = createUnavailabilityTableColumns({
@@ -73,28 +86,65 @@ const UnavailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
   return (
     <>
       <section>
-        <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h3 className="text-headline-sm font-semibold text-text-primary">
-            Ausencias ({unavailabilityRowData.length})
-          </h3>
+        <h3 className="mb-8 text-headline-md font-semibold text-text-primary text-center md:text-left">
+          Ausencias ({total})
+        </h3>
+
+        <div className="flex flex-col gap-6 lg:flex-row lg:justify-between lg:items-center mb-10 lg:mb-4">
+          <div className="mb-4 flex flex-col lg:flex-row gap-4 items-center">
+            <div className="w-full lg:w-auto">
+              <InputField
+                type="date"
+                label="Desde"
+                value={from}
+                onChange={(e) => handleFilterChange('from', e.target.value)}
+              />
+            </div>
+            <div className="w-full lg:w-auto">
+              <InputField
+                type="date"
+                label="Hasta"
+                value={to}
+                onChange={(e) => handleFilterChange('to', e.target.value)}
+              />
+            </div>
+            <Button
+              size="md"
+              variant="outline"
+              className="w-full lg:w-auto"
+              onClick={() => {
+                handleFilterChange('from', '');
+                handleFilterChange('to', '');
+              }}
+              icon={<Filter className="h-4 w-4 mr-2" aria-hidden="true" />}
+            >
+              Limpiar filtros
+            </Button>
+          </div>
           <Button
+            size="md"
             variant="solid"
-            size="sm"
             onClick={openCreateModal}
             icon={<Plus className="h-4 w-4 mr-2" aria-hidden="true" />}
           >
             Agregar ausencia
           </Button>
         </div>
+
         <Table
           columns={excepcionesColumns}
           rows={unavailabilityRowData}
-          total={unavailabilityRowData.length}
-          page={1}
-          pageSize={unavailabilityRowData.length}
-          onPageChange={() => {}}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+          onPageChange={handlePageChange}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
           rowKey={(row) => `excepcion-${row.id}`}
           isLoading={false}
+          pageSizeOptions={[10, 25, 50]}
+          onPageSizeChange={handlePageSizeChange}
           emptyState={
             <div className="text-center py-8">
               <CalendarClock

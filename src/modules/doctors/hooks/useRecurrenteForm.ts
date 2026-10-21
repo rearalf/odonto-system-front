@@ -50,6 +50,8 @@ export function useRecurrenteForm({
   const endTime = useWatch({ control, name: 'endTime' });
   const slotDuration = useWatch({ control, name: 'slotDuration' });
   const maxPatientsPerSlot = useWatch({ control, name: 'maxPatientsPerSlot' });
+  const isRecurring = useWatch({ control, name: 'isRecurring' });
+  const specificDate = useWatch({ control, name: 'specificDate' });
 
   useEffect(() => {
     if (initialData) {
@@ -76,8 +78,9 @@ export function useRecurrenteForm({
         slotDuration: values.slotDuration,
         maxPatientsPerSlot: values.maxPatientsPerSlot,
         isRecurring: values.isRecurring,
-        dayOfWeek: values.dayOfWeek,
-        specificDate: values.specificDate,
+        ...(values.isRecurring
+          ? { dayOfWeek: values.dayOfWeek }
+          : { specificDate: values.specificDate }),
       };
 
       if (isEditing && initialData?.id) {
@@ -125,6 +128,20 @@ export function useRecurrenteForm({
     [setValue],
   );
 
+  const handleSpecificDateChange = useCallback(
+    (value: string) => {
+      setValue('specificDate', value || null, { shouldValidate: true });
+    },
+    [setValue],
+  );
+
+  const handleIsRecurringChange = useCallback(
+    (value: boolean) => {
+      setValue('isRecurring', value, { shouldValidate: true });
+    },
+    [setValue],
+  );
+
   return {
     control,
     errors,
@@ -137,8 +154,12 @@ export function useRecurrenteForm({
     endTime,
     slotDuration,
     maxPatientsPerSlot,
+    isRecurring,
+    specificDate,
     handleDayOfWeekChange,
     handleSlotDurationChange,
     handleMaxPatientsChange,
+    handleSpecificDateChange,
+    handleIsRecurringChange,
   };
 }

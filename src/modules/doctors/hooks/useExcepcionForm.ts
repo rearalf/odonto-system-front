@@ -8,12 +8,12 @@ import {
 } from '@/modules/doctors/schemas/UnavailabilitySchema';
 import { useDoctorUnavailabilityCreateMutation } from '@/modules/doctors/hooks/mutations/useDoctorUnavailabilityCreateMutation';
 import { useDoctorUnavailabilityUpdateMutation } from '@/modules/doctors/hooks/mutations/useDoctorUnavailabilityUpdateMutation';
-import type { UseExcepcionFormProps } from '@/modules/doctors/types/availabilityModal';
 import {
   showLoading,
   showSuccess,
   showApiError,
 } from '@/shared/components/feedback';
+import type { UseUnavailabilityFormProps } from '../types/Unavailability';
 
 export function useExcepcionForm({
   doctorId,
@@ -21,7 +21,7 @@ export function useExcepcionForm({
   isEditing,
   onClose,
   onSuccess,
-}: UseExcepcionFormProps) {
+}: UseUnavailabilityFormProps) {
   const createMutation = useDoctorUnavailabilityCreateMutation();
   const updateMutation = useDoctorUnavailabilityUpdateMutation();
 
@@ -64,13 +64,20 @@ export function useExcepcionForm({
     }
   }, [initialData, reset]);
 
+  const combineDateTime = (dateStr: string, timeStr: string): string => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+    const localDate = new Date(year, month - 1, day, hours, minutes, seconds);
+    return localDate.toISOString();
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     const toastId = showLoading(isEditing ? 'Actualizando…' : 'Creando…', {
       description: 'Procesando...',
     });
     try {
-      const startISO = `${values.startDate}T${values.startTime}.000Z`;
-      const endISO = `${values.endDate}T${values.endTime}.000Z`;
+      const startISO = combineDateTime(values.startDate, values.startTime);
+      const endISO = combineDateTime(values.endDate, values.endTime);
       const payload = {
         startTime: startISO,
         endTime: endISO,

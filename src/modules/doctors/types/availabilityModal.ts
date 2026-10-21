@@ -1,5 +1,4 @@
 import type { AvailabilityBlock } from './Availability';
-import type { Unavailability } from './Unavailability';
 
 export type AvailabilityModalMode = 'recurrente' | 'excepcion';
 
@@ -32,25 +31,9 @@ export interface RecurrenteModalProps {
   onSuccess?: () => void;
 }
 
-export interface ExcepcionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  doctorId: string | number;
-  initialData?: Unavailability;
-  onSuccess?: () => void;
-}
-
 export interface UseRecurrenteFormProps {
   doctorId: string | number;
   initialData?: AvailabilityBlock;
-  isEditing: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-}
-
-export interface UseExcepcionFormProps {
-  doctorId: string | number;
-  initialData?: Unavailability;
   isEditing: boolean;
   onClose: () => void;
   onSuccess?: () => void;

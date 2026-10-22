@@ -17,9 +17,9 @@ export function useDoctorAvailabilityUpdateMutation() {
       id: number;
       payload: UpdateAvailabilityPayload;
     }) => doctorAvailabilityApi.update(doctorId, id, payload),
-    onSuccess: (_data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: availabilityKeys.detail(variables.doctorId),
+        queryKey: availabilityKeys.lists(),
       });
     },
   });

@@ -114,6 +114,8 @@ function useAvailabilityTab(
       setDeleteId(null);
     } catch (e) {
       showApiError(e, { id: toastId });
+    } finally {
+      refetch();
     }
   };
 
@@ -140,6 +142,7 @@ function useAvailabilityTab(
 
   const handleModalSuccess = () => {
     handleRecurrenteModalClose();
+    refetch();
   };
 
   const handleSortChange = (key: string, direction: 'asc' | 'desc') => {

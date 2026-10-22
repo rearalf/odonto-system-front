@@ -13,5 +13,5 @@ export type SelectFieldProps = Omit<
   error?: string;
   className?: string;
   children: ReactNode;
-  defaultValue: string;
+  defaultValue?: string;
 };

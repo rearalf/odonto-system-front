@@ -9,3 +9,4 @@ export { default as TimeField } from './TimeField';
 export { default as FieldHelp } from './FieldHelp';
 export { default as FieldMock } from './FieldMock';
 export { default as Switch } from './switch/index';
+export { default as TimePickerField } from './TimePickerField/TimePickerField';

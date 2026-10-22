@@ -36,7 +36,7 @@ export interface CreateAvailabilityPayload {
   slotDuration: number;
   maxPatientsPerSlot: number;
   isRecurring: boolean;
-  dayOfWeek: number;
+  dayOfWeek?: number;
   specificDate?: string | null;
 }
 

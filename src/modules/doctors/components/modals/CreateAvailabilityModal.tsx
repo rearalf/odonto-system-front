@@ -6,7 +6,7 @@ import {
   InputField,
   SelectField,
   Switch,
-  TimeField,
+  TimePickerField,
   Modal,
   Badge,
 } from '@/shared/components/ui';
@@ -33,6 +33,7 @@ const CreateAvailabilityModal = ({
     slotDuration,
     maxPatientsPerSlot,
     isRecurring,
+    dayOfWeek,
     specificDate,
     handleDayOfWeekChange,
     handleSlotDurationChange,
@@ -40,6 +41,7 @@ const CreateAvailabilityModal = ({
     handleSpecificDateChange,
     handleIsRecurringChange,
   } = useRecurrenteForm({
+    isOpen,
     doctorId,
     initialData,
     isEditing,
@@ -53,6 +55,7 @@ const CreateAvailabilityModal = ({
     <Modal
       open={isOpen}
       onOpenChange={onClose}
+      closeOnBackdrop={false}
       title={isEditing ? 'Editar bloque recurrente' : 'Nuevo bloque recurrente'}
       description="Configure los detalles del horario recurrente semanal"
       size="lg"
@@ -101,7 +104,7 @@ const CreateAvailabilityModal = ({
                 id="dayOfWeek"
                 label="Día de la semana"
                 required
-                defaultValue="1"
+                value={String(dayOfWeek)}
                 onChange={(e) => handleDayOfWeekChange(Number(e.target.value))}
                 error={errors.dayOfWeek?.message}
               >
@@ -126,7 +129,7 @@ const CreateAvailabilityModal = ({
             />
           )}
 
-          <TimeField
+          <TimePickerField
             id="startTime"
             label="Hora Inicio"
             required
@@ -135,8 +138,14 @@ const CreateAvailabilityModal = ({
               setValue('startTime', val, { shouldValidate: true })
             }
             error={errors.startTime?.message}
+            showSeconds={false}
+            stepSeconds={30}
+            use12Hour={true}
+            accept12HourInput={true}
+            min="06:00:00"
+            max="22:00:00"
           />
-          <TimeField
+          <TimePickerField
             id="endTime"
             label="Hora Fin"
             required
@@ -145,13 +154,19 @@ const CreateAvailabilityModal = ({
               setValue('endTime', val, { shouldValidate: true })
             }
             error={errors.endTime?.message}
+            showSeconds={false}
+            stepSeconds={30}
+            use12Hour={true}
+            accept12HourInput={true}
+            min="06:00:00"
+            max="23:00:00"
           />
           <InputField
             id="slotDuration"
             label="Duración del turno (min)"
             type="number"
             required
-            min={5}
+            min={15}
             max={120}
             step={5}
             value={slotDuration}

@@ -32,6 +32,7 @@ export interface RecurrenteModalProps {
 }
 
 export interface UseRecurrenteFormProps {
+  isOpen: boolean;
   doctorId: string | number;
   initialData?: AvailabilityBlock;
   isEditing: boolean;

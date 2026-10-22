@@ -15,7 +15,18 @@ import {
   showApiError,
 } from '@/shared/components/feedback';
 
+const defaultFormValues: AvailabilityBlockFormValues = {
+  startTime: '08:00:00',
+  endTime: '14:00:00',
+  slotDuration: 30,
+  maxPatientsPerSlot: 1,
+  isRecurring: true,
+  dayOfWeek: 1,
+  specificDate: null,
+};
+
 export function useRecurrenteForm({
+  isOpen,
   doctorId,
   initialData,
   isEditing,
@@ -34,15 +45,7 @@ export function useRecurrenteForm({
     watch,
   } = useForm<AvailabilityBlockFormValues>({
     resolver: zodResolver(availabilityBlockSchema),
-    defaultValues: {
-      startTime: '08:00:00',
-      endTime: '14:00:00',
-      slotDuration: 30,
-      maxPatientsPerSlot: 1,
-      isRecurring: true,
-      dayOfWeek: 1,
-      specificDate: null,
-    },
+    defaultValues: defaultFormValues,
     mode: 'onChange',
   });
 
@@ -51,21 +54,26 @@ export function useRecurrenteForm({
   const slotDuration = useWatch({ control, name: 'slotDuration' });
   const maxPatientsPerSlot = useWatch({ control, name: 'maxPatientsPerSlot' });
   const isRecurring = useWatch({ control, name: 'isRecurring' });
+  const dayOfWeek = useWatch({ control, name: 'dayOfWeek' });
   const specificDate = useWatch({ control, name: 'specificDate' });
 
   useEffect(() => {
-    if (initialData) {
-      reset({
-        startTime: initialData.startTime,
-        endTime: initialData.endTime,
-        slotDuration: initialData.slotDuration,
-        maxPatientsPerSlot: initialData.maxPatientsPerSlot,
-        isRecurring: initialData.isRecurring,
-        dayOfWeek: initialData.dayOfWeek,
-        specificDate: initialData.specificDate,
-      });
+    if (isOpen) {
+      if (initialData) {
+        reset({
+          startTime: initialData.startTime,
+          endTime: initialData.endTime,
+          slotDuration: initialData.slotDuration,
+          maxPatientsPerSlot: initialData.maxPatientsPerSlot,
+          isRecurring: initialData.isRecurring,
+          dayOfWeek: initialData.dayOfWeek,
+          specificDate: initialData.specificDate ?? null,
+        });
+      } else {
+        reset(defaultFormValues);
+      }
     }
-  }, [initialData, reset]);
+  }, [isOpen, initialData, reset]);
 
   const onSubmit = handleSubmit(async (values) => {
     const toastId = showLoading(isEditing ? 'Actualizando…' : 'Creando…', {
@@ -78,9 +86,8 @@ export function useRecurrenteForm({
         slotDuration: values.slotDuration,
         maxPatientsPerSlot: values.maxPatientsPerSlot,
         isRecurring: values.isRecurring,
-        dayOfWeek: values.dayOfWeek,
         ...(values.isRecurring
-          ? {}
+          ? { dayOfWeek: values.dayOfWeek }
           : { specificDate: values.specificDate }),
       };
 
@@ -156,6 +163,7 @@ export function useRecurrenteForm({
     slotDuration,
     maxPatientsPerSlot,
     isRecurring,
+    dayOfWeek,
     specificDate,
     handleDayOfWeekChange,
     handleSlotDurationChange,

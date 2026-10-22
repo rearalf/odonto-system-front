@@ -1,6 +1,6 @@
 import type { TimePickerState } from '../types/TimePickerField';
 
-export function parseTime12Hour(
+function parseTime12Hour(
   val: string,
 ): { h: number; m: number; s: number; pm: boolean } | null {
   const match = val.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)$/i);
@@ -14,7 +14,7 @@ export function parseTime12Hour(
   return { h, m, s, pm };
 }
 
-export function parseTime24Hour(
+function parseTime24Hour(
   val: string,
 ): { h: number; m: number; s: number } | null {
   const parts = val.split(':').map(Number);
@@ -30,4 +30,37 @@ export function getInitialState(use12Hour: boolean): TimePickerState {
     period: 'AM',
     isOpen: false,
   };
+}
+
+export function getParsedState(
+  value: string | undefined,
+  use12Hour: boolean,
+  accept12HourInput: boolean,
+): TimePickerState {
+  if (!value) return getInitialState(use12Hour);
+  let parsed: { h: number; m: number; s: number; pm?: boolean } | null = null;
+
+  if (accept12HourInput && use12Hour) {
+    parsed = parseTime12Hour(value);
+  }
+  if (!parsed) {
+    parsed = parseTime24Hour(value);
+  }
+
+  if (parsed) {
+    const isPm = parsed.pm !== undefined ? parsed.pm : parsed.h >= 12;
+    // Lógica segura para convertir a 12h
+    let h12 = parsed.h;
+    if (use12Hour) {
+      h12 = parsed.h % 12 || 12;
+    }
+    return {
+      hours: use12Hour ? h12 : parsed.h,
+      minutes: parsed.m,
+      seconds: parsed.s,
+      period: use12Hour ? (isPm ? 'PM' : 'AM') : 'AM',
+      isOpen: false,
+    };
+  }
+  return getInitialState(use12Hour);
 }

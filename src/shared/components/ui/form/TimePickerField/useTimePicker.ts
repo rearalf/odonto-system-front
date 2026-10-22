@@ -10,7 +10,7 @@ import {
   MINUTES_LIST,
   PERIODS_LIST,
 } from './constants';
-import { getInitialState, parseTime12Hour, parseTime24Hour } from './functions';
+import { getInitialState, getParsedState } from './functions';
 
 function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
   const {
@@ -30,7 +30,7 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
   const prevValueRef = useRef<string | undefined>(value);
 
   const [state, setState] = useState<TimePickerState>(() =>
-    getInitialState(use12Hour),
+    getParsedState(value, use12Hour, accept12HourInput),
   );
 
   const hoursList = use12Hour ? HOURS_12_LIST : HOURS_24_LIST;
@@ -87,29 +87,8 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
   );
 
   const parseValue = useCallback((): TimePickerState => {
-    if (!value) return getInitialState(use12Hour);
-    let parsed: { h: number; m: number; s: number; pm?: boolean } | null = null;
-
-    if (accept12HourInput && use12Hour) {
-      parsed = parseTime12Hour(value);
-    }
-    if (!parsed) {
-      parsed = parseTime24Hour(value);
-    }
-
-    if (parsed) {
-      const isPm = parsed.pm !== undefined ? parsed.pm : parsed.h >= 12;
-
-      return {
-        hours: use12Hour ? to12Hour(parsed.h) : parsed.h,
-        minutes: parsed.m,
-        seconds: parsed.s,
-        period: use12Hour ? (isPm ? 'PM' : 'AM') : 'AM',
-        isOpen: false,
-      };
-    }
-    return getInitialState(use12Hour);
-  }, [value, use12Hour, accept12HourInput, to12Hour]);
+    return getParsedState(value, use12Hour, accept12HourInput);
+  }, [value, use12Hour, accept12HourInput]);
 
   useEffect(() => {
     if (prevValueRef.current !== value) {

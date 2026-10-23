@@ -21,11 +21,28 @@ function useDatePicker({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  // Se parsea el valor inicial: el componente puede montarse ya con valor (modo edición)
+  const [initialParsed] = useState(() => {
+    if (!value) return { single: null, start: null, end: null };
+    if (mode === 'single')
+      return { single: parseDateString(value), start: null, end: null };
+    const [startStr, endStr] = value.split(' - ');
+    return {
+      single: null,
+      start: parseDateString(startStr),
+      end: parseDateString(endStr),
+    };
+  });
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    initialParsed.single,
+  );
+  const [startDate, setStartDate] = useState<Date | null>(initialParsed.start);
+  const [endDate, setEndDate] = useState<Date | null>(initialParsed.end);
   const [isOpen, setIsOpen] = useState(false);
-  const [viewDate, setViewDate] = useState(new Date());
+  const [viewDate, setViewDate] = useState(
+    initialParsed.single ?? initialParsed.start ?? new Date(),
+  );
 
   const [prevValue, setPrevValue] = useState(value);
 

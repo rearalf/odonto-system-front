@@ -283,7 +283,7 @@ const TimePickerField = ({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
+            <div className="flex items-center justify-between pt-3 border-t border-border-default">
               <Button
                 variant="ghost"
                 size="sm"

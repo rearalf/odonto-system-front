@@ -10,3 +10,4 @@ export { default as FieldHelp } from './FieldHelp';
 export { default as FieldMock } from './FieldMock';
 export { default as Switch } from './switch/index';
 export { default as TimePickerField } from './TimePickerField/TimePickerField';
+export { default as DatePickerField } from './DatePickerField/index';

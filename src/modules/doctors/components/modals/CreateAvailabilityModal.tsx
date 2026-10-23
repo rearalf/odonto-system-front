@@ -1,14 +1,13 @@
 import { CalendarDays } from 'lucide-react';
-
 import {
+  Badge,
+  Modal,
   Button,
-  DateField,
+  Switch,
   InputField,
   SelectField,
-  Switch,
   TimePickerField,
-  Modal,
-  Badge,
+  DatePickerField,
 } from '@/shared/components/ui';
 import { useRecurrenteForm } from '@/modules/doctors/hooks/useRecurrenteForm';
 import type { RecurrenteModalProps } from '@/modules/doctors/types/availabilityModal';
@@ -119,10 +118,11 @@ const CreateAvailabilityModal = ({
               </SelectField>
             </>
           ) : (
-            <DateField
+            <DatePickerField
+              required
               id="specificDate"
               label="Fecha específica"
-              required
+              minDate={new Date()}
               value={specificDate ?? ''}
               onChange={handleSpecificDateChange}
               error={errors.specificDate?.message}

@@ -151,6 +151,20 @@ function useUnavailabilityTab(
     setPage(1);
   };
 
+  const handleDateRangeChange = (val: string) => {
+    const [start, end] = val.split(' - ').map((s) => s.trim());
+    if (start && end) {
+      setFrom(start);
+      setTo(end);
+      setPage(1);
+    }
+    if (!start && !end) {
+      setFrom('');
+      setTo('');
+      setPage(1);
+    }
+  };
+
   const handlePageChange = (newPage: number) => setPage(newPage);
   const handlePageSizeChange = (newSize: number) => {
     setPageSize(newSize);
@@ -186,6 +200,7 @@ function useUnavailabilityTab(
     handleCloseViewModal,
     handleSortChange,
     handleFilterChange,
+    handleDateRangeChange,
     handlePageChange,
     handlePageSizeChange,
   };

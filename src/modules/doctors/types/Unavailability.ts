@@ -95,4 +95,5 @@ export interface UseUnavailabilityTabReturn {
   handleFilterChange: (field: 'from' | 'to', value: string) => void;
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
+  handleDateRangeChange: (val: string) => void;
 }

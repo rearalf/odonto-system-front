@@ -7,8 +7,7 @@ import {
   Filter,
 } from 'lucide-react';
 
-import { Button, Modal, Table } from '@/shared/components/ui';
-import { InputField } from '@/shared/components/ui/form';
+import { Button, Modal, Table, DatePickerField } from '@/shared/components/ui';
 import useUnavailabilityTab from '../hooks/useUnavailabilityTab';
 import { createUnavailabilityTableColumns } from '../constants/horarioTabColumns';
 import {
@@ -42,6 +41,7 @@ const UnavailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
     handleModalSuccess,
     handleCancelDelete,
     handleFilterChange,
+    handleDateRangeChange,
     handleConfirmDelete,
     handleCloseViewModal,
     handlePageSizeChange,
@@ -93,19 +93,12 @@ const UnavailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
         <div className="flex flex-col gap-6 lg:flex-row lg:justify-between lg:items-center mb-10 lg:mb-4">
           <div className="mb-4 flex flex-col lg:flex-row gap-4 items-center">
             <div className="w-full lg:w-auto">
-              <InputField
-                type="date"
-                label="Desde"
-                value={from}
-                onChange={(e) => handleFilterChange('from', e.target.value)}
-              />
-            </div>
-            <div className="w-full lg:w-auto">
-              <InputField
-                type="date"
-                label="Hasta"
-                value={to}
-                onChange={(e) => handleFilterChange('to', e.target.value)}
+              <DatePickerField
+                label="Rango de fechas"
+                mode="range"
+                dateFormat="YYYY-MM-DD"
+                value={from && to ? `${from} - ${to}` : from ? `${from} -` : ''}
+                onChange={handleDateRangeChange}
               />
             </div>
             <Button

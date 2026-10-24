@@ -1,8 +1,8 @@
 import {
   Modal,
   Button,
-  DateField,
-  TimeField,
+  DatePickerField,
+  TimePickerField,
   TextAreaField,
 } from '@/shared/components/ui';
 import { useExcepcionForm } from '@/modules/doctors/hooks/useExcepcionForm';
@@ -65,7 +65,7 @@ function CreateUnavailabilityModal({
     >
       <form id="excepcion-form" onSubmit={onSubmit} className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
-          <DateField
+          <DatePickerField
             id="startDate"
             label="Fecha inicio"
             required
@@ -73,7 +73,7 @@ function CreateUnavailabilityModal({
             onChange={(val) => handleStartDateChange(val)}
             error={errors.startDate?.message}
           />
-          <TimeField
+          <TimePickerField
             id="startTime"
             label="Hora inicio"
             required
@@ -82,8 +82,14 @@ function CreateUnavailabilityModal({
               setValue('startTime', val, { shouldValidate: true })
             }
             error={errors.startTime?.message}
+            showSeconds={false}
+            stepSeconds={30}
+            use12Hour={true}
+            accept12HourInput={true}
+            min="06:00:00"
+            max="22:00:00"
           />
-          <DateField
+          <DatePickerField
             id="endDate"
             label="Fecha fin"
             required
@@ -91,7 +97,7 @@ function CreateUnavailabilityModal({
             onChange={(val) => handleEndDateChange(val)}
             error={errors.endDate?.message}
           />
-          <TimeField
+          <TimePickerField
             id="endTime"
             label="Hora fin"
             required
@@ -100,6 +106,12 @@ function CreateUnavailabilityModal({
               setValue('endTime', val, { shouldValidate: true })
             }
             error={errors.endTime?.message}
+            showSeconds={false}
+            stepSeconds={30}
+            use12Hour={true}
+            accept12HourInput={true}
+            min="06:00:00"
+            max="23:00:00"
           />
           <div className="sm:col-span-2">
             <TextAreaField

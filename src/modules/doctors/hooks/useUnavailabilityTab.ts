@@ -59,7 +59,15 @@ function useUnavailabilityTab(
 
   const deleteUnavailMutation = useDoctorUnavailabilityDeleteMutation();
 
-  const handleReloadPage = () => refetch();
+  const handleReloadPage = () => {
+    setPage(1);
+    setPageSize(10);
+    setSortKey('startTime');
+    setSortDirection('asc');
+    setFrom('');
+    setTo('');
+    refetch();
+  };
 
   const unavailabilityData = unavailabilityResponse?.data ?? [];
 

@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   flip,
   shift,
@@ -14,6 +21,7 @@ import {
   getCalendarDays,
   isAfterOrEqual,
   isBeforeOrEqual,
+  isSameDay,
   parseDateString,
 } from './functions';
 
@@ -53,7 +61,7 @@ function useDatePicker({
     [setFloating],
   );
 
-  // Se parsea el valor inicial: el componente puede montarse ya con valor (modo edición)
+  // Parseo inicial (solo en mount)
   const [initialParsed] = useState(() => {
     if (!value) return { single: null, start: null, end: null };
     if (mode === 'single')
@@ -61,8 +69,8 @@ function useDatePicker({
     const [startStr, endStr] = value.split(' - ');
     return {
       single: null,
-      start: parseDateString(startStr),
-      end: parseDateString(endStr),
+      start: parseDateString(startStr?.trim()),
+      end: parseDateString(endStr?.trim()),
     };
   });
 
@@ -76,36 +84,92 @@ function useDatePicker({
     initialParsed.single ?? initialParsed.start ?? new Date(),
   );
 
-  const [prevValue, setPrevValue] = useState(value);
+  // Refs para leer estado actual en callbacks sin staleness
+  const startDateRef = useRef(startDate);
+  const endDateRef = useRef(endDate);
+  const isUserChangeRef = useRef(false);
+  const prevValueRef = useRef(value);
 
-  const calendarDays = getCalendarDays(viewDate);
+  useEffect(() => {
+    startDateRef.current = startDate;
+  }, [startDate]);
+  useEffect(() => {
+    endDateRef.current = endDate;
+  }, [endDate]);
+
+  // Memoizado: solo recalcula cuando cambia viewDate
+  const calendarDays = useMemo(() => getCalendarDays(viewDate), [viewDate]);
 
   const placeholderText =
     mode === 'range' ? `${dateFormat} - ${dateFormat}` : dateFormat;
 
-  if (value !== prevValue) {
-    setPrevValue(value);
-
-    if (!value) {
-      setSelectedDate(null);
-      setStartDate(null);
-      setEndDate(null);
-    } else if (mode === 'single') {
-      const parsed = parseDateString(value);
-      setSelectedDate(parsed);
-      if (parsed) setViewDate(parsed);
-    } else {
-      const [startStr, endStr] = value.split(' - ');
-      const parsedStart = parseDateString(startStr);
-      const parsedEnd = parseDateString(endStr);
-      setStartDate(parsedStart);
-      setEndDate(parsedEnd);
-      if (parsedStart) setViewDate(parsedStart);
+  useLayoutEffect(() => {
+    if (value === prevValueRef.current) return;
+    if (isUserChangeRef.current) {
+      isUserChangeRef.current = false;
+      prevValueRef.current = value;
+      return;
     }
-  }
+
+    prevValueRef.current = value;
+
+    const nextState = (() => {
+      if (!value) {
+        return {
+          selectedDate: null,
+          startDate: null,
+          endDate: null,
+          viewDate: null,
+        };
+      }
+
+      if (mode === 'single') {
+        const parsed = parseDateString(value);
+        return {
+          selectedDate: parsed,
+          startDate: null,
+          endDate: null,
+          viewDate: parsed,
+        };
+      }
+
+      const [startStr, endStr] = value.split(' - ');
+      const parsedStart = parseDateString(startStr?.trim());
+      const parsedEnd = parseDateString(endStr?.trim());
+
+      return {
+        selectedDate: null,
+        startDate: isSameDay(parsedStart, startDateRef.current)
+          ? startDateRef.current
+          : parsedStart,
+        endDate: isSameDay(parsedEnd, endDateRef.current)
+          ? endDateRef.current
+          : parsedEnd,
+        viewDate: parsedStart,
+      };
+    })();
+
+    queueMicrotask(() => {
+      if (nextState.selectedDate !== undefined) {
+        setSelectedDate(nextState.selectedDate);
+      }
+      if (nextState.startDate !== undefined) {
+        setStartDate(nextState.startDate);
+      }
+      if (nextState.endDate !== undefined) {
+        setEndDate(nextState.endDate);
+      }
+      if (nextState.viewDate) {
+        setViewDate(nextState.viewDate);
+      }
+    });
+  }, [value, mode]);
 
   const emitChange = useCallback(
-    (newVal: string) => onChange?.(newVal),
+    (newVal: string) => {
+      isUserChangeRef.current = true;
+      onChange?.(newVal);
+    },
     [onChange],
   );
 
@@ -145,27 +209,28 @@ function useDatePicker({
         emitChange(formatDate(date));
         setIsOpen(false);
       } else {
-        // Lógica para modo Rango
-        if (!startDate || (startDate && endDate)) {
+        const currentStart = startDateRef.current;
+        const currentEnd = endDateRef.current;
+
+        if (!currentStart || (currentStart && currentEnd)) {
           // Iniciar nuevo rango
           setStartDate(date);
           setEndDate(null);
           emitChange(`${formatDate(date)} -`);
         } else {
           // Completar rango
-          if (isBeforeOrEqual(date, startDate)) {
-            // Si hace clic en una fecha anterior, reinicia el inicio
+          if (isBeforeOrEqual(date, currentStart)) {
             setStartDate(date);
             emitChange(`${formatDate(date)} -`);
           } else {
             setEndDate(date);
-            emitChange(`${formatDate(startDate)} - ${formatDate(date)}`);
-            setIsOpen(false); // Cierra automáticamente al completar el rango
+            emitChange(`${formatDate(currentStart)} - ${formatDate(date)}`);
+            setIsOpen(false);
           }
         }
       }
     },
-    [mode, startDate, endDate, isDateDisabled, emitChange],
+    [mode, isDateDisabled, emitChange],
   );
 
   const clearDate = useCallback(() => {
@@ -201,13 +266,8 @@ function useDatePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, dropdownElement, inputElement]);
 
-  return {
-    placeholderText,
-    setReference,
-    setCalendar,
-    floatingStyles,
-    state: { selectedDate, startDate, endDate, isOpen, viewDate, mode },
-    actions: {
+  const actions = useMemo(
+    () => ({
       setIsOpen,
       setViewDate,
       nextMonth,
@@ -216,7 +276,26 @@ function useDatePicker({
       clearDate,
       jumpToToday,
       isDateDisabled,
-    },
+    }),
+    [
+      setIsOpen,
+      setViewDate,
+      nextMonth,
+      prevMonth,
+      selectDate,
+      clearDate,
+      jumpToToday,
+      isDateDisabled,
+    ],
+  );
+
+  return {
+    placeholderText,
+    setReference,
+    setCalendar,
+    floatingStyles,
+    state: { selectedDate, startDate, endDate, isOpen, viewDate, mode },
+    actions,
     displayValue,
     calendarDays,
   };

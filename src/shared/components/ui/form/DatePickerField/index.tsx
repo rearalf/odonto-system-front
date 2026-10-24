@@ -77,7 +77,7 @@ const DatePickerField = ({
           <div
             ref={setCalendar}
             style={floatingStyles}
-            className="z-[60] w-70 origin-top-left rounded-xl border border-border-default bg-bg-surface-elevated p-3 shadow-sm"
+            className="z-60 w-70 origin-top-left rounded-xl border border-border-default bg-bg-surface-elevated p-3 shadow-sm"
             role="dialog"
             aria-label="Seleccionar fecha"
           >

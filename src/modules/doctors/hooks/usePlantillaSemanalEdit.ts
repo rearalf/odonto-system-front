@@ -12,12 +12,7 @@ import {
   type WeeklyScheduleFormValues,
   type AvailabilityBlockFormValues,
 } from '@/modules/doctors/schemas/AvailabilitySchema';
-import {
-  type DayOfWeek,
-  DAYS_OF_WEEK,
-  DEFAULT_SLOT_DURATION,
-  DEFAULT_MAX_PATIENTS_PER_SLOT,
-} from '@/modules/doctors/types/Availability';
+import { type DayOfWeek } from '@/modules/doctors/types/Availability';
 import { useDoctorAvailabilityQuery } from '@/modules/doctors/hooks/queries/useDoctorAvailabilityQuery';
 import { useDoctorAvailabilityBulkMutation } from '@/modules/doctors/hooks/mutations/useDoctorAvailabilityBulkMutation';
 import { useDoctorDetailQuery } from '@/modules/doctors/hooks/queries/useDoctorDetailQuery';
@@ -26,6 +21,11 @@ import {
   showSuccess,
   showApiError,
 } from '@/shared/components/feedback';
+import {
+  DAYS_OF_WEEK,
+  DEFAULT_MAX_PATIENTS_PER_SLOT,
+  DEFAULT_SLOT_DURATION,
+} from '../constants/availability';
 
 export function usePlantillaSemanalEdit() {
   const { id: doctorId } = useParams<{ id: string }>();

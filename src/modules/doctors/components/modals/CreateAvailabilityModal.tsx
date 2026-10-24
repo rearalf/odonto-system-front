@@ -11,7 +11,7 @@ import {
 } from '@/shared/components/ui';
 import { useRecurrenteForm } from '@/modules/doctors/hooks/useRecurrenteForm';
 import type { RecurrenteModalProps } from '@/modules/doctors/types/availabilityModal';
-import { DAYS_OF_WEEK } from '@/modules/doctors/types/Availability';
+import { DAYS_OF_WEEK } from '../../constants/availability';
 
 const CreateAvailabilityModal = ({
   isOpen,

@@ -36,14 +36,16 @@ function useAvailabilityTab(
   const [isRecurringFilter, setIsRecurringFilter] = useState<
     boolean | undefined
   >(undefined);
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
+  const [dateRange, setDateRange] = useState('');
+
+  const [rangeStart, rangeEnd] = dateRange.split(' - ');
+  const isRangeComplete = !!rangeStart && !!rangeEnd && rangeEnd.trim() !== '';
 
   const queryParams: AvailabilityListParams = {
     doctorId,
     isRecurring: isRecurringFilter,
-    from: from || undefined,
-    to: to || undefined,
+    from: isRangeComplete ? rangeStart : undefined,
+    to: isRangeComplete ? rangeEnd : undefined,
     page,
     per_page: pageSize,
     sort: sortKey,
@@ -61,7 +63,15 @@ function useAvailabilityTab(
 
   const deleteAvailMutation = useDoctorAvailabilityDeleteMutation();
 
-  const handleReloadPage = () => refetch();
+  const handleReloadPage = () => {
+    setPage(1);
+    setPageSize(10);
+    setSortKey('dayOfWeek');
+    setSortDirection('asc');
+    setIsRecurringFilter(undefined);
+    setDateRange('');
+    refetch();
+  };
 
   const dayNames = [
     'Domingo',
@@ -158,13 +168,12 @@ function useAvailabilityTab(
   };
 
   const handleFilterChange = (
-    field: 'isRecurring' | 'from' | 'to',
+    field: 'isRecurring' | 'dateRange',
     value: boolean | undefined | string,
   ) => {
     if (field === 'isRecurring')
       setIsRecurringFilter(value as boolean | undefined);
-    else if (field === 'from') setFrom(value as string);
-    else if (field === 'to') setTo(value as string);
+    else if (field === 'dateRange') setDateRange(value as string);
     setPage(1);
   };
 
@@ -189,8 +198,7 @@ function useAvailabilityTab(
     sortKey,
     sortDirection,
     isRecurringFilter,
-    from,
-    to,
+    dateRange,
     deleteAvailMutation,
     setDeleteId,
     handlePlantilla,

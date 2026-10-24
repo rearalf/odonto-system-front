@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 import { Button, Modal, Table } from '@/shared/components/ui';
-import { InputField, SelectField } from '@/shared/components/ui/form';
+import { SelectField, DatePickerField } from '@/shared/components/ui/form';
 import CreateAvailabilityModal from '../components/modals/CreateAvailabilityModal';
 import useAvailabilityTab from '../hooks/useAvailabilityTab';
 import { buildRecurrentesColumns } from '../constants/horarioTabColumns';
@@ -17,8 +17,6 @@ import type { RowData } from '../types/Availability';
 
 const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
   const {
-    to,
-    from,
     page,
     total,
     sortKey,
@@ -30,6 +28,7 @@ const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
     recurrenteModal,
     recurrentesRows,
     isRecurringFilter,
+    dateRange,
     deleteAvailMutation,
     openEditModal,
     handlePlantilla,
@@ -112,20 +111,14 @@ const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
                 <option value="false">Fecha específica</option>
               </SelectField>
             </div>
-            <div className="w-full lg:w-48">
-              <InputField
-                type="date"
-                label="Desde"
-                value={from}
-                onChange={(e) => handleFilterChange('from', e.target.value)}
-              />
-            </div>
-            <div className="w-full lg:w-48">
-              <InputField
-                type="date"
-                label="Hasta"
-                value={to}
-                onChange={(e) => handleFilterChange('to', e.target.value)}
+            <div className="w-full lg:w-64">
+              <DatePickerField
+                label="Rango de fechas"
+                mode="range"
+                value={dateRange}
+                onChange={(val) => handleFilterChange('dateRange', val)}
+                placeholder="DD/MM/YYYY - DD/MM/YYYY"
+                dateFormat="DD/MM/YYYY"
               />
             </div>
             <Button
@@ -134,8 +127,7 @@ const AvailabilitySection = ({ doctorId }: { doctorId: number | string }) => {
               className="w-full lg:w-auto"
               onClick={() => {
                 handleFilterChange('isRecurring', undefined);
-                handleFilterChange('from', '');
-                handleFilterChange('to', '');
+                handleFilterChange('dateRange', '');
               }}
               icon={<Filter className="h-4 w-4" aria-hidden="true" />}
             >

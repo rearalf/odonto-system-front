@@ -1,3 +1,4 @@
+import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 
 import FieldLabel from '../FieldLabel';
@@ -31,8 +32,9 @@ const DatePickerField = ({
 }: DatePickerFieldProps) => {
   const {
     placeholderText,
-    dropdownRef,
-    inputRef,
+    setReference,
+    setCalendar,
+    floatingStyles,
     state,
     actions,
     displayValue,
@@ -66,54 +68,53 @@ const DatePickerField = ({
         leftIcon={LeftIcon}
         state={state}
         actions={actions}
-        inputRef={inputRef as React.RefObject<HTMLDivElement>}
+        inputRef={setReference}
         {...props}
       />
 
       {state.isOpen && !disabled && (
-        <div
-          ref={dropdownRef}
-          className="fixed z-50 mt-1 w-70 origin-top-left bg-bg-surface-elevated border border-border-default shadow-sm rounded-xl p-3"
-          role="dialog"
-          aria-label="Seleccionar fecha"
-        >
-          {/* Header de navegación */}
-          <CalendarHeader state={state} actions={actions} />
+        <FloatingPortal>
+          <div
+            ref={setCalendar}
+            style={floatingStyles}
+            className="z-[60] w-70 origin-top-left rounded-xl border border-border-default bg-bg-surface-elevated p-3 shadow-sm"
+            role="dialog"
+            aria-label="Seleccionar fecha"
+          >
+            <CalendarHeader state={state} actions={actions} />
 
-          {/* Días de la semana */}
-          <div className="grid grid-cols-7 text-center mb-2">
-            {DAYS.map((day) => (
-              <div
-                key={day}
-                className="font-medium text-body-lg text-text-secondary"
+            <div className="mb-2 grid grid-cols-7 text-center">
+              {DAYS.map((day) => (
+                <div
+                  key={day}
+                  className="font-medium text-body-lg text-text-secondary"
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            <CalendarGrid
+              calendarDays={calendarDays}
+              mode={mode}
+              state={state}
+              actions={actions}
+            />
+
+            <div className="mt-3 flex items-center justify-center border-t border-border-default pt-3">
+              <Button
+                variant="outline"
+                color="info"
+                size="md"
+                type="button"
+                onClick={actions.jumpToToday}
+                className="w-auto"
               >
-                {day}
-              </div>
-            ))}
+                Today
+              </Button>
+            </div>
           </div>
-
-          {/* Cuadrícula de fechas */}
-          <CalendarGrid
-            calendarDays={calendarDays}
-            mode={mode}
-            state={state}
-            actions={actions}
-          />
-
-          {/* Footer */}
-          <div className="flex items-center justify-center pt-3 mt-3 border-t border-border-default">
-            <Button
-              variant="outline"
-              color="info"
-              size="md"
-              type="button"
-              onClick={actions.jumpToToday}
-              className="w-auto"
-            >
-              Today
-            </Button>
-          </div>
-        </div>
+        </FloatingPortal>
       )}
       <FieldHelp
         help={help}

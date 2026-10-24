@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  flip,
+  shift,
+  offset,
+  autoUpdate,
+  useFloating,
+} from '@floating-ui/react';
 import type { UseDatePickerOptions } from '../types/DatePickerField';
 import {
   addMonths,
@@ -18,8 +25,33 @@ function useDatePicker({
   maxDate,
   dateFormat = 'DD/MM/YYYY',
 }: UseDatePickerOptions) {
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [dropdownElement, setDropdownElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const [inputElement, setInputElement] = useState<HTMLDivElement | null>(null);
+  const {
+    refs: { setReference: setFloatingReference, setFloating },
+    floatingStyles,
+  } = useFloating({
+    placement: 'bottom-start',
+    strategy: 'fixed',
+    middleware: [offset(4), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
+  });
+  const setReference = useCallback(
+    (node: HTMLDivElement | null) => {
+      setInputElement(node);
+      setFloatingReference(node);
+    },
+    [setFloatingReference],
+  );
+  const setCalendar = useCallback(
+    (node: HTMLDivElement | null) => {
+      setDropdownElement(node);
+      setFloating(node);
+    },
+    [setFloating],
+  );
 
   // Se parsea el valor inicial: el componente puede montarse ya con valor (modo edición)
   const [initialParsed] = useState(() => {
@@ -72,9 +104,10 @@ function useDatePicker({
     }
   }
 
-  const emitChange = (newVal: string) => {
-    if (onChange) onChange(newVal);
-  };
+  const emitChange = useCallback(
+    (newVal: string) => onChange?.(newVal),
+    [onChange],
+  );
 
   const nextMonth = useCallback(
     () => setViewDate((prev) => addMonths(prev, 1)),
@@ -92,7 +125,7 @@ function useDatePicker({
       emitChange(formatDate(today));
       setIsOpen(false);
     }
-  }, [mode, onChange]);
+  }, [mode, emitChange]);
 
   const isDateDisabled = useCallback(
     (date: Date) => {
@@ -132,7 +165,7 @@ function useDatePicker({
         }
       }
     },
-    [mode, startDate, endDate, isDateDisabled, onChange],
+    [mode, startDate, endDate, isDateDisabled, emitChange],
   );
 
   const clearDate = useCallback(() => {
@@ -141,7 +174,7 @@ function useDatePicker({
     setEndDate(null);
     emitChange('');
     setIsOpen(false);
-  }, [onChange]);
+  }, [emitChange]);
 
   const displayValue = useMemo(() => {
     if (mode === 'single' && selectedDate)
@@ -156,27 +189,23 @@ function useDatePicker({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      // Verifica que el clic NO sea dentro del modal ni dentro del input
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
+      const target = e.target as Node;
+      if (dropdownElement?.contains(target) || inputElement?.contains(target))
+        return;
+      setIsOpen(false);
     };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+  }, [isOpen, dropdownElement, inputElement]);
 
   return {
     placeholderText,
-    dropdownRef,
-    inputRef,
+    setReference,
+    setCalendar,
+    floatingStyles,
     state: { selectedDate, startDate, endDate, isOpen, viewDate, mode },
     actions: {
       setIsOpen,

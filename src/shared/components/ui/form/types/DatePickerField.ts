@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { InputHTMLAttributes, ReactNode, Ref } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
 export type DateFormat =
@@ -77,7 +77,7 @@ export interface DatePickerInputProps extends Omit<
   required?: boolean;
   error?: string;
   leftIcon?: LucideIcon;
-  inputRef?: React.RefObject<HTMLDivElement>;
+  inputRef?: Ref<HTMLDivElement>;
   state: {
     isOpen: boolean;
   };

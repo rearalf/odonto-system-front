@@ -1,3 +1,4 @@
+import { FloatingPortal } from '@floating-ui/react';
 import { clsx } from 'clsx';
 import { Clock, X } from 'lucide-react';
 import FieldLabel, { fieldBaseClass } from '../FieldLabel';
@@ -36,8 +37,9 @@ const TimePickerField = ({
     isMinuteDisabled,
     isSecondDisabled,
     isPeriodDisabled,
-    inputRef,
-    dropdownRef,
+    setReference,
+    setDropdown,
+    floatingStyles,
   } = useTimePicker({
     label,
     required,
@@ -73,15 +75,15 @@ const TimePickerField = ({
         htmlFor={id}
       />
       <div className="relative">
-        {Icon && (
-          <Icon
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-text-subtle"
-          />
-        )}
         <div className="relative">
+          {Icon && (
+            <Icon
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-text-subtle"
+            />
+          )}
           <input
-            ref={inputRef}
+            ref={setReference}
             id={id}
             type="text"
             readOnly
@@ -135,12 +137,14 @@ const TimePickerField = ({
         </div>
 
         {state.isOpen && !disabled && (
-          <div
-            ref={dropdownRef}
-            className="fixed z-50 mt-1 w-56 origin-top-right bg-bg-surface-elevated border border-border-default shadow-sm rounded-xl p-3"
-            role="dialog"
-            aria-label="Seleccionar hora"
-          >
+          <FloatingPortal>
+            <div
+              ref={setDropdown}
+              style={floatingStyles}
+              className="z-50 mt-1 w-56 origin-top-right bg-bg-surface-elevated border border-border-default shadow-sm rounded-xl p-3"
+              role="dialog"
+              aria-label="Seleccionar hora"
+            >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <span className="text-label-lg font-medium text-text-primary">
@@ -302,6 +306,7 @@ const TimePickerField = ({
               </Button>
             </div>
           </div>
+        </FloatingPortal>
         )}
       </div>
       <FieldHelp help={help} error={error} id={messageId} />

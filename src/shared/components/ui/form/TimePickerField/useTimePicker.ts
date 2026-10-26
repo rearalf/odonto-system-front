@@ -1,4 +1,17 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
+import {
+  flip,
+  shift,
+  offset,
+  autoUpdate,
+  useFloating,
+} from '@floating-ui/react';
 import type {
   TimePickerFieldProps,
   UseTimePickerReturn,
@@ -25,9 +38,38 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
     accept12HourInput = true,
   } = props;
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownElement, setDropdownElement] =
+    useState<HTMLDivElement | null>(null);
+  const [inputElement, setInputElement] = useState<HTMLInputElement | null>(
+    null,
+  );
   const prevValueRef = useRef<string | undefined>(value);
+
+  const {
+    refs: { setReference: setFloatingReference, setFloating },
+    floatingStyles,
+  } = useFloating({
+    placement: 'bottom-start',
+    strategy: 'fixed',
+    middleware: [offset(4), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
+  });
+
+  const setReference = useCallback(
+    (node: HTMLInputElement | null) => {
+      setInputElement(node);
+      setFloatingReference(node);
+    },
+    [setFloatingReference],
+  );
+
+  const setDropdown = useCallback(
+    (node: HTMLDivElement | null) => {
+      setDropdownElement(node);
+      setFloating(node);
+    },
+    [setFloating],
+  );
 
   const [state, setState] = useState<TimePickerState>(() =>
     getParsedState(value, use12Hour, accept12HourInput),
@@ -99,18 +141,16 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setState((prev) => ({ ...prev, isOpen: false }));
-      }
+      const target = e.target as Node;
+      if (dropdownElement?.contains(target) || inputElement?.contains(target))
+        return;
+      setState((prev) => ({ ...prev, isOpen: false }));
     };
     if (state.isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [state.isOpen]);
+  }, [state.isOpen, dropdownElement, inputElement]);
 
   const isDisabled = useCallback(
     (h: number, m: number, s: number, pm: boolean) => {
@@ -135,7 +175,7 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
       const formatted = formatStorage(h24, state.minutes, state.seconds);
       onChange?.(formatted);
       setState((prev) => ({ ...prev, isOpen: false }));
-      inputRef.current?.focus();
+      inputElement?.focus();
     },
     handleClear: () => {
       onChange?.('');
@@ -179,7 +219,7 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
       });
       const h24 = to24Hour(h, pm);
       onChange?.(formatStorage(h24, m, s));
-      inputRef.current?.focus();
+      inputElement?.focus();
     },
     handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -245,8 +285,9 @@ function useTimePicker(props: TimePickerFieldProps): UseTimePickerReturn {
     isMinuteDisabled,
     isSecondDisabled,
     isPeriodDisabled,
-    inputRef,
-    dropdownRef,
+    setReference,
+    setDropdown,
+    floatingStyles,
   };
 }
 

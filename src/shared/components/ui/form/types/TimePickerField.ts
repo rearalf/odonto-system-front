@@ -53,6 +53,7 @@ export interface UseTimePickerReturn {
   isMinuteDisabled: (m: number) => boolean;
   isSecondDisabled: (s: number) => boolean;
   isPeriodDisabled: (p: 'AM' | 'PM') => boolean;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  setReference: (node: HTMLInputElement | null) => void;
+  setDropdown: (node: HTMLDivElement | null) => void;
+  floatingStyles: React.CSSProperties;
 }

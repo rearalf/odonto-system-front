@@ -54,8 +54,9 @@ export function usePlantillaSemanalEdit() {
   const blocks = useWatch({ control, name: 'blocks' });
 
   useEffect(() => {
-    if (query.data && Array.isArray(query.data)) {
-      const recurringBlocks = query.data.filter((b) => b.isRecurring);
+    const availabilityData = query.data?.data;
+    if (availabilityData && Array.isArray(availabilityData)) {
+      const recurringBlocks = availabilityData.filter((b) => b.isRecurring);
       if (recurringBlocks.length > 0) {
         const formBlocks = recurringBlocks.map((b) => ({
           startTime: b.startTime,
@@ -73,14 +74,15 @@ export function usePlantillaSemanalEdit() {
   const initializedRef = useRef(false);
 
   useEffect(() => {
+    const availabilityData = query.data?.data;
     if (
       !initializedRef.current &&
-      query.data &&
-      Array.isArray(query.data) &&
-      query.data.some((b) => b.isRecurring)
+      availabilityData &&
+      Array.isArray(availabilityData) &&
+      availabilityData.some((b) => b.isRecurring)
     ) {
       if (blocks.length === 0) {
-        const recurringBlocks = query.data.filter((b) => b.isRecurring);
+        const recurringBlocks = availabilityData.filter((b) => b.isRecurring);
         const formBlocks = recurringBlocks.map((b) => ({
           startTime: b.startTime,
           endTime: b.endTime,

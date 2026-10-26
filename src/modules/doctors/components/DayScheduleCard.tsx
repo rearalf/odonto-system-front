@@ -1,27 +1,12 @@
 import { Clock, Plus, Trash2 } from 'lucide-react';
 import { Controller } from 'react-hook-form';
-import { Button, InputField, Switch, TimeField } from '@/shared/components/ui';
-import type { Control, FieldErrors } from 'react-hook-form';
-import type { DayOfWeek } from '@/modules/doctors/types/Availability';
 import {
-  type WeeklyScheduleFormValues,
-  type AvailabilityBlockFormValues,
-} from '@/modules/doctors/schemas/AvailabilitySchema';
-
-interface DayScheduleCardProps {
-  day: { value: DayOfWeek; label: string };
-  shifts: { block: AvailabilityBlockFormValues; index: number }[];
-  isEnabled: boolean;
-  blocks: AvailabilityBlockFormValues[];
-  isPending: boolean;
-  errors: FieldErrors<WeeklyScheduleFormValues>;
-  control: Control<WeeklyScheduleFormValues>;
-  updateBlock: (index: number, updates: Partial<AvailabilityBlockFormValues>) => void;
-  removeShift: (index: number) => void;
-  addShift: (dayOfWeek: DayOfWeek) => void;
-  DEFAULT_SLOT_DURATION: number;
-  DEFAULT_MAX_PATIENTS_PER_SLOT: number;
-}
+  Button,
+  Switch,
+  InputField,
+  TimePickerField,
+} from '@/shared/components/ui';
+import type { DayScheduleCardProps } from '@/modules/doctors/types/Availability';
 
 export function DayScheduleCard({
   day,
@@ -78,8 +63,7 @@ export function DayScheduleCard({
             >
               <div className="flex items-center justify-between">
                 <span className="text-label-sm font-medium text-text-secondary">
-                  Turno{' '}
-                  {shifts.findIndex((s) => s.index === index) + 1}
+                  Turno {shifts.findIndex((s) => s.index === index) + 1}
                 </span>
                 <Button
                   variant="ghost"
@@ -98,7 +82,7 @@ export function DayScheduleCard({
                   name={`blocks.${index}.startTime`}
                   control={control}
                   render={({ field }) => (
-                    <TimeField
+                    <TimePickerField
                       id={`startTime-${day.value}-${index}`}
                       label="Hora Inicio"
                       required
@@ -109,6 +93,12 @@ export function DayScheduleCard({
                       }
                       error={errors.blocks?.[index]?.startTime?.message}
                       disabled={isPending}
+                      showSeconds={false}
+                      stepSeconds={30}
+                      use12Hour={true}
+                      accept12HourInput={true}
+                      min="06:00:00"
+                      max="22:00:00"
                     />
                   )}
                 />
@@ -116,7 +106,7 @@ export function DayScheduleCard({
                   name={`blocks.${index}.endTime`}
                   control={control}
                   render={({ field }) => (
-                    <TimeField
+                    <TimePickerField
                       id={`endTime-${day.value}-${index}`}
                       label="Hora Fin"
                       required
@@ -127,6 +117,12 @@ export function DayScheduleCard({
                       }
                       error={errors.blocks?.[index]?.endTime?.message}
                       disabled={isPending}
+                      showSeconds={false}
+                      stepSeconds={30}
+                      use12Hour={true}
+                      accept12HourInput={true}
+                      min="06:00:00"
+                      max="22:00:00"
                     />
                   )}
                 />

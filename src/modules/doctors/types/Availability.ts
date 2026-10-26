@@ -1,3 +1,8 @@
+import type { Control, FieldErrors } from 'react-hook-form';
+import type {
+  AvailabilityBlockFormValues,
+  WeeklyScheduleFormValues,
+} from '../schemas/AvailabilitySchema';
 import type { BlockType, RowData } from './HorarioTab';
 export type { BlockType, RowData };
 
@@ -94,4 +99,25 @@ export interface UseAvailabilityTabReturn {
   ) => void;
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
+}
+
+export interface DayScheduleCardProps {
+  day: { value: DayOfWeek; label: string };
+  shifts: {
+    block: AvailabilityBlockFormValues;
+    index: number;
+  }[];
+  isEnabled: boolean;
+  blocks: AvailabilityBlockFormValues[];
+  isPending: boolean;
+  errors: FieldErrors<WeeklyScheduleFormValues>;
+  control: Control<WeeklyScheduleFormValues>;
+  updateBlock: (
+    index: number,
+    updates: Partial<AvailabilityBlockFormValues>,
+  ) => void;
+  removeShift: (index: number) => void;
+  addShift: (dayOfWeek: DayOfWeek) => void;
+  DEFAULT_SLOT_DURATION: number;
+  DEFAULT_MAX_PATIENTS_PER_SLOT: number;
 }

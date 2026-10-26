@@ -57,3 +57,60 @@ export interface UseTimePickerReturn {
   setDropdown: (node: HTMLDivElement | null) => void;
   floatingStyles: React.CSSProperties;
 }
+
+export interface TimePickerColumnProps<T extends string | number> {
+  title: string;
+  items: T[];
+  selectedValue: T | null;
+  onSelect: (value: T) => void;
+  isDisabled: (value: T) => boolean;
+  scrollable?: boolean;
+}
+
+export interface TimePickerInputProps {
+  id?: string;
+  displayValue: string;
+  placeholderText: string;
+  disabled?: boolean;
+  required?: boolean;
+  error?: string;
+  leftIcon?: LucideIcon;
+  messageId?: string;
+  // Extraído directamente de tu UseTimePickerReturn
+  setReference: (node: HTMLInputElement | null) => void;
+  isOpen: boolean;
+  actions: {
+    setIsOpen: (open: boolean) => void;
+    handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    handleClear: () => void;
+  };
+}
+
+export interface TimePickerDropdownProps {
+  setDropdown: (node: HTMLDivElement | null) => void;
+  floatingStyles: React.CSSProperties;
+  use12Hour?: boolean;
+  showSeconds?: boolean;
+  state: TimePickerState;
+  lists: {
+    hoursList: number[];
+    minutesList: number[];
+    secondsList: number[];
+    periodsList: ('AM' | 'PM')[];
+  };
+  validators: {
+    isHourDisabled: (h: number) => boolean;
+    isMinuteDisabled: (m: number) => boolean;
+    isSecondDisabled: (s: number) => boolean;
+    isPeriodDisabled: (p: 'AM' | 'PM') => boolean;
+  };
+  actions: {
+    setIsOpen: (open: boolean) => void;
+    setHours: (h: number) => void;
+    setMinutes: (m: number) => void;
+    setSeconds: (s: number) => void;
+    setPeriod: (p: 'AM' | 'PM') => void;
+    handleNow: () => void;
+    handleSelect: () => void;
+  };
+}

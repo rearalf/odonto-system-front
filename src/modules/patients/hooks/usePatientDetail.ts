@@ -1,15 +1,14 @@
 'use no memo';
 
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { patientApi } from '@/modules/patients/api/patientApi';
+import { usePatientDetailQuery } from '@/modules/patients/hooks/queries/usePatientDetailQuery';
 import { GENDER_LABELS } from '@/modules/patients/enums/GenderType';
 import { calculateAge } from '@/shared/utils/date';
 import { showError, showSuccess } from '@/shared/components/feedback';
 import type React from 'react';
-import type { PatientNavTab } from '../types/PatientDetail';
-import { useState } from 'react';
+import type { PatientNavTab, PatientDetailView } from '../types/PatientDetail';
 
 const formatBirthDate = (value: string) =>
   new Intl.DateTimeFormat('es', {
@@ -18,21 +17,20 @@ const formatBirthDate = (value: string) =>
     year: 'numeric',
   }).format(new Date(value));
 
+/**
+ * CAPA 2 (orquestador) — ficha del paciente.
+ * Mapea `PatientResponse` (DTO) a `PatientDetailView` (strings para la UI).
+ * La red vive en `usePatientDetailQuery`.
+ */
 export function usePatientDetail() {
   const { id } = useParams<{ id: string }>();
-
   const [activeTab, setActiveTab] = useState<PatientNavTab>('ficha-general');
 
-  const query = useQuery({
-    queryKey: ['patients', id],
-    queryFn: () => patientApi.get(id as string),
-    enabled: Boolean(id),
-    retry: false,
-  });
-
+  const query = usePatientDetailQuery(id);
   const data = query.data;
 
-  const phoneDigits = data?.person.phone.replace(/\D/g, '') ?? '';
+  // el backend devuelve phone como numero
+  const phoneDigits = data ? String(data.person.phone ?? '').replace(/\D/g, '') : '';
   const phone = phoneDigits
     ? `${phoneDigits.slice(0, 4)} ${phoneDigits.slice(4, 8)}`.trim()
     : '-';
@@ -63,34 +61,36 @@ export function usePatientDetail() {
     }
   };
 
+  const patient: PatientDetailView | undefined = data
+    ? {
+        id: data.id,
+        fullName: [
+          data.person.firstName,
+          data.person.middleName,
+          data.person.lastName,
+        ]
+          .filter(Boolean)
+          .join(' '),
+        avatarUrl: data.person.profilePictureUrl,
+        age: calculateAge(data.birthDate),
+        birthDate: formatBirthDate(data.birthDate),
+        gender: GENDER_LABELS[data.gender] ?? data.gender,
+        occupation: data.person.occupation ?? '-',
+        phone,
+        address: data.person.address ?? '-',
+        firstName: data.person.firstName,
+        middleName: data.person.middleName,
+        lastName: data.person.lastName,
+        medicalHistory: data.medicalHistory,
+        allergicReactions: data.allergicReactions,
+        currentSystemicTreatment: data.currentSystemicTreatment,
+        labResults: data.labResults,
+        systemicReview: data.systemicReview,
+      }
+    : undefined;
+
   return {
-    patient: data
-      ? {
-          id: data.id,
-          fullName: [
-            data.person.firstName,
-            data.person.middleName,
-            data.person.lastName,
-          ]
-            .filter(Boolean)
-            .join(' '),
-          avatarUrl: data.person.profilePictureUrl,
-          age: calculateAge(data.birthDate),
-          birthDate: formatBirthDate(data.birthDate),
-          gender: GENDER_LABELS[data.gender] ?? data.gender,
-          occupation: data.person.occupation ?? '-',
-          phone,
-          address: data.person.address ?? '-',
-          firstName: data.person.firstName,
-          middleName: data.person.middleName,
-          lastName: data.person.lastName,
-          medicalHistory: data.medicalHistory,
-          allergicReactions: data.allergicReactions,
-          currentSystemicTreatment: data.currentSystemicTreatment,
-          labResults: data.labResults,
-          systemicReview: data.systemicReview,
-        }
-      : undefined,
+    patient,
     breadcrumbsItems,
     phoneDigits,
     activeTab,

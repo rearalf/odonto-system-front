@@ -14,6 +14,7 @@ const SelectField = ({
   error,
   id,
   children,
+  className,
   ...selectProps
 }: SelectFieldProps) => {
   const messageId = id ? `${id}-message` : undefined;
@@ -42,6 +43,7 @@ const SelectField = ({
             fieldColorClass(error),
             Icon && 'pl-11',
             'cursor-pointer appearance-none pr-10',
+            className,
           )}
           {...selectProps}
         >

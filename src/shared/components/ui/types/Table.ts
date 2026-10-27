@@ -8,6 +8,7 @@ export type TableColumn<T> = {
   sortable?: boolean;
   render?: (row: T) => ReactNode;
   align?: TableColumnAlign;
+  numeric?: boolean;
   className?: string;
 };
 

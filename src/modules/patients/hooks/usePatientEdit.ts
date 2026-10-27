@@ -5,7 +5,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, parseISO, subYears } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
   PatientCreateSchema,
@@ -16,15 +15,16 @@ import {
   type PatientSystemDtoKey,
 } from '@/modules/patients/constants/SistemasAnatomicos';
 import { calculateAge } from '@/shared/utils/date';
-import { patientApi } from '@/modules/patients/api/patientApi';
-import type { PatientDetail } from '@/modules/patients/types/PatientList';
+import { usePatientDetailQuery } from '@/modules/patients/hooks/queries/usePatientDetailQuery';
+import { usePatientUpdateMutation } from '@/modules/patients/hooks/mutations/usePatientUpdateMutation';
+import type { PatientResponse } from '@/modules/patients/types/Patient';
 import {
   showApiError,
   showLoading,
   showSuccess,
 } from '@/shared/components/feedback';
 
-function toFormValues(detail: PatientDetail): PatientCreateFormValues {
+function toFormValues(detail: PatientResponse): PatientCreateFormValues {
   const hasSystemIssues = Object.fromEntries(
     SISTEMAS_ANATOMICOS.map((s) => [
       s.dtoKey,
@@ -39,7 +39,8 @@ function toFormValues(detail: PatientDetail): PatientCreateFormValues {
     lastName: detail.person.lastName ?? '',
     birthDate: format(parseISO(detail.birthDate), 'yyyy-MM-dd'),
     gender: detail.gender,
-    phone: detail.person.phone ?? '',
+    // el backend devuelve phone como numero; el formulario trabaja con string
+    phone: String(detail.person.phone ?? ''),
     occupation: detail.person.occupation ?? '',
     address: detail.person.address ?? '',
     medicalHistory: detail.medicalHistory ?? '',
@@ -56,14 +57,9 @@ export function usePatientEdit() {
   const { id } = useParams<{ id: string }>();
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const updatePatient = usePatientUpdateMutation();
 
-  const { data, isError, error } = useQuery({
-    queryKey: ['patients', id],
-    queryFn: () => patientApi.get(id as string),
-    enabled: Boolean(id),
-    retry: false,
-  });
+  const { data, isError, error } = usePatientDetailQuery(id);
 
   const form = useForm<PatientCreateFormValues>({
     resolver: zodResolver(PatientCreateSchema),
@@ -139,7 +135,6 @@ export function usePatientEdit() {
       navigate('/patients');
       return;
     }
-    if (!data) return;
     const formData = new FormData();
     if (data.profilePicture) {
       formData.append('profilePicture', data.profilePicture);
@@ -148,16 +143,16 @@ export function usePatientEdit() {
       if (key === 'profilePicture' || value === '' || value == null) continue;
       formData.append(key, String(value));
     }
+
     const toastId = showLoading('Guardando cambios…', {
       description: 'Actualizando el expediente clínico',
     });
     try {
-      await patientApi.update(id, formData);
+      await updatePatient.mutateAsync({ id, formData });
       showSuccess('Paciente actualizado', {
         id: toastId,
         description: 'Los cambios se guardaron correctamente',
       });
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
       navigate(`/patients/${id}`);
     } catch (error) {
       showApiError(error, { id: toastId });
@@ -176,7 +171,7 @@ export function usePatientEdit() {
     register,
     control,
     errors,
-    isSubmitting: formState.isSubmitting,
+    isSubmitting: formState.isSubmitting || updatePatient.isPending,
     patientName,
     onSubmit,
     setBirthDate,

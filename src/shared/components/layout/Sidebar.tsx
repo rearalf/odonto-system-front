@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Sun, Moon, ChevronDown } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Stethoscope,
+  Sun,
+  Moon,
+  ChevronDown,
+} from 'lucide-react';
 import { clsx } from 'clsx';
 import { useThemeStore } from '@/shared/stores/theme';
 
@@ -14,6 +21,7 @@ const ToothIcon = ({ className }: { className?: string }) => (
 const links = [
   { to: '/', label: 'Dashboard / Panel', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
+  { to: '/doctors', label: 'Doctores', icon: Stethoscope },
   // { to: '/appointments', label: 'Agenda de Citas', icon: Calendar },
   // { to: '/odontogram', label: 'Odontograma', icon: ToothIcon },
   // { to: '/treatments', label: 'Tratamientos', icon: FlaskConical },
@@ -145,7 +153,7 @@ export function Sidebar({
                   {label}
                 </span>
                 {collapsed && (
-                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-[#0b1c30] text-white text-label-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
+                  <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-sidebar-bg text-white text-label-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50">
                     {label}
                   </span>
                 )}

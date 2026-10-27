@@ -1,6 +1,10 @@
 import { useEffect, useId, useRef } from 'react';
 import type { UseModalOptions } from '../types';
 
+function getScrollbarWidth() {
+  return window.innerWidth - document.documentElement.clientWidth;
+}
+
 function useModal({
   open,
   onOpenChange,
@@ -9,14 +13,28 @@ function useModal({
   const titleId = useId();
   const descriptionId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
+    const scrollbarWidth = getScrollbarWidth();
+    scrollYRef.current = window.scrollY;
+
     document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.body.style.top = `-${scrollYRef.current}px`;
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+
     panelRef.current?.focus();
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.body.style.top = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollYRef.current);
     };
   }, [open]);
 

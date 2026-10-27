@@ -39,7 +39,6 @@ export type PatientFormSectionsProps = ReturnType<typeof usePatientCreate> & {
 };
 
 const PatientFormSections = ({
-  register,
   control,
   errors,
   isSubmitting,
@@ -81,32 +80,50 @@ const PatientFormSections = ({
         <hr className="mb-4 border-border-strong" />
         <PhotoUploadCard file={foto} onFileChange={setFoto} />
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <InputField
-            id="primer-nombre"
-            label="Primer Nombre"
-            required
-            leftIcon={User}
-            placeholder="Ej. Carlos"
-            error={errors.firstName?.message}
-            {...register('firstName')}
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="primer-nombre"
+                label="Primer Nombre"
+                required
+                leftIcon={User}
+                placeholder="Ej. Carlos"
+                error={errors.firstName?.message}
+                {...field}
+              />
+            )}
           />
-          <InputField
-            id="segundo-nombre"
-            label="Segundo Nombre"
-            optional
-            leftIcon={User}
-            placeholder="Ej. Eduardo"
-            error={errors.middleName?.message}
-            {...register('middleName')}
+          <Controller
+            name="middleName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="segundo-nombre"
+                label="Segundo Nombre"
+                optional
+                leftIcon={User}
+                placeholder="Ej. Eduardo"
+                error={errors.middleName?.message}
+                {...field}
+              />
+            )}
           />
-          <InputField
-            id="apellidos"
-            label="Apellidos Completos"
-            required
-            leftIcon={Users}
-            placeholder="Ej. Gómez Mendoza"
-            error={errors.lastName?.message}
-            {...register('lastName')}
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="apellidos"
+                label="Apellidos Completos"
+                required
+                leftIcon={Users}
+                placeholder="Ej. Gómez Mendoza"
+                error={errors.lastName?.message}
+                {...field}
+              />
+            )}
           />
 
           <DateField
@@ -121,22 +138,28 @@ const PatientFormSections = ({
             badge={age !== null ? `${age} años` : undefined}
             error={errors.birthDate?.message}
           />
-          <SelectField
-            id="genero"
-            label="Género Biológico / Legal"
-            required
-            leftIcon={Users}
-            error={errors.gender?.message}
-            defaultValue=""
-            {...register('gender')}
-          >
-            <option value="" disabled>
-              Seleccione una opción
-            </option>
-            <option value={GenderType.MALE}>Masculino</option>
-            <option value={GenderType.FEMALE}>Femenino</option>
-            <option value={GenderType.OTHER}>Otro</option>
-          </SelectField>
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <SelectField
+                id="genero"
+                label="Género Biológico / Legal"
+                required
+                leftIcon={Users}
+                error={errors.gender?.message}
+                defaultValue=""
+                {...field}
+              >
+                <option value="" disabled>
+                  Seleccione una opción
+                </option>
+                <option value={GenderType.MALE}>Masculino</option>
+                <option value={GenderType.FEMALE}>Femenino</option>
+                <option value={GenderType.OTHER}>Otro</option>
+              </SelectField>
+            )}
+          />
         </div>
       </section>
 
@@ -178,24 +201,36 @@ const PatientFormSections = ({
               />
             )}
           />
-          <InputField
-            id="ocupacion"
-            label="Ocupación / Profesión"
-            leftIcon={Briefcase}
-            placeholder="Ej. Ingeniero de Software"
-            error={errors.occupation?.message}
-            {...register('occupation')}
+          <Controller
+            name="occupation"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="ocupacion"
+                label="Ocupación / Profesión"
+                leftIcon={Briefcase}
+                placeholder="Ej. Ingeniero de Software"
+                error={errors.occupation?.message}
+                {...field}
+              />
+            )}
           />
           <div className="md:col-span-2">
-            <TextAreaField
-              id="direccion"
-              label="Dirección Completa de Residencia"
-              leftIcon={Home}
-              rows={3}
-              maxLength={100}
-              placeholder="Dirección completa (calle, número, piso, puerta, código postal y ciudad de residencia)..."
-              error={errors.address?.message}
-              {...register('address')}
+            <Controller
+              name="address"
+              control={control}
+              render={({ field }) => (
+                <TextAreaField
+                  id="direccion"
+                  label="Dirección Completa de Residencia"
+                  leftIcon={Home}
+                  rows={3}
+                  maxLength={100}
+                  placeholder="Dirección completa (calle, número, piso, puerta, código postal y ciudad de residencia)..."
+                  error={errors.address?.message}
+                  {...field}
+                />
+              )}
             />
           </div>
         </div>
@@ -299,53 +334,83 @@ const PatientFormSections = ({
               Precaución Quirúrgica
             </Badge>
           </div>
-          <TextAreaField
-            id="alergias-adversas"
-            label="Alergias conocidas"
-            rows={3}
-            maxLength={500}
-            placeholder="Indique alergias conocidas (ej. Penicilina, látex, AINEs, anestésicos locales con vasoconstrictor)..."
-            error={errors.allergicReactions?.message}
-            {...register('allergicReactions')}
+          <Controller
+            name="allergicReactions"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="alergias-adversas"
+                label="Alergias conocidas"
+                rows={3}
+                maxLength={500}
+                placeholder="Indique alergias conocidas (ej. Penicilina, látex, AINEs, anestésicos locales con vasoconstrictor)..."
+                error={errors.allergicReactions?.message}
+                {...field}
+              />
+            )}
           />
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <TextAreaField
-            id="antecedentes-medicos"
-            label="Antecedentes Médicos y Quirúrgicos Generales"
-            rows={4}
-            maxLength={1000}
-            placeholder="Describa cirugías previas, hospitalizaciones, patologías crónicas o antecedentes familiares de interés odontológico..."
-            error={errors.medicalHistory?.message}
-            {...register('medicalHistory')}
+          <Controller
+            name="medicalHistory"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="antecedentes-medicos"
+                label="Antecedentes Médicos y Quirúrgicos Generales"
+                rows={4}
+                maxLength={1000}
+                placeholder="Describa cirugías previas, hospitalizaciones, patologías crónicas o antecedentes familiares de interés odontológico..."
+                error={errors.medicalHistory?.message}
+                {...field}
+              />
+            )}
           />
-          <TextAreaField
-            id="tratamiento-sistemico"
-            label="Tratamiento Sistémico Actual (Farmacología)"
-            rows={4}
-            maxLength={1000}
-            placeholder="Medicamentos actuales: anticoagulantes orales, antihipertensivos, bifosfonatos, corticoides, dosis y frecuencia..."
-            error={errors.currentSystemicTreatment?.message}
-            {...register('currentSystemicTreatment')}
+          <Controller
+            name="currentSystemicTreatment"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="tratamiento-sistemico"
+                label="Tratamiento Sistémico Actual (Farmacología)"
+                rows={4}
+                maxLength={1000}
+                placeholder="Medicamentos actuales: anticoagulantes orales, antihipertensivos, bifosfonatos, corticoides, dosis y frecuencia..."
+                error={errors.currentSystemicTreatment?.message}
+                {...field}
+              />
+            )}
           />
-          <TextAreaField
-            id="examenes-laboratorio"
-            label="Resultados y Exámenes de Laboratorio"
-            rows={4}
-            maxLength={1000}
-            placeholder="Hemogramas, tiempos de coagulación (INR), glucemia basal, HbA1c o paneles virales recientes..."
-            error={errors.labResults?.message}
-            {...register('labResults')}
+          <Controller
+            name="labResults"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="examenes-laboratorio"
+                label="Resultados y Exámenes de Laboratorio"
+                rows={4}
+                maxLength={1000}
+                placeholder="Hemogramas, tiempos de coagulación (INR), glucemia basal, HbA1c o paneles virales recientes..."
+                error={errors.labResults?.message}
+                {...field}
+              />
+            )}
           />
-          <TextAreaField
-            id="notas-clinicas"
-            label="Notas y Observaciones Clínicas Adicionales"
-            rows={4}
-            maxLength={1000}
-            placeholder="Hallazgos en mucosa oral, hábitos parafuncionales (bruxismo), hábitos tabáquicos o consideraciones anestésicas..."
-            error={errors.systemEvaluationNotes?.message}
-            {...register('systemEvaluationNotes')}
+          <Controller
+            name="systemEvaluationNotes"
+            control={control}
+            render={({ field }) => (
+              <TextAreaField
+                id="notas-clinicas"
+                label="Notas y Observaciones Clínicas Adicionales"
+                rows={4}
+                maxLength={1000}
+                placeholder="Hallazgos en mucosa oral, hábitos parafuncionales (bruxismo), hábitos tabáquicos o consideraciones anestésicas..."
+                error={errors.systemEvaluationNotes?.message}
+                {...field}
+              />
+            )}
           />
         </div>
       </section>

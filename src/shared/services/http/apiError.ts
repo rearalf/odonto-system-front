@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 
 export interface ApiErrorBody {
-  message?: string;
+  message?: string | string[];
   errors?: Record<string, string[]>;
 }
 
@@ -32,7 +32,10 @@ export function normalizeError(error: unknown): ApiError {
   if (error instanceof AxiosError) {
     const status = error.response?.status;
     const body = error.response?.data as ApiErrorBody | undefined;
-    const message = body?.message ?? defaultMessage(status);
+    const rawMessage = body?.message;
+    const message = Array.isArray(rawMessage)
+      ? rawMessage.join('. ')
+      : (rawMessage ?? defaultMessage(status));
 
     return new ApiError(message, {
       status,

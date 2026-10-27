@@ -6,9 +6,12 @@ interface PhotoUploadCardProps {
   onFileChange?: (file: File | null) => void;
 }
 
-export const PhotoUploadCard = ({ file, onFileChange }: PhotoUploadCardProps) => {
+export const PhotoUploadCard = ({
+  file,
+  onFileChange,
+}: PhotoUploadCardProps) => {
   const [internalFile, setInternalFile] = useState<File | null>(null);
-  const currentFile = onFileChange ? file ?? null : internalFile;
+  const currentFile = onFileChange ? (file ?? null) : internalFile;
   const setCurrentFile = (next: File | null) =>
     onFileChange ? onFileChange(next) : setInternalFile(next);
 
@@ -21,10 +24,12 @@ export const PhotoUploadCard = ({ file, onFileChange }: PhotoUploadCardProps) =>
       />
 
       <div className="flex-1">
-        <h3 className="text-headline-sm font-semibold text-text-primary">Fotografía de Ficha Clínica</h3>
+        <h3 className="text-headline-sm font-semibold text-text-primary">
+          Fotografía de Ficha Clínica
+        </h3>
         <p className="mt-1 text-body-md text-text-muted">
-          Archivos admitidos: JPG o PNG. Tamaño máximo recomendado: 5 MB. Enfoque
-          frontal nítido.
+          Archivos admitidos: JPG o PNG. Tamaño máximo recomendado: 5 MB.
+          Enfoque frontal nítido.
         </p>
       </div>
     </section>

@@ -3,6 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, subYears } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 import {
   PatientCreateSchema,
@@ -13,19 +14,17 @@ import {
   type PatientSystemDtoKey,
 } from '@/modules/patients/constants/SistemasAnatomicos';
 import { calculateAge } from '@/shared/utils/date';
-import { patientApi } from '@/modules/patients/api/patientApi';
+import { usePatientCreateMutation } from '@/modules/patients/hooks/mutations/usePatientCreateMutation';
 import {
   showApiError,
   showLoading,
   showSuccess,
 } from '@/shared/components/feedback';
-import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 export function usePatientCreate() {
   const maxBirthDate = format(subYears(new Date(), 1), 'yyyy-MM-dd');
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const createPatient = usePatientCreateMutation();
 
   const form = useForm<PatientCreateFormValues>({
     resolver: zodResolver(PatientCreateSchema),
@@ -97,16 +96,16 @@ export function usePatientCreate() {
       if (key === 'profilePicture' || value === '' || value == null) continue;
       formData.append(key, String(value));
     }
+
     const toastId = showLoading('Guardando paciente…', {
       description: 'Creando el expediente clínico',
     });
     try {
-      await patientApi.create(formData);
+      await createPatient.mutateAsync(formData);
       showSuccess('Paciente guardado', {
         id: toastId,
         description: 'Paciente creado correctamente',
       });
-      queryClient.invalidateQueries({ queryKey: ['patients'] });
       navigate('/patients');
     } catch (error) {
       showApiError(error, { id: toastId });
@@ -121,7 +120,7 @@ export function usePatientCreate() {
     register,
     control,
     errors,
-    isSubmitting: formState.isSubmitting,
+    isSubmitting: formState.isSubmitting || createPatient.isPending,
     onSubmit,
     setBirthDate,
     setCompleteOdontogram,

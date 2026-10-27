@@ -39,8 +39,10 @@ export function buildPatientListColumns({
       key: 'phone',
       header: 'Teléfono',
       align: 'center',
+      numeric: true,
       render: (patient) => {
-        const digits = patient.phone.replace(/\D/g, '');
+        // el backend devuelve phone como numero
+        const digits = String(patient.phone ?? '').replace(/\D/g, '');
         const formatted = `${digits.slice(0, 4)} ${digits.slice(4, 8)}`;
         return (
           <div className="flex items-center gap-2">
@@ -81,6 +83,7 @@ export function buildPatientListColumns({
       key: 'age',
       header: 'Edad',
       align: 'center',
+      numeric: true,
       render: (patient) => (
         <div className="flex flex-col gap-2 items-center">
           <Badge variant="primary">{patient.age} años</Badge>

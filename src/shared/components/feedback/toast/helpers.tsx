@@ -50,8 +50,8 @@ export function showApiError(error: unknown, data?: ToastData) {
     <ul className="flex list-disc flex-col gap-1 pl-4">
       {Object.values(errors)
         .flat()
-        .map((fieldError) => (
-          <li key={fieldError}>{fieldError}</li>
+        .map((fieldError, index) => (
+          <li key={`${index}-${fieldError}`}>{fieldError}</li>
         ))}
     </ul>
   ) : undefined;

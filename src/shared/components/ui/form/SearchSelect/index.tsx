@@ -88,8 +88,17 @@ const SearchSelect = <T extends unknown>(props: SearchSelectProps<T>) => {
         getFloatingProps={getFloatingProps}
         setFloating={setFloating}
         getItemProps={getItemProps}
-        handleSelectOption={handleSelectOption as (option: SearchOption<unknown>) => void}
-        renderOption={renderOption as ((option: SearchOption<unknown>, isSelected: boolean) => React.ReactNode) | undefined}
+        handleSelectOption={
+          handleSelectOption as (option: SearchOption<unknown>) => void
+        }
+        renderOption={
+          renderOption as
+            | ((
+                option: SearchOption<unknown>,
+                isSelected: boolean,
+              ) => React.ReactNode)
+            | undefined
+        }
       />
     </div>
   );

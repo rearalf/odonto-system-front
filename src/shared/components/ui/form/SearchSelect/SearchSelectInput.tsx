@@ -65,7 +65,7 @@ export const SearchSelectInput = ({
         ) : (
           value != null &&
           value !== undefined &&
-          value !== '0' && (
+          value !== '' && (
             <button
               type="button"
               onMouseDown={(e) => {

@@ -17,4 +17,5 @@ export type PatientListParams = {
   page: number;
   perPage: number;
   search?: string;
+  pagination?: boolean;
 };

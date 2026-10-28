@@ -8,10 +8,10 @@ import type { PatientListItem, PatientListParams } from '../types/PatientList';
  * POST, PATCH y GET por id devuelven el mismo `PatientResponse`.
  */
 export const patientApi = {
-  list: ({ page, perPage, search }: PatientListParams) =>
+  list: ({ page, perPage, search, pagination }: PatientListParams) =>
     http.get<PaginatedResponse<PatientListItem>>('/patients', {
       params: {
-        pagination: true,
+        pagination,
         page,
         per_page: perPage,
         ...(search ? { search } : {}),

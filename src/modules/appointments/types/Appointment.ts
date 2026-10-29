@@ -1,5 +1,7 @@
 import type { GenderType } from '@/modules/patients/enums/GenderType';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
+import type { Control, FieldErrors } from 'react-hook-form';
+import type { AppointmentCreateFormValues } from '../schemas/AppointmentCreateSchema';
 
 export const AppointmentStatus = {
   WAITING: 'waiting',
@@ -33,10 +35,18 @@ export type PatientSearchProps = {
   error?: string;
 };
 
+export type CreatePatientModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSavePatient: () => void;
+  control: Control<AppointmentCreateFormValues>;
+  errors: FieldErrors<AppointmentCreateFormValues>;
+};
+
 export type PatientCardData = {
-  source?: 'new' | 'existing';
+  source: 'new' | 'existing';
   fullName: string;
-  phone: string | number;
+  phone: string;
   age?: number;
   birthday?: string;
   gender?: GenderType;
@@ -45,4 +55,4 @@ export type PatientCardData = {
   address?: string;
   hasAllergies?: boolean;
   patientId?: number;
-};
+} | null;

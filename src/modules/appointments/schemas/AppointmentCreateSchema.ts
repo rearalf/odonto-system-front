@@ -9,9 +9,12 @@ import { PatientCreateSchema } from '@/modules/patients/schemas/PatientCreateSch
 export const NewPatientQuickSchema = PatientCreateSchema.pick({
   firstName: true,
   lastName: true,
+  middleName: true,
   birthDate: true,
   gender: true,
   phone: true,
+  occupation: true,
+  address: true,
   completeOdontogram: true,
   medicalHistory: true,
   allergicReactions: true,

@@ -26,6 +26,8 @@ import { useDoctorSlotsQuery } from '@/modules/doctors/hooks/queries/useDoctorSl
 import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
 import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
+import { differenceInYears } from 'date-fns';
+
 import {
   currentTime,
   DEFAULT_VALUES,
@@ -39,8 +41,7 @@ function useAppointmentCreate() {
 
   const doctors = useDoctorListQuery({ page: 1, perPage: 100 });
   const [patientModalOpen, setPatientModalOpen] = useState(false);
-  const [patientCardData, setPatientCardData] =
-    useState<PatientCardData | null>(null);
+  const [patientCardData, setPatientCardData] = useState<PatientCardData>(null);
 
   const form = useForm<AppointmentCreateFormValues>({
     resolver: zodResolver(AppointmentCreateSchema),
@@ -58,6 +59,10 @@ function useAppointmentCreate() {
   const patientMode = useWatch({
     control: form.control,
     name: 'patientMode',
+  });
+  const newPatient = useWatch({
+    control: form.control,
+    name: 'newPatient',
   });
 
   const patientId = useWatch({
@@ -150,7 +155,9 @@ function useAppointmentCreate() {
   const closePatientModal = () => {
     setPatientModalOpen(false);
     setPatientMode('search');
-    form.resetField('newPatient');
+    if (!patientCardData) {
+      form.resetField('newPatient');
+    }
   };
 
   const clearPatient = () => {
@@ -170,6 +177,8 @@ function useAppointmentCreate() {
       gender: patient.gender,
       avatarUrl: patient.avatarUrl,
       hasAllergies: patient.hasAllergies,
+      occupation: '',
+      address: '',
       patientId: patient.id,
     });
     form.setValue('patientId', patient.id, { shouldValidate: true });
@@ -179,32 +188,69 @@ function useAppointmentCreate() {
   const saveNewPatient = async () => {
     if (!(await form.trigger('newPatient'))) return;
 
-    const newPatientData = form.getValues('newPatient');
-    const fullName =
-      `${newPatientData.firstName} ${newPatientData.lastName}`.trim();
-    const age = newPatientData.birthDate
-      ? new Date().getFullYear() -
-        new Date(newPatientData.birthDate).getFullYear()
+    const np = form.getValues('newPatient');
+    const fullName = [np.firstName, np.middleName, np.lastName]
+      .filter(Boolean)
+      .join(' ');
+    const age = np.birthDate
+      ? differenceInYears(new Date(), new Date(np.birthDate))
       : undefined;
 
     setPatientCardData({
       source: 'new',
       fullName,
-      phone: newPatientData.phone,
+      phone: np.phone,
       age,
-      birthday: newPatientData.birthDate,
-      gender: newPatientData.gender,
+      birthday: np.birthDate,
+      gender: np.gender,
       avatarUrl: null,
-      hasAllergies: false,
+      hasAllergies: !!np.allergicReactions?.length,
+      occupation: np.occupation,
+      address: np.address,
+      patientId: undefined,
     });
 
     setPatientModalOpen(false);
     setPatientMode('search');
   };
 
+  const editPatient = () => {
+    const data = patientCardData;
+    if (!data || data.source !== 'new') return;
+
+    setPatientModalOpen(true);
+    setPatientMode('new');
+  };
+
   const selectedDoctor = doctors.data?.data?.find(
     (doctor: DoctorListItem) => doctor.id === doctorId,
   );
+
+  const cardData = useMemo(() => {
+    if (!patientCardData) return null;
+
+    if (patientCardData.source === 'new') {
+      const np = newPatient;
+      return {
+        ...patientCardData,
+        fullName: [np.firstName, np.middleName, np.lastName]
+          .filter(Boolean)
+          .join(' '),
+        phone: np.phone || '',
+        age: np.birthDate
+          ? differenceInYears(new Date(), new Date(np.birthDate))
+          : undefined,
+        birthday: np.birthDate,
+        gender: np.gender,
+        hasAllergies: !!np.allergicReactions?.length,
+        occupation: np.occupation,
+        address: np.address,
+        avatarUrl: null,
+      };
+    }
+
+    return patientCardData;
+  }, [patientCardData, newPatient]);
 
   return {
     ...form,
@@ -235,7 +281,9 @@ function useAppointmentCreate() {
     saveNewPatient,
     clearPatient,
     selectExistingPatient,
+    editPatient,
     patientCardData,
+    cardData,
     setPatientId: (id: number) =>
       form.setValue('patientId', id, { shouldValidate: true }),
   };

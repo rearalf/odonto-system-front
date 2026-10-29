@@ -10,6 +10,10 @@ import { PatientCard } from '../components/PatientCard';
 export default function AppointmentCreatePage() {
   const appointment = useAppointmentCreate();
 
+  const cardData = appointment.cardData;
+  const patientMode = appointment.watch('patientMode');
+  const patientId = appointment.watch('patientId');
+
   return (
     <>
       <Breadcrumbs />
@@ -79,7 +83,7 @@ export default function AppointmentCreatePage() {
                 </p>
               </div>
             </div>
-            {!appointment.patientCardData && !appointment.watchers.patientId && (
+            {!cardData && !patientId && (
               <Button
                 type="button"
                 variant="outline"
@@ -92,21 +96,21 @@ export default function AppointmentCreatePage() {
             )}
           </div>
 
-          {!appointment.patientCardData &&
-            appointment.watchers.patientMode === 'search' && (
-              <PatientSearch
-                selectedId={appointment.watchers.patientId}
-                onSelect={(patient) =>
-                  appointment.selectExistingPatient(patient)
-                }
-                error={appointment.errors.patientId?.message}
-              />
-            )}
+          {!cardData && patientMode === 'search' && (
+            <PatientSearch
+              selectedId={patientId}
+              onSelect={(patient) =>
+                appointment.selectExistingPatient(patient)
+              }
+              error={appointment.errors.patientId?.message}
+            />
+          )}
 
-          {appointment.patientCardData && (
+          {cardData && (
             <PatientCard
-              patient={appointment.patientCardData}
+              patient={cardData}
               onClear={appointment.clearPatient}
+              onEdit={cardData.source === 'new' ? appointment.editPatient : undefined}
             />
           )}
         </section>

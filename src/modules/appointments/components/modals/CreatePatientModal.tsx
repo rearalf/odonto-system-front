@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Controller, type Control, type FieldErrors } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Calendar, ChevronDown, Phone, UserRound, Users } from 'lucide-react';
 
 import { SISTEMAS_ANATOMICOS } from '@/modules/patients/constants/SistemasAnatomicos';
@@ -14,15 +14,7 @@ import {
   DatePickerField,
   MaskedInputField,
 } from '@/shared/components/ui';
-import type { AppointmentCreateFormValues } from '../../schemas/AppointmentCreateSchema';
-
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSavePatient: () => void;
-  control: Control<AppointmentCreateFormValues>;
-  errors: FieldErrors<AppointmentCreateFormValues>;
-};
+import type { CreatePatientModalProps } from '../../types/Appointment';
 
 const CreatePatientModal = ({
   isOpen,
@@ -30,7 +22,7 @@ const CreatePatientModal = ({
   onSavePatient,
   control,
   errors,
-}: Props) => {
+}: CreatePatientModalProps) => {
   const [expanded1, setExpanded1] = useState(false);
   const [expanded2, setExpanded2] = useState(false);
   const newErrors = errors.newPatient;
@@ -68,6 +60,20 @@ const CreatePatientModal = ({
                 leftIcon={UserRound}
                 placeholder="Ej. Ana María"
                 error={newErrors?.firstName?.message}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            name="newPatient.middleName"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="new-middle-name"
+                label="Segundo nombre"
+                leftIcon={UserRound}
+                placeholder="Opcional"
+                error={newErrors?.middleName?.message}
                 {...field}
               />
             )}
@@ -138,6 +144,33 @@ const CreatePatientModal = ({
                 value={field.value}
                 onAccept={field.onChange}
                 error={newErrors?.phone?.message}
+              />
+            )}
+          />
+          <Controller
+            name="newPatient.occupation"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="new-occupation"
+                label="Ocupación"
+                leftIcon={Users}
+                placeholder="Opcional"
+                error={newErrors?.occupation?.message}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            name="newPatient.address"
+            control={control}
+            render={({ field }) => (
+              <InputField
+                id="new-address"
+                label="Dirección"
+                placeholder="Opcional"
+                error={newErrors?.address?.message}
+                {...field}
               />
             )}
           />

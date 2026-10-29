@@ -1,24 +1,30 @@
 import {
   Cake,
   Copy,
+  Edit,
   Locate,
   Luggage,
-  Phone,
   PhoneCall,
   User,
+  X,
 } from 'lucide-react';
 
 import { GenderType } from '@/modules/patients/enums/GenderType';
-import { Avatar, Badge } from '@/shared/components/ui';
-import type { PatientCardData } from '../types/Appointment';
+import { Avatar, Badge, Button } from '@/shared/components/ui';
+import type { PatientCardData } from '@/modules/appointments/types/Appointment';
+
+type PatientCardProps = {
+  patient: NonNullable<PatientCardData>;
+  onClear?: () => void;
+  onEdit?: () => void;
+};
 
 export function PatientCard({
   patient,
   onClear,
-}: {
-  patient: PatientCardData;
-  onClear?: () => void;
-}) {
+  onEdit,
+}: PatientCardProps) {
+  const canEdit = patient.source === 'new';
   return (
     <section className="flex flex-col items-center gap-4 bg-bg-surface rounded-xl border border-border-default shadow-sm p-4 sm:p-6 lg:p-8 mt-6 xl:flex-row xl:justify-between xl:items-center">
       <div className="flex flex-col md:flex-row items-center justify-center gap-4">
@@ -72,59 +78,53 @@ export function PatientCard({
           )}
         </div>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <Badge variant="primary" className="flex items-center gap-4">
-          <span className="flex gap-2 items-center min-w-0">
-            <Phone size={18} className="shrink-0" />
-            <span className="truncate">{patient.phone}</span>
-          </span>
+          <a
+            href={`tel:${patient.phone}`}
+            aria-label="Llamar al número de teléfono"
+            title="Llamar"
+            className="rounded p-0.5 text-current opacity-70 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
+          >
+            <PhoneCall className="h-5 w-5" aria-hidden="true" />
+          </a>
+          <span className="truncate">{patient.phone}</span>
 
-          <span className="flex items-center gap-4 shrink-0">
-            <button
-              type="button"
-              aria-label="Copiar teléfono"
-              title="Copiar"
-              className="rounded p-0.5 text-current opacity-70 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
-              onClick={() =>
-                navigator.clipboard.writeText(String(patient.phone))
-              }
-            >
-              <Copy className="h-5 w-5" aria-hidden="true" />
-            </button>
-
-            <a
-              href={`tel:${patient.phone}`}
-              aria-label="Llamar al número de teléfono"
-              title="Llamar"
-              className="rounded p-0.5 text-current opacity-70 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
-            >
-              <PhoneCall className="h-5 w-5" aria-hidden="true" />
-            </a>
-            {onClear && (
-              <button
-                type="button"
-                aria-label="Cambiar paciente"
-                title="Cambiar paciente"
-                className="rounded p-0.5 text-current opacity-70 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
-                onClick={onClear}
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-          </span>
+          <button
+            type="button"
+            aria-label="Copiar teléfono"
+            title="Copiar"
+            className="rounded p-0.5 text-current opacity-70 transition hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
+            onClick={() => navigator.clipboard.writeText(String(patient.phone))}
+          >
+            <Copy className="h-5 w-5" aria-hidden="true" />
+          </button>
         </Badge>
+        {canEdit && onEdit && (
+          <Button
+            type="button"
+            onClick={onEdit}
+            variant="outline"
+            color="info"
+            title="Editar paciente"
+            aria-label="Editar paciente"
+          >
+            <Edit className="h-5 w-5" aria-hidden="true" />
+            Editar
+          </Button>
+        )}
+        {onClear && (
+          <Button
+            variant="ghost"
+            color="error"
+            type="button"
+            aria-label="Cambiar paciente"
+            title="Cambiar paciente"
+            onClick={onClear}
+          >
+            <X />
+          </Button>
+        )}
       </div>
     </section>
   );

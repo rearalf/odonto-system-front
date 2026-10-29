@@ -4,6 +4,7 @@ import { Home } from 'lucide-react';
 import { dashboardRoutes } from '@/modules/dashboard/routes';
 import { patientRoutes } from '@/modules/patients/routes';
 import { doctorRoutes } from '@/modules/doctors/routes';
+import { appointmentRoutes } from '@/modules/appointments/routes';
 import { NotFoundPage } from './NotFoundPage';
 
 const allRoutes: RouteObject[] = [
@@ -14,6 +15,7 @@ const allRoutes: RouteObject[] = [
       ...dashboardRoutes,
       ...patientRoutes,
       ...doctorRoutes,
+      ...appointmentRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

@@ -18,4 +18,5 @@ export type PatientListParams = {
   perPage: number;
   search?: string;
   pagination?: boolean;
+  _scope?: string;
 };

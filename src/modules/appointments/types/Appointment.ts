@@ -10,7 +10,7 @@ export type AppointmentStatus =
   (typeof AppointmentStatus)[keyof typeof AppointmentStatus];
 
 export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
-  waiting: 'En espera (walk-in)',
+  waiting: 'En espera (sin cita previa)',
   scheduled: 'Programada',
 };
 

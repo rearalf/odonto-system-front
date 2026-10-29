@@ -1,3 +1,5 @@
+import type { GenderType } from '../enums/GenderType';
+
 export type PatientListItem = {
   id: number;
   fullName: string;
@@ -5,7 +7,7 @@ export type PatientListItem = {
   avatarUrl: string | null;
   birthday: string;
   age: number;
-  gender: string;
+  gender: GenderType;
   hasAllergies: boolean;
   allergicReactions: string | null;
   medicalHistory: string | null;

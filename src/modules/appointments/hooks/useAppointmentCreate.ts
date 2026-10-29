@@ -1,7 +1,7 @@
 'use no memo';
 
 import { useMemo, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type DefaultValues } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addMinutes, format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
@@ -26,10 +26,11 @@ import { useDoctorSlotsQuery } from '@/modules/doctors/hooks/queries/useDoctorSl
 import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
 import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
-import type { GenderType } from '@/modules/patients/enums/GenderType';
-
-const today = () => format(new Date(), 'yyyy-MM-dd');
-const currentTime = () => format(new Date(), 'HH:mm:ss');
+import {
+  currentTime,
+  DEFAULT_VALUES,
+  today,
+} from '../constants/CreateAppointment';
 
 function useAppointmentCreate() {
   const navigate = useNavigate();
@@ -43,35 +44,7 @@ function useAppointmentCreate() {
 
   const form = useForm<AppointmentCreateFormValues>({
     resolver: zodResolver(AppointmentCreateSchema),
-    defaultValues: {
-      isWalkIn: false,
-      patientMode: 'search',
-      patientId: null,
-      newPatient: {
-        firstName: '',
-        lastName: '',
-        birthDate: '',
-        gender: undefined,
-        phone: '',
-        completeOdontogram: true,
-        medicalHistory: '',
-        hasSncIssues: false,
-        hasSvcIssues: false,
-        hasSeIssues: false,
-        hasSmeIssues: false,
-        hasSrIssues: false,
-        hasSuIssues: false,
-        hasSguIssues: false,
-        hasSgiIssues: false,
-      },
-      doctorId: null,
-      date: today(),
-      slot: null,
-      startTime: currentTime(),
-      duration: 30,
-      reason: '',
-      notes: '',
-    },
+    defaultValues: DEFAULT_VALUES as DefaultValues<AppointmentCreateFormValues>,
   });
 
   const isWalkIn = useWatch({ control: form.control, name: 'isWalkIn' });
@@ -188,18 +161,13 @@ function useAppointmentCreate() {
   };
 
   const selectExistingPatient = (patient: PatientListItem) => {
-    const genderMap: Record<string, GenderType> = {
-      M: 'male',
-      F: 'female',
-    };
-
     setPatientCardData({
       source: 'existing',
       fullName: patient.fullName,
       phone: String(patient.phone),
       age: patient.age,
       birthday: patient.birthday,
-      gender: (genderMap[patient.gender] ?? 'other') as GenderType,
+      gender: patient.gender,
       avatarUrl: patient.avatarUrl,
       hasAllergies: patient.hasAllergies,
       patientId: patient.id,
@@ -219,19 +187,13 @@ function useAppointmentCreate() {
         new Date(newPatientData.birthDate).getFullYear()
       : undefined;
 
-    const genderMap: Record<string, GenderType> = {
-      M: 'male',
-      F: 'female',
-    };
-
     setPatientCardData({
       source: 'new',
       fullName,
       phone: newPatientData.phone,
       age,
       birthday: newPatientData.birthDate,
-      gender: (genderMap[newPatientData.gender as string] ??
-        'other') as GenderType,
+      gender: newPatientData.gender,
       avatarUrl: null,
       hasAllergies: false,
     });
@@ -250,7 +212,7 @@ function useAppointmentCreate() {
     errors: form.formState.errors,
     isWalkIn,
     doctorId,
-    date: date || format(new Date(), 'yyyy-MM-dd'),
+    date: date || today,
     endTime,
     watchers: {
       slot,

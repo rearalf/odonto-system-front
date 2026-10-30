@@ -11,3 +11,4 @@ export { default as FieldMock } from './FieldMock';
 export { default as Switch } from './switch/index';
 export { default as TimePickerField } from './TimePickerField/TimePickerField';
 export { default as DatePickerField } from './DatePickerField/index';
+export { default as SearchSelect } from './SearchSelect';

@@ -14,7 +14,7 @@ import {
   DatePickerField,
   MaskedInputField,
 } from '@/shared/components/ui';
-import type { CreatePatientModalProps } from '../../types/Appointment';
+import type { CreatePatientModalProps } from '@/modules/appointments/types';
 
 const CreatePatientModal = ({
   isOpen,

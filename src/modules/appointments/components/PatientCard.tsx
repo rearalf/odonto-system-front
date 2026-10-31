@@ -11,7 +11,7 @@ import {
 
 import { GenderType } from '@/modules/patients/enums/GenderType';
 import { Avatar, Badge, Button } from '@/shared/components/ui';
-import type { PatientCardData } from '@/modules/appointments/types/Appointment';
+import type { PatientCardData } from '@/modules/appointments/types';
 
 type PatientCardProps = {
   patient: NonNullable<PatientCardData>;

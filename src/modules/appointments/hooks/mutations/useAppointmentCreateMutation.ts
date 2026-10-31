@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { appointmentApi } from '@/modules/appointments/api/appointmentApi';
 import { appointmentKeys } from '@/modules/appointments/hooks/appointmentKeys';
-import type { AppointmentCreatePayload } from '@/modules/appointments/types/Appointment';
+import type { AppointmentCreatePayload } from '@/modules/appointments/types';
 
 export function useAppointmentCreateMutation() {
   const queryClient = useQueryClient();

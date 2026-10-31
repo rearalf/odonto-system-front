@@ -21,7 +21,7 @@ import {
   AppointmentStatus,
   type AppointmentCreatePayload,
   type PatientCardData,
-} from '../types/Appointment';
+} from '@/modules/appointments/types';
 import { useDoctorSlotsQuery } from '@/modules/doctors/hooks/queries/useDoctorSlotsQuery';
 import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
 import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
@@ -255,6 +255,7 @@ function useAppointmentCreate() {
   return {
     ...form,
     selectedDoctor,
+    doctors,
     errors: form.formState.errors,
     isWalkIn,
     doctorId,

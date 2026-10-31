@@ -1,11 +1,11 @@
-import { UserPlus, UserRound } from 'lucide-react';
-
 import { Badge, Breadcrumbs, Button, Switch } from '@/shared/components/ui';
-// import CreateAppointmentView from '../components/CreateAppointmentView'; // Comentado temporalmente - en migración
+
+import {
+  PatientSelector,
+  SelectDoctorSection,
+  AppointmentDetailsSection,
+} from '../components/CreateAppointmentSections';
 import useAppointmentCreate from '../hooks/useAppointmentCreate';
-import CreatePatientModal from '../components/modals/CreatePatientModal';
-import PatientSearch from '../components/PatientSearch';
-import { PatientCard } from '../components/PatientCard';
 
 export default function AppointmentCreatePage() {
   const appointment = useAppointmentCreate();
@@ -68,63 +68,65 @@ export default function AppointmentCreatePage() {
         noValidate
         className="mt-6 space-y-6"
       >
-        <section className="rounded-2xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
-          <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <span className="rounded-xl bg-primary/10 p-3 text-primary">
-                <UserRound className="h-5 w-5" />
-              </span>
-              <div>
-                <h2 className="text-headline-sm font-semibold text-text-primary">
-                  Paciente
-                </h2>
-                <p className="text-body-sm text-text-muted">
-                  Busca un expediente existente o abre uno nuevo.
-                </p>
-              </div>
-            </div>
-            {!cardData && !patientId && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                icon={<UserPlus className="h-4 w-4" />}
-                onClick={() => appointment.openPatientModal()}
-              >
-                Nuevo paciente
-              </Button>
-            )}
-          </div>
+        <PatientSelector
+          patientId={patientId}
+          patientMode={patientMode}
+          cardData={cardData}
+          error={appointment.errors.patientId?.message}
+          isModalOpen={appointment.patientModalOpen}
+          onSelectExisting={appointment.selectExistingPatient}
+          onClearPatient={appointment.clearPatient}
+          onEditPatient={appointment.editPatient}
+          onOpenNewPatientModal={appointment.openPatientModal}
+          onClosePatientModal={appointment.closePatientModal}
+          onSaveNewPatient={appointment.saveNewPatient}
+          control={appointment.control}
+          errors={appointment.errors}
+        />
 
-          {!cardData && patientMode === 'search' && (
-            <PatientSearch
-              selectedId={patientId}
-              onSelect={(patient) =>
-                appointment.selectExistingPatient(patient)
-              }
-              error={appointment.errors.patientId?.message}
-            />
-          )}
+        <SelectDoctorSection
+          doctorId={appointment.doctorId}
+          date={appointment.watch('date')}
+          startTime={appointment.watch('startTime')}
+          duration={appointment.watch('duration')}
+          slot={appointment.watch('slot')}
+          isWalkIn={appointment.isWalkIn}
+          endTime={appointment.endTime}
+          selectedDoctor={appointment.selectedDoctor}
+          onDoctorChange={(id) =>
+            appointment.setValue('doctorId', id, { shouldValidate: true })
+          }
+          onDateChange={(date) =>
+            appointment.setValue('date', date, { shouldValidate: true })
+          }
+          onStartTimeChange={(time) =>
+            appointment.setValue('startTime', time, { shouldValidate: true })
+          }
+          onDurationChange={(duration) =>
+            appointment.setValue('duration', duration, { shouldValidate: true })
+          }
+          onSlotSelect={(slot) =>
+            appointment.setValue('slot', slot, { shouldValidate: true })
+          }
+          doctorError={appointment.errors.doctorId?.message}
+          dateError={appointment.errors.date?.message}
+          slotError={appointment.errors.slot?.message}
+        />
 
-          {cardData && (
-            <PatientCard
-              patient={cardData}
-              onClear={appointment.clearPatient}
-              onEdit={cardData.source === 'new' ? appointment.editPatient : undefined}
-            />
-          )}
-        </section>
+        <AppointmentDetailsSection
+          control={appointment.control}
+          errors={appointment.errors}
+          isWalkIn={appointment.isWalkIn}
+        />
+
+        <div className="flex justify-end">
+          <Button type="submit" size="lg" loading={appointment.isSubmitting}>
+            Crear cita
+          </Button>
+        </div>
       </form>
 
       {/* <CreateAppointmentView /> */}
-
-      <CreatePatientModal
-        isOpen={appointment.patientModalOpen}
-        onClose={appointment.closePatientModal}
-        onSavePatient={appointment.saveNewPatient}
-        control={appointment.control}
-        errors={appointment.errors}
-      />
     </>
   );
 }

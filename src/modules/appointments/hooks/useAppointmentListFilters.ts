@@ -3,17 +3,16 @@ import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorLis
 
 function useAppointmentListFilters() {
   const { data: doctorsResponse } = useDoctorListQuery({ pagination: false });
-  const doctors = doctorsResponse?.data ?? [];
 
-  const doctorOptions = useMemo(
-    () =>
-      doctors.map((d) => ({
-        id: d.id,
-        label: d.fullName,
-        data: d,
-      })),
-    [doctors],
-  );
+  const doctorOptions = useMemo(() => {
+    const doctors = doctorsResponse?.data ?? [];
+
+    return doctors.map((d) => ({
+      id: d.id,
+      label: d.fullName,
+      data: d,
+    }));
+  }, [doctorsResponse?.data]);
 
   const statusOptions = [
     { value: 'scheduled' as const, label: 'Programada' },

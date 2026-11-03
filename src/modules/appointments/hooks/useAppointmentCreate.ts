@@ -16,6 +16,7 @@ import { useAppointmentCreateMutation } from './mutations/useAppointmentCreateMu
 import {
   AppointmentCreateSchema,
   type AppointmentCreateFormValues,
+  type NewPatientQuickValues,
 } from '../schemas/AppointmentCreateSchema';
 import {
   AppointmentStatus,
@@ -51,7 +52,8 @@ function useAppointmentCreate() {
   const isWalkIn = useWatch({ control: form.control, name: 'isWalkIn' });
   const doctorId = useWatch({ control: form.control, name: 'doctorId' });
   const date = useWatch({ control: form.control, name: 'date' });
-  const startTime = useWatch({ control: form.control, name: 'startTime' });
+  const startTime =
+    useWatch({ control: form.control, name: 'startTime' }) || currentTime();
   const duration = useWatch({ control: form.control, name: 'duration' });
   const slotsQuery = useDoctorSlotsQuery(
     !isWalkIn && doctorId && date ? { doctorId, date } : undefined,
@@ -89,8 +91,10 @@ function useAppointmentCreate() {
     try {
       let patientId = values.patientId;
       if (values.patientMode === 'new') {
+        const newPatientData = (values.newPatient ??
+          {}) as NewPatientQuickValues;
         const patientFormData = new FormData();
-        for (const [key, value] of Object.entries(values.newPatient)) {
+        for (const [key, value] of Object.entries(newPatientData)) {
           if (value !== '' && value != null)
             patientFormData.append(key, String(value));
         }
@@ -144,7 +148,11 @@ function useAppointmentCreate() {
 
   const setPatientMode = (mode: 'search' | 'new') => {
     form.setValue('patientMode', mode, { shouldValidate: true });
-    if (mode === 'new') form.setValue('patientId', null);
+    if (mode === 'new') {
+      form.setValue('patientId', null);
+    } else {
+      form.setValue('newPatient', undefined);
+    }
   };
 
   const openPatientModal = () => {
@@ -188,7 +196,7 @@ function useAppointmentCreate() {
   const saveNewPatient = async () => {
     if (!(await form.trigger('newPatient'))) return;
 
-    const np = form.getValues('newPatient');
+    const np = (form.getValues('newPatient') ?? {}) as NewPatientQuickValues;
     const fullName = [np.firstName, np.middleName, np.lastName]
       .filter(Boolean)
       .join(' ');
@@ -230,7 +238,7 @@ function useAppointmentCreate() {
     if (!patientCardData) return null;
 
     if (patientCardData.source === 'new') {
-      const np = newPatient;
+      const np = (newPatient ?? {}) as NewPatientQuickValues;
       return {
         ...patientCardData,
         fullName: [np.firstName, np.middleName, np.lastName]
@@ -259,7 +267,7 @@ function useAppointmentCreate() {
     errors: form.formState.errors,
     isWalkIn,
     doctorId,
-    date: date || today,
+    date: date || today(),
     endTime,
     watchers: {
       slot,

@@ -2,10 +2,6 @@ import { z } from 'zod';
 
 import { PatientCreateSchema } from '@/modules/patients/schemas/PatientCreateSchema';
 
-/**
- * Registro rápido de paciente: subset del schema canónico de patients.
- * El backend exige los mismos campos del POST /patients (incluido el teléfono).
- */
 export const NewPatientQuickSchema = PatientCreateSchema.pick({
   firstName: true,
   lastName: true,
@@ -33,29 +29,23 @@ export const NewPatientQuickSchema = PatientCreateSchema.pick({
 
 export type NewPatientQuickValues = z.infer<typeof NewPatientQuickSchema>;
 
-/** Duraciones rápidas del walk-in (minutos). */
 export const WALK_IN_DURATIONS = [15, 30, 45] as const;
 
 export const AppointmentCreateSchema = z
   .object({
-    /** Estado rector de la vista: cita regular (false) vs walk-in (true). */
     isWalkIn: z.boolean(),
     patientMode: z.enum(['search', 'new']),
     patientId: z.number().nullable(),
-    newPatient: NewPatientQuickSchema,
+    newPatient: NewPatientQuickSchema.optional(),
     doctorId: z.number().nullable(),
-    /** YYYY-MM-DD. En walk-in queda fijada a la fecha actual. */
     date: z.iso.date({ message: 'La fecha es obligatoria.' }),
-    /** Slot elegido de GET /doctors/{id}/slots (solo cita regular). */
     slot: z
       .object({
         startTime: z.string(),
         endTime: z.string(),
       })
       .nullable(),
-    /** HH:mm:ss. Solo walk-in; se prellena con la hora actual. */
     startTime: z.string(),
-    /** Duración del walk-in en minutos (15/30/45). */
     duration: z.number(),
     reason: z
       .string()

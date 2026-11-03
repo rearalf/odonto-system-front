@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Users,
-  Stethoscope,
   Sun,
   Moon,
+  Users,
+  Calendar,
+  Stethoscope,
   ChevronDown,
+  LayoutDashboard,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useThemeStore } from '@/shared/stores/theme';
@@ -22,7 +23,7 @@ const links = [
   { to: '/', label: 'Dashboard / Panel', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
   { to: '/doctors', label: 'Doctores', icon: Stethoscope },
-  // { to: '/appointments', label: 'Agenda de Citas', icon: Calendar },
+  { to: '/appointments', label: 'Citas', icon: Calendar },
   // { to: '/odontogram', label: 'Odontograma', icon: ToothIcon },
   // { to: '/treatments', label: 'Tratamientos', icon: FlaskConical },
   // { to: '/billing', label: 'Facturación', icon: Receipt },

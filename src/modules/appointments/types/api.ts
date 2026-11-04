@@ -1,9 +1,14 @@
-import type { AppointmentStatus } from '@/modules/appointments/constants/appointment-status';
+export type AppointmentStatus = {
+  id: number;
+  name: string;
+  color: string;
+  description: string;
+};
 
 export type AppointmentCreatePayload = {
   reason: string;
   notes?: string;
-  status: AppointmentStatus;
+  status: string;
   start_time: string;
   end_time: string;
   doctor_id: number;

@@ -3,7 +3,11 @@ import { Clock, Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { Badge, Button, type TableColumn } from '@/shared/components/ui';
 import type { AppointmentListItem } from '@/modules/appointments/types';
-import { APPOINTMENT_STATUS_LABELS } from '@/modules/appointments/constants/appointment-status';
+import type { AppointmentStatus } from '@/modules/appointments/types';
+import {
+  getStatusLabel,
+  getStatusColor,
+} from '@/modules/appointments/constants/appointment-status';
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PER_PAGE = 10;
@@ -11,9 +15,11 @@ export const DEFAULT_PER_PAGE = 10;
 export function buildAppointmentListColumns({
   onDelete,
   deletingId,
+  statuses,
 }: {
   onDelete: (appointment: AppointmentListItem) => void;
   deletingId: number | undefined;
+  statuses: AppointmentStatus[];
 }): TableColumn<AppointmentListItem>[] {
   return [
     {
@@ -78,22 +84,16 @@ export function buildAppointmentListColumns({
       align: 'center',
       sortable: true,
       render: (appointment) => {
-        const variant =
-          appointment.statusColor === 'blue'
-            ? 'primary'
-            : appointment.statusColor === 'yellow'
-              ? 'warning'
-              : appointment.statusColor === 'green'
-                ? 'success'
-                : appointment.statusColor === 'red'
-                  ? 'error'
-                  : 'default';
+        const label = getStatusLabel(statuses, appointment.status);
+        const color = getStatusColor(statuses, appointment.status);
 
         return (
-          <Badge variant={variant} className="text-capitalize">
-            {APPOINTMENT_STATUS_LABELS[appointment.status] ??
-              appointment.status}
-          </Badge>
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full font-medium text-xs px-2.5 py-0.5 text-white text-capitalize"
+            style={{ backgroundColor: color }}
+          >
+            {label}
+          </span>
         );
       },
     },
@@ -155,3 +155,8 @@ export function buildAppointmentListColumns({
     },
   ];
 }
+
+export const sortOrderOptions = [
+  { id: 'ASC' as const, label: 'Ascendente', data: 'ASC' },
+  { id: 'DESC' as const, label: 'Descendente', data: 'DESC' },
+];

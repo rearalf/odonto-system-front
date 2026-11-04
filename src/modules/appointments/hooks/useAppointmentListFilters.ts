@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
-import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
 
-function useAppointmentListFilters() {
+import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
+import { getStatusOptions } from '@/modules/appointments/constants/appointment-status';
+import type { AppointmentStatus } from '@/modules/appointments/types';
+
+function useAppointmentListFilters(statuses: AppointmentStatus[]) {
   const { data: doctorsResponse } = useDoctorListQuery({ pagination: false });
 
   const doctorOptions = useMemo(() => {
@@ -14,10 +17,7 @@ function useAppointmentListFilters() {
     }));
   }, [doctorsResponse?.data]);
 
-  const statusOptions = [
-    { value: 'scheduled' as const, label: 'Programada' },
-    { value: 'waiting' as const, label: 'En espera' },
-  ];
+  const statusOptions = useMemo(() => getStatusOptions(statuses), [statuses]);
 
   const sortByOptions = [
     { id: 'startTime' as const, label: 'Fecha/Hora inicio', data: 'startTime' },

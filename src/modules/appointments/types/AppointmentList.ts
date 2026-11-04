@@ -4,7 +4,7 @@ export type AppointmentListItem = {
   doctorId: number;
   startTime: string;
   endTime: string;
-  status: 'scheduled' | 'waiting';
+  status: string;
   reason: string;
   isWalkIn: boolean;
   patientFullName: string;
@@ -23,8 +23,9 @@ export type AppointmentListParams = {
   from?: string;
   to?: string;
   patientName?: string;
-  status?: ('scheduled' | 'waiting')[];
+  status?: number[];
   sortBy?: 'startTime' | 'createdAt' | 'reason';
+  sortOrder?: 'ASC' | 'DESC';
 };
 
 export type AppointmentListResponse = {

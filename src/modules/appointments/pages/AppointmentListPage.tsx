@@ -10,11 +10,13 @@ import {
   SearchSelect,
   MultiSelectField,
 } from '@/shared/components/ui';
-import { buildAppointmentListColumns } from '@/modules/appointments/constants/appointmentListColumns';
+import {
+  sortOrderOptions,
+  buildAppointmentListColumns,
+} from '@/modules/appointments/constants/appointmentListColumns';
 import useAppointmentListPage from '@/modules/appointments/hooks/useAppointmentListPage';
-import useAppointmentListFilters from '@/modules/appointments/hooks/useAppointmentListFilters';
 
-export default function AppointmentListPage() {
+function AppointmentListPage() {
   const {
     appointments,
     total,
@@ -29,13 +31,15 @@ export default function AppointmentListPage() {
     to,
     status,
     sortBy,
+    sortOrder,
     onPageChange,
     onPerPageChange,
     setSearchInput,
     setDoctorId,
     setDateRange,
     setStatus,
-    setSort,
+    setSortBy,
+    setSortOrder,
     handleClearFilters,
     hasActiveFilters,
     selectedAppointment,
@@ -45,10 +49,11 @@ export default function AppointmentListPage() {
     requestDelete,
     cancelDelete,
     handleConfirmDelete,
+    statuses,
+    doctorOptions,
+    statusOptions,
+    sortByOptions,
   } = useAppointmentListPage();
-
-  const { doctorOptions, statusOptions, sortByOptions } =
-    useAppointmentListFilters();
 
   const emptyState = search ? (
     <div className="text-center py-8">
@@ -178,9 +183,7 @@ export default function AppointmentListPage() {
               placeholder="Todos los estados"
               options={statusOptions}
               value={status as string[]}
-              onChange={(value) =>
-                setStatus(value as ('scheduled' | 'waiting')[])
-              }
+              onChange={(value) => setStatus(value as string[])}
             />
           </div>
 
@@ -191,7 +194,19 @@ export default function AppointmentListPage() {
               options={sortByOptions}
               value={sortBy}
               onSelect={(option) =>
-                setSort(option?.data as 'startTime' | 'createdAt' | 'reason')
+                setSortBy(option?.data as 'startTime' | 'createdAt' | 'reason')
+              }
+            />
+          </div>
+
+          <div>
+            <SearchSelect
+              id="filtro-orden-direccion"
+              label="Dirección"
+              options={sortOrderOptions}
+              value={sortOrder}
+              onSelect={(option) =>
+                setSortOrder(option?.data as 'ASC' | 'DESC')
               }
             />
           </div>
@@ -225,6 +240,7 @@ export default function AppointmentListPage() {
           columns={buildAppointmentListColumns({
             onDelete: requestDelete,
             deletingId,
+            statuses,
           })}
           rows={appointments}
           total={total}
@@ -287,3 +303,5 @@ export default function AppointmentListPage() {
     </>
   );
 }
+
+export default AppointmentListPage;

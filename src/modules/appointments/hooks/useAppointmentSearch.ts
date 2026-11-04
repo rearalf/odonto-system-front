@@ -3,23 +3,32 @@ import { useDebounce } from '@/shared/hooks/useDebounce';
 
 import { useAppointmentListQuery } from '@/modules/appointments/hooks/queries';
 import type { AppointmentListParams } from '@/modules/appointments/types';
+import type { AppointmentStatus } from '@/modules/appointments/types';
+import { getStatusIds } from '@/modules/appointments/constants/appointment-status';
 import {
   DEFAULT_PAGE,
   DEFAULT_PER_PAGE,
 } from '../constants/appointmentListColumns';
 
-function useAppointmentSearch() {
+function useAppointmentSearch(statuses: AppointmentStatus[]) {
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [search, setSearch] = useState('');
   const [doctorId, setDoctorId] = useState<number | undefined>(undefined);
   const [from, setFrom] = useState<string | undefined>(undefined);
   const [to, setTo] = useState<string | undefined>(undefined);
-  const [status, setStatus] = useState<('scheduled' | 'waiting')[]>([]);
+  const [statusNames, setStatusNames] = useState<string[]>([]);
   const [sortBy, setSortBy] =
     useState<AppointmentListParams['sortBy']>('startTime');
+  const [sortOrder, setSortOrder] =
+    useState<AppointmentListParams['sortOrder']>('ASC');
 
   const debouncedSearch = useDebounce(search, 300);
+
+  const statusIds = useMemo(
+    () => getStatusIds(statuses, statusNames),
+    [statuses, statusNames],
+  );
 
   const params = useMemo<AppointmentListParams>(
     () => ({
@@ -29,10 +38,21 @@ function useAppointmentSearch() {
       from,
       to,
       patientName: debouncedSearch || undefined,
-      status: status.length > 0 ? status : undefined,
+      status: statusIds.length > 0 ? statusIds : undefined,
       sortBy,
+      sortOrder,
     }),
-    [page, perPage, doctorId, from, to, debouncedSearch, status, sortBy],
+    [
+      page,
+      perPage,
+      doctorId,
+      from,
+      to,
+      debouncedSearch,
+      statusIds,
+      sortBy,
+      sortOrder,
+    ],
   );
 
   const query = useAppointmentListQuery(params);
@@ -65,17 +85,22 @@ function useAppointmentSearch() {
     [],
   );
 
-  const handleStatusChange = useCallback(
-    (newStatus: ('scheduled' | 'waiting')[]) => {
-      setStatus(newStatus);
+  const handleStatusChange = useCallback((newStatusNames: string[]) => {
+    setStatusNames(newStatusNames);
+    setPage(DEFAULT_PAGE);
+  }, []);
+
+  const handleSortByChange = useCallback(
+    (newSortBy: AppointmentListParams['sortBy']) => {
+      setSortBy(newSortBy);
       setPage(DEFAULT_PAGE);
     },
     [],
   );
 
-  const handleSortChange = useCallback(
-    (newSortBy: AppointmentListParams['sortBy']) => {
-      setSortBy(newSortBy);
+  const handleSortOrderChange = useCallback(
+    (newSortOrder: AppointmentListParams['sortOrder']) => {
+      setSortOrder(newSortOrder);
       setPage(DEFAULT_PAGE);
     },
     [],
@@ -86,14 +111,15 @@ function useAppointmentSearch() {
     setDoctorId(undefined);
     setFrom(undefined);
     setTo(undefined);
-    setStatus([]);
+    setStatusNames([]);
     setSortBy('startTime');
+    setSortOrder('ASC');
     setPage(DEFAULT_PAGE);
   }, []);
 
   const hasActiveFilters = useMemo(
-    () => debouncedSearch || doctorId || from || to || status.length > 0,
-    [debouncedSearch, doctorId, from, to, status],
+    () => debouncedSearch || doctorId || from || to || statusNames.length > 0,
+    [debouncedSearch, doctorId, from, to, statusNames],
   );
 
   return {
@@ -110,15 +136,17 @@ function useAppointmentSearch() {
     doctorId,
     from,
     to,
-    status,
+    status: statusNames,
     sortBy,
+    sortOrder,
     onPageChange: handlePageChange,
     onPerPageChange: handlePerPageChange,
     setSearchInput: handleSearchChange,
     setDoctorId: handleDoctorChange,
     setDateRange: handleDateRangeChange,
     setStatus: handleStatusChange,
-    setSort: handleSortChange,
+    setSortBy: handleSortByChange,
+    setSortOrder: handleSortOrderChange,
     handleClearFilters,
     hasActiveFilters,
     refetch: query.refetch,

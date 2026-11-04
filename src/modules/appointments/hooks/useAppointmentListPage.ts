@@ -2,11 +2,18 @@ import { useState } from 'react';
 
 import useAppointmentSearch from './useAppointmentSearch';
 import { useAppointmentDeleteMutation } from './mutations/useAppointmentDeleteMutation';
+import { useAppointmentStatusesQuery } from './queries/useAppointmentStatusesQuery';
+import useAppointmentListFilters from './useAppointmentListFilters';
 import type { AppointmentListItem } from '@/modules/appointments/types';
+import type { AppointmentStatus } from '@/modules/appointments/types';
 import { showApiError, showSuccess } from '@/shared/components/feedback';
 
 function useAppointmentListPage() {
-  const search = useAppointmentSearch();
+  const { data: statuses = [] } = useAppointmentStatusesQuery();
+  const { doctorOptions, statusOptions, sortByOptions } =
+    useAppointmentListFilters(statuses as AppointmentStatus[]);
+
+  const search = useAppointmentSearch(statuses as AppointmentStatus[]);
   const deleteMutation = useAppointmentDeleteMutation();
   const [selectedAppointment, setSelectedAppointment] =
     useState<AppointmentListItem | null>(null);
@@ -31,6 +38,10 @@ function useAppointmentListPage() {
 
   return {
     ...search,
+    statuses: statuses as AppointmentStatus[],
+    doctorOptions,
+    statusOptions,
+    sortByOptions,
     selectedAppointment,
     isDeleteModalOpen: selectedAppointment !== null,
     isDeleting: deleteMutation.isPending,

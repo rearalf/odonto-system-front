@@ -12,6 +12,7 @@ import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
 import type { SearchOption } from '@/shared/components/ui/form/SearchSelect/SearchSelect.types';
 import type { ReactNode } from 'react';
 import type { SelectDoctorSectionProps } from '@/modules/appointments/types';
+import { format, parse } from 'date-fns';
 
 const SelectDoctorSection = (props: SelectDoctorSectionProps) => {
   const {
@@ -109,7 +110,7 @@ const SelectDoctorSection = (props: SelectDoctorSectionProps) => {
                 aria-hidden="true"
               />
               <div>
-                <p className="font-semibold">Atención Walk-in</p>
+                <p className="font-semibold">Atención (Sin cita previa)</p>
                 <p className="mt-1 text-body-sm">
                   Esta cita se insertará como sobrecupo y quedará en estado de
                   espera.
@@ -125,7 +126,7 @@ const SelectDoctorSection = (props: SelectDoctorSectionProps) => {
               value={startTime}
               onChange={onStartTimeChange}
               showSeconds={false}
-              use12Hour={false}
+              use12Hour={true}
               stepSeconds={900}
             />
             <div>
@@ -146,7 +147,10 @@ const SelectDoctorSection = (props: SelectDoctorSectionProps) => {
                 ))}
               </div>
               <p className="mt-2 text-body-sm text-text-muted">
-                Finaliza a las {endTime || '—'}
+                Finaliza a las{' '}
+                {endTime
+                  ? format(parse(endTime, 'HH:mm:ss', new Date()), 'hh:mm a')
+                  : '—'}
               </p>
             </div>
           </div>

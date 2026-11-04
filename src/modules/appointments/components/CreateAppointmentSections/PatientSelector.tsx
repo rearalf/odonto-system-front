@@ -3,10 +3,10 @@ import { Search, UserPlus, UserRound } from 'lucide-react';
 import { Button } from '@/shared/components/ui';
 import SearchSelect from '@/shared/components/ui/form/SearchSelect';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
-import { PatientCard } from '../../components/PatientCard';
 import CreatePatientModal from '../../components/modals/CreatePatientModal';
 import type { PatientSelectorProps } from '@/modules/appointments/types';
 import usePatientSearch from '../../hooks/CreateAppointmentSections/usePatientSearch';
+import PatientCard from '../../components/PatientCard';
 
 const PatientSelector = ({
   patientId,

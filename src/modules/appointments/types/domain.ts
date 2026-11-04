@@ -11,5 +11,12 @@ export type PatientCardData = {
   occupation?: string;
   address?: string;
   hasAllergies?: boolean;
+  completeOdontogram?: boolean;
   patientId?: number;
 } | null;
+
+export type PatientCardProps = {
+  patient: NonNullable<PatientCardData>;
+  onClear?: () => void;
+  onEdit?: () => void;
+};

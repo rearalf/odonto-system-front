@@ -185,6 +185,7 @@ function useAppointmentCreate() {
       gender: patient.gender,
       avatarUrl: patient.avatarUrl,
       hasAllergies: patient.hasAllergies,
+      completeOdontogram: patient.completeOdontogram,
       occupation: '',
       address: '',
       patientId: patient.id,

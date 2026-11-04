@@ -189,8 +189,8 @@ const CreatePatientModal = ({
             control={control}
             render={({ field }) => (
               <Switch
-                checked={field.value}
-                onChange={field.onChange}
+                checked={field.value ?? false}
+                onChange={(checked) => field.onChange(checked)}
                 aria-label="Odontograma inicial completado"
               />
             )}
@@ -311,8 +311,8 @@ const CreatePatientModal = ({
                       {system.nombre}
                     </span>
                     <Switch
-                      checked={field.value}
-                      onChange={field.onChange}
+                      checked={field.value ?? false}
+                      onChange={(checked) => field.onChange(checked)}
                       aria-label={`${system.nombre} con alteraciones`}
                     />
                   </div>

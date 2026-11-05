@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { GenderType } from '@/modules/patients/enums/GenderType';
 
 export const PatientCreateSchema = z.object({
-  profilePicture: z.instanceof(File).nullable(),
+  profilePicture: z.instanceof(File).nullable().optional(),
   firstName: z
     .string()
     .trim()
@@ -20,10 +20,9 @@ export const PatientCreateSchema = z.object({
     .min(1, 'El apellido es obligatorio.')
     .max(255, 'El apellido no puede exceder los 255 caracteres.'),
   birthDate: z.iso.date({ message: 'La fecha de nacimiento es obligatoria.' }),
-  gender: z.enum(
-    [GenderType.MALE, GenderType.FEMALE, GenderType.OTHER],
-    { message: 'El género es obligatorio.' },
-  ),
+  gender: z.enum([GenderType.MALE, GenderType.FEMALE, GenderType.OTHER], {
+    message: 'El género es obligatorio.',
+  }),
   phone: z
     .string()
     .trim()
@@ -47,15 +46,15 @@ export const PatientCreateSchema = z.object({
     .trim()
     .max(255, 'Las notas de evaluación no pueden exceder los 255 caracteres.')
     .optional(),
-  completeOdontogram: z.boolean(),
-  hasSncIssues: z.boolean(),
-  hasSvcIssues: z.boolean(),
-  hasSeIssues: z.boolean(),
-  hasSmeIssues: z.boolean(),
-  hasSrIssues: z.boolean(),
-  hasSuIssues: z.boolean(),
-  hasSguIssues: z.boolean(),
-  hasSgiIssues: z.boolean(),
+  completeOdontogram: z.boolean().default(false),
+  hasSncIssues: z.boolean().default(false),
+  hasSvcIssues: z.boolean().default(false),
+  hasSeIssues: z.boolean().default(false),
+  hasSmeIssues: z.boolean().default(false),
+  hasSrIssues: z.boolean().default(false),
+  hasSuIssues: z.boolean().default(false),
+  hasSguIssues: z.boolean().default(false),
+  hasSgiIssues: z.boolean().default(false),
 });
 
 export type PatientCreateFormValues = z.infer<typeof PatientCreateSchema>;

@@ -4,11 +4,13 @@ import AvatarWithBadge from '@/shared/components/ui/AvatarWithBadge';
 interface PhotoUploadCardProps {
   file?: File | null;
   onFileChange?: (file: File | null) => void;
+  error?: string;
 }
 
 export const PhotoUploadCard = ({
   file,
   onFileChange,
+  error,
 }: PhotoUploadCardProps) => {
   const [internalFile, setInternalFile] = useState<File | null>(null);
   const currentFile = onFileChange ? (file ?? null) : internalFile;
@@ -31,6 +33,11 @@ export const PhotoUploadCard = ({
           Archivos admitidos: JPG o PNG. Tamaño máximo recomendado: 5 MB.
           Enfoque frontal nítido.
         </p>
+        {error && (
+          <p className="mt-2 text-body-sm font-medium text-error" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </section>
   );

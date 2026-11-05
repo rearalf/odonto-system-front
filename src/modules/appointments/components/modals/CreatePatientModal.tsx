@@ -4,6 +4,7 @@ import { Calendar, ChevronDown, Phone, UserRound, Users } from 'lucide-react';
 
 import { SISTEMAS_ANATOMICOS } from '@/modules/patients/constants/SistemasAnatomicos';
 import { GenderType } from '@/modules/patients/enums/GenderType';
+import { PhotoUploadCard } from '@/modules/patients/components/PhotoUploadCard';
 import {
   Modal,
   Switch,
@@ -28,6 +29,7 @@ const CreatePatientModal = ({
   const newErrors = errors.newPatient;
 
   if (!isOpen) return null;
+
   return (
     <Modal
       open={isOpen}
@@ -102,7 +104,11 @@ const CreatePatientModal = ({
                 label="Fecha de nacimiento"
                 required
                 leftIcon={Calendar}
-                max={new Date().toISOString().slice(0, 10)}
+                max={new Date(
+                  new Date().setFullYear(new Date().getFullYear() - 1),
+                )
+                  .toISOString()
+                  .slice(0, 10)}
                 error={newErrors?.birthDate?.message}
                 {...field}
               />
@@ -137,6 +143,7 @@ const CreatePatientModal = ({
               <MaskedInputField
                 id="new-phone"
                 label="Teléfono"
+                placeholder="0000 0000"
                 required
                 leftIcon={Phone}
                 mask="0000 0000"
@@ -175,13 +182,26 @@ const CreatePatientModal = ({
             )}
           />
         </div>
+        <div className="mt-4">
+          <Controller
+            name="newPatient.profilePicture"
+            control={control}
+            render={({ field }) => (
+              <PhotoUploadCard
+                file={field.value as File | null}
+                onFileChange={(file) => field.onChange(file)}
+                error={newErrors?.profilePicture?.message}
+              />
+            )}
+          />
+        </div>
         <div className="mt-4 flex items-center justify-between rounded-xl border border-border-default bg-bg-surface p-3">
           <div>
             <p className="text-body-md font-semibold text-text-primary">
-              Odontograma inicial completado
+              Tipo de odontograma
             </p>
             <p className="text-body-sm text-text-muted">
-              Se marca por defecto al abrir un expediente.
+              Selecciona qué denticiones se mostrarán en el odontograma.
             </p>
           </div>
           <Controller

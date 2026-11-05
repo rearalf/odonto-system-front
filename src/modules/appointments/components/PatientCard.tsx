@@ -4,7 +4,6 @@ import {
   Copy,
   User,
   Edit,
-  Locate,
   Luggage,
   PhoneCall,
   AlertTriangle,
@@ -101,17 +100,6 @@ const PatientCard = ({ patient, onClear, onEdit }: PatientCardProps) => {
                 </span>
               </Badge>
             )}
-            {patient.address && (
-              <Badge
-                variant="info"
-                className="px-3 py-1.5 flex items-center gap-1.5"
-              >
-                <Locate size={16} className="shrink-0 opacity-70" />
-                <span className="truncate max-w-50">
-                  {patient.address}
-                </span>
-              </Badge>
-            )}
           </div>
 
           {/* Footer: Estado Clínico y Contacto */}
@@ -136,7 +124,7 @@ const PatientCard = ({ patient, onClear, onEdit }: PatientCardProps) => {
                 <ToothIcon className="h-4 w-4" aria-hidden="true" />
                 <span>
                   Odontograma:{' '}
-                  {patient.completeOdontogram ? 'Completo' : 'Pendiente'}
+                  {patient.completeOdontogram ? 'Mixto' : 'Permanente'}
                 </span>
               </Badge>
             </div>

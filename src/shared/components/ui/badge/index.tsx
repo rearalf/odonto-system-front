@@ -8,6 +8,7 @@ const Badge = ({
   size = 'md',
   dot = false,
   className,
+  style,
 }: BadgeProps) => (
   <span
     className={clsx(
@@ -16,6 +17,7 @@ const Badge = ({
       variantClasses[variant],
       className,
     )}
+    style={style}
   >
     {dot && (
       <span

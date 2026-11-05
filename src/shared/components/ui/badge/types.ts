@@ -10,4 +10,5 @@ export type BadgeProps = {
   size?: BadgeSize;
   dot?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 };

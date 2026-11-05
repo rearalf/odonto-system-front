@@ -116,7 +116,6 @@ export default function AppointmentCreatePage() {
         <AppointmentDetailsSection
           control={appointment.control}
           errors={appointment.errors}
-          isWalkIn={appointment.isWalkIn}
         />
 
         <div className="flex justify-end">

@@ -8,13 +8,23 @@ export const DEFAULT_VALUES = {
   patientMode: 'search',
   patientId: null,
   newPatient: {
+    profilePicture: null,
     firstName: '',
     lastName: '',
-    birthDate: '',
+    middleName: '',
+    birthDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+      .toISOString()
+      .slice(0, 10),
     gender: undefined,
     phone: '',
+    occupation: '',
+    address: '',
     completeOdontogram: true,
     medicalHistory: '',
+    allergicReactions: '',
+    currentSystemicTreatment: '',
+    labResults: '',
+    systemEvaluationNotes: '',
     hasSncIssues: false,
     hasSvcIssues: false,
     hasSeIssues: false,
@@ -31,4 +41,6 @@ export const DEFAULT_VALUES = {
   duration: 30,
   reason: '',
   notes: '',
+  statusId: 1,
+  allow_overbooking: false,
 };

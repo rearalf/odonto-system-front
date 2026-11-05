@@ -25,6 +25,7 @@ export const NewPatientQuickSchema = PatientCreateSchema.pick({
   hasSuIssues: true,
   hasSguIssues: true,
   hasSgiIssues: true,
+  profilePicture: true,
 });
 
 export type NewPatientQuickValues = z.infer<typeof NewPatientQuickSchema>;
@@ -57,6 +58,8 @@ export const AppointmentCreateSchema = z
       .trim()
       .max(1000, 'Las notas no pueden exceder los 1000 caracteres.')
       .optional(),
+    statusId: z.number().default(1),
+    allow_overbooking: z.boolean().default(false),
   })
   .superRefine((data, ctx) => {
     if (data.patientMode === 'search' && data.patientId == null) {
@@ -93,6 +96,14 @@ export const AppointmentCreateSchema = z
         code: 'custom',
         path: ['slot'],
         message: 'Seleccione un horario disponible.',
+      });
+    }
+
+    if (data.allow_overbooking && !data.isWalkIn) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['allow_overbooking'],
+        message: 'El sobrecupo solo está permitido en citas walk-in.',
       });
     }
   });

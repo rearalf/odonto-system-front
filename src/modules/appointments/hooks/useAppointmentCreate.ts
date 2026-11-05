@@ -1,7 +1,12 @@
 'use no memo';
 
-import { useMemo, useState } from 'react';
-import { useForm, useWatch, type DefaultValues } from 'react-hook-form';
+import { useMemo, useState, useCallback } from 'react';
+import {
+  useForm,
+  useWatch,
+  type DefaultValues,
+  type Resolver,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addMinutes, format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +16,7 @@ import {
   showApiError,
   showLoading,
   showSuccess,
+  showError,
 } from '@/shared/components/feedback';
 import { useAppointmentCreateMutation } from './mutations/useAppointmentCreateMutation';
 import {
@@ -18,13 +24,10 @@ import {
   type AppointmentCreateFormValues,
   type NewPatientQuickValues,
 } from '../schemas/AppointmentCreateSchema';
-import {
-  AppointmentStatus,
-  type AppointmentCreatePayload,
-  type PatientCardData,
-} from '@/modules/appointments/types';
+import { type PatientCardData } from '@/modules/appointments/types';
 import { useDoctorSlotsQuery } from '@/modules/doctors/hooks/queries/useDoctorSlotsQuery';
 import { useDoctorListQuery } from '@/modules/doctors/hooks/queries/useDoctorListQuery';
+import { useAppointmentStatusesQuery } from './queries/useAppointmentStatusesQuery';
 import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
 import type { PatientListItem } from '@/modules/patients/types/PatientList';
 import { differenceInYears } from 'date-fns';
@@ -41,11 +44,15 @@ function useAppointmentCreate() {
   const createAppointment = useAppointmentCreateMutation();
 
   const doctors = useDoctorListQuery({ page: 1, perPage: 100 });
+  const statuses = useAppointmentStatusesQuery();
   const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [patientCardData, setPatientCardData] = useState<PatientCardData>(null);
+  const [overbookingConflict, setOverbookingConflict] = useState(false);
 
   const form = useForm<AppointmentCreateFormValues>({
-    resolver: zodResolver(AppointmentCreateSchema),
+    resolver: zodResolver(
+      AppointmentCreateSchema,
+    ) as unknown as Resolver<AppointmentCreateFormValues>,
     defaultValues: DEFAULT_VALUES as DefaultValues<AppointmentCreateFormValues>,
   });
 
@@ -72,6 +79,11 @@ function useAppointmentCreate() {
     name: 'patientId',
   });
   const slot = useWatch({ control: form.control, name: 'slot' });
+  const statusId = useWatch({ control: form.control, name: 'statusId' });
+  const allowOverbooking = useWatch({
+    control: form.control,
+    name: 'allow_overbooking',
+  });
 
   const endTime = useMemo(() => {
     const [hours, minutes, seconds = '00'] = startTime.split(':').map(Number);
@@ -81,6 +93,30 @@ function useAppointmentCreate() {
     return format(addMinutes(value, duration), 'HH:mm:ss');
   }, [duration, startTime]);
 
+  const toUTCISO = useCallback((dateStr: string, timeStr: string) => {
+    return new Date(`${dateStr}T${timeStr}`).toISOString();
+  }, []);
+
+  const getStatusIdForWalkIn = useCallback(
+    (walkIn: boolean) => {
+      if (!statuses.data) return 1;
+      const validNames = walkIn
+        ? ['waiting', 'in_progress']
+        : ['scheduled', 'confirmed'];
+      const status = statuses.data.find((s) => validNames.includes(s.name));
+      return status?.id ?? 1;
+    },
+    [statuses.data],
+  );
+
+  const computeEndTime = (start: string, dur: number) => {
+    const [h, m, s = '00'] = start.split(':').map(Number);
+    if ([h, m, Number(s)].some(Number.isNaN)) return '';
+    const dt = new Date();
+    dt.setHours(h, m, Number(s), 0);
+    return format(addMinutes(dt, dur), 'HH:mm:ss');
+  };
+
   const onSubmit = form.handleSubmit(async (values) => {
     const toastId = showLoading('Guardando cita…', {
       description: values.isWalkIn
@@ -89,57 +125,111 @@ function useAppointmentCreate() {
     });
 
     try {
-      let patientId = values.patientId;
-      if (values.patientMode === 'new') {
-        const newPatientData = (values.newPatient ??
-          {}) as NewPatientQuickValues;
-        const patientFormData = new FormData();
-        for (const [key, value] of Object.entries(newPatientData)) {
-          if (value !== '' && value != null)
-            patientFormData.append(key, String(value));
-        }
-        const patient = await createPatient.mutateAsync(patientFormData);
-        patientId = patient.id;
-      }
-
-      if (patientId == null || values.doctorId == null) {
-        throw new Error('Faltan datos obligatorios para crear la cita.');
-      }
+      const formData = new FormData();
 
       const selectedSlot = values.slot;
-      const start = values.isWalkIn
-        ? `${values.date}T${values.startTime}`
-        : `${values.date}T${selectedSlot?.startTime ?? ''}`;
-      const end = values.isWalkIn
-        ? `${values.date}T${endTime}`
-        : `${values.date}T${selectedSlot?.endTime ?? ''}`;
-      const payload: AppointmentCreatePayload = {
-        patient_id: patientId,
-        doctor_id: values.doctorId,
-        start_time: new Date(start).toISOString(),
-        end_time: new Date(end).toISOString(),
-        status: values.isWalkIn
-          ? AppointmentStatus.WAITING
-          : AppointmentStatus.SCHEDULED,
-        is_walk_in: values.isWalkIn,
-        reason: values.reason,
-        ...(values.notes ? { notes: values.notes } : {}),
-      };
+      const walkInStart = values.startTime;
+      const walkInEnd = computeEndTime(walkInStart, values.duration);
+      const slotStart = selectedSlot?.startTime ?? '';
+      const slotEnd = selectedSlot?.endTime ?? '';
 
-      await createAppointment.mutateAsync(payload);
+      formData.append(
+        'start_time',
+        toUTCISO(values.date, values.isWalkIn ? walkInStart : slotStart),
+      );
+      formData.append(
+        'end_time',
+        toUTCISO(values.date, values.isWalkIn ? walkInEnd : slotEnd),
+      );
+      formData.append('doctor_id', String(values.doctorId));
+      formData.append('statusId', String(values.statusId));
+      formData.append('is_walk_in', String(values.isWalkIn));
+      formData.append('allow_overbooking', String(values.allow_overbooking));
+      if (values.reason) formData.append('reason', values.reason);
+      if (values.notes) formData.append('notes', values.notes);
+
+      if (values.patientMode === 'new') {
+        const np = (values.newPatient ?? {}) as NewPatientQuickValues;
+        const patientFields: Record<
+          string,
+          string | File | boolean | number | undefined | null
+        > = {
+          firstName: np.firstName,
+          lastName: np.lastName,
+          middleName: np.middleName,
+          birthDate: np.birthDate,
+          gender: np.gender,
+          phone: np.phone,
+          address: np.address,
+          occupation: np.occupation,
+          userId: undefined,
+          medicalHistory: np.medicalHistory,
+          allergicReactions: np.allergicReactions,
+          currentSystemicTreatment: np.currentSystemicTreatment,
+          labResults: np.labResults,
+          completeOdontogram: np.completeOdontogram,
+          hasSncIssues: np.hasSncIssues,
+          hasSvcIssues: np.hasSvcIssues,
+          hasSeIssues: np.hasSeIssues,
+          hasSmeIssues: np.hasSmeIssues,
+          hasSrIssues: np.hasSrIssues,
+          hasSuIssues: np.hasSuIssues,
+          hasSguIssues: np.hasSguIssues,
+          hasSgiIssues: np.hasSgiIssues,
+          systemEvaluationNotes: np.systemEvaluationNotes,
+          profilePicture: np.profilePicture,
+        };
+
+        Object.entries(patientFields).forEach(([key, value]) => {
+          if (value instanceof File) {
+            formData.append(key, value);
+          } else if (value !== '' && value != null && value !== false) {
+            formData.append(key, String(value));
+          } else if (value === false) {
+            formData.append(key, 'false');
+          }
+        });
+      } else {
+        formData.append('patient_id', String(values.patientId));
+      }
+
+      await createAppointment.mutateAsync(formData);
+      setOverbookingConflict(false);
       showSuccess('Cita creada', {
         id: toastId,
         description: 'La cita se guardó correctamente.',
       });
-      navigate('/appointments/new');
-    } catch (error) {
-      showApiError(error, { id: toastId });
+      navigate('/appointments');
+    } catch (error: unknown) {
+      const err = error as { response?: { status: number } };
+      if (err.response?.status === 409 && values.isWalkIn) {
+        setOverbookingConflict(true);
+        showError('Solapamiento de horario', {
+          id: toastId,
+          description:
+            'El doctor tiene otra cita en ese horario. ¿Desea permitir sobrecupo y reintentar?',
+          action: {
+            label: 'Permitir sobrecupo y reintentar',
+            onClick: () => {
+              form.setValue('allow_overbooking', true, {
+                shouldValidate: true,
+              });
+              onSubmit();
+            },
+          },
+        });
+      } else {
+        showApiError(error, { id: toastId });
+      }
     }
   });
 
   const setWalkIn = (value: boolean) => {
     form.setValue('isWalkIn', value, { shouldValidate: true });
     form.setValue('slot', null);
+    form.setValue('allow_overbooking', false);
+    const newStatusId = getStatusIdForWalkIn(value);
+    form.setValue('statusId', newStatusId, { shouldValidate: true });
     if (value) {
       form.setValue('date', today());
       form.setValue('startTime', currentTime());
@@ -217,10 +307,10 @@ function useAppointmentCreate() {
       occupation: np.occupation,
       address: np.address,
       patientId: undefined,
+      completeOdontogram: np.completeOdontogram,
     });
 
     setPatientModalOpen(false);
-    setPatientMode('search');
   };
 
   const editPatient = () => {
@@ -276,6 +366,8 @@ function useAppointmentCreate() {
       patientId,
       startTime,
       patientMode,
+      statusId,
+      allowOverbooking,
     },
     slotsQuery,
     isSubmitting:
@@ -296,6 +388,7 @@ function useAppointmentCreate() {
     cardData,
     setPatientId: (id: number) =>
       form.setValue('patientId', id, { shouldValidate: true }),
+    overbookingConflict,
   };
 }
 

@@ -10,7 +10,7 @@ export const colorClasses = {
       'bg-primary text-text-inverse hover:bg-primary-hover active:bg-primary-active',
     outline:
       'bg-secondary text-secondary-text border-secondary-border hover:bg-secondary-hover',
-    ghost: 'text-text-primary hover:bg-ghost-hover',
+    ghost: 'text-primary hover:bg-ghost-hover',
   },
   success: {
     solid:

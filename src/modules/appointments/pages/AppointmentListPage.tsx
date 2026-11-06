@@ -5,6 +5,7 @@ import {
   Breadcrumbs,
   Button,
   InputField,
+  DatePickerField,
   Modal,
   Table,
   SearchSelect,
@@ -15,6 +16,9 @@ import {
   buildAppointmentListColumns,
 } from '@/modules/appointments/constants/appointmentListColumns';
 import useAppointmentListPage from '@/modules/appointments/hooks/useAppointmentListPage';
+import type { SearchOption } from '@/shared/components/ui/form/SearchSelect/SearchSelect.types';
+import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
+import type { ReactNode } from 'react';
 
 function AppointmentListPage() {
   const {
@@ -54,6 +58,19 @@ function AppointmentListPage() {
     statusOptions,
     sortByOptions,
   } = useAppointmentListPage();
+
+  const renderOption = (option: SearchOption<DoctorListItem>): ReactNode => (
+    <div className="flex flex-col gap-1">
+      <span className="font-medium text-text-primary">
+        {option.data.fullName}
+      </span>
+      <span className="text-body-sm text-text-muted">
+        {option.data.primarySpecialty}
+        {option.data.specialtyCount > 1 &&
+          ` +${option.data.specialtyCount - 1} más`}
+      </span>
+    </div>
+  );
 
   const emptyState = search ? (
     <div className="text-center py-8">
@@ -105,23 +122,41 @@ function AppointmentListPage() {
       </section>
 
       <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
-        <div className="mb-4 flex items-center gap-4">
-          <div className="rounded-lg bg-bg-surface-elevated p-2 text-primary shrink-0">
-            <Filter aria-hidden="true" size={24} />
+        {/* Cabecera con botón de limpiar filtros integrado */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-bg-surface-elevated text-primary">
+              <Filter aria-hidden="true" size={24} />
+            </div>
+            <div>
+              <h2 className="text-headline-md font-semibold text-text-primary">
+                Filtros
+              </h2>
+              <p className="text-body-md text-text-muted">
+                Busque y filtre citas por paciente, doctor, fecha y estado.
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-headline-md font-semibold text-text-primary">
-              Filtros
-            </h2>
-            <p className="text-body-md text-text-muted">
-              Busque y filtre citas por paciente, doctor, fecha y estado.
-            </p>
-          </div>
-        </div>
-        <hr className="mb-4 border-border-strong" />
 
-        <form className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-          <div className="flex-1 w-full">
+          {hasActiveFilters && (
+            <div className="shrink-0">
+              <Button
+                type="button"
+                variant="solid"
+                color="primary"
+                onClick={handleClearFilters}
+                className="w-full sm:w-auto"
+              >
+                Limpiar todo
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <hr className="mb-6 border-border-strong" />
+
+        <form className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="sm:col-span-2 lg:col-span-2">
             <InputField
               id="buscar-cita"
               label="Buscar paciente"
@@ -131,52 +166,43 @@ function AppointmentListPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <SearchSelect
               id="filtro-doctor"
               label="Doctor"
               placeholder="Todos los doctores"
               options={doctorOptions}
               value={doctorId}
+              renderOption={renderOption}
               onSelect={(option) =>
                 setDoctorId(option?.id as number | undefined)
               }
             />
           </div>
 
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <InputField
-                id="filtro-desde"
-                label="Desde"
-                type="date"
-                leftIcon={Calendar}
-                placeholder="YYYY-MM-DD"
-                value={from ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setDateRange(val || undefined, to);
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <InputField
-                id="filtro-hasta"
-                label="Hasta"
-                type="date"
-                leftIcon={Calendar}
-                placeholder="YYYY-MM-DD"
-                value={to ?? ''}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setDateRange(from, val || undefined);
-                }}
-              />
-            </div>
-          </div>
-
           <div>
+            <DatePickerField
+              id="filtro-desde"
+              label="Citas que empiezan desde"
+              leftIcon={Calendar}
+              placeholder="DD/MM/YYYY"
+              value={from ?? ''}
+              onChange={(val) => setDateRange(val || undefined, to)}
+              dateFormat="DD/MM/YYYY"
+            />
+          </div>
+          <div>
+            <DatePickerField
+              id="filtro-hasta"
+              label="Citas que terminan hasta"
+              leftIcon={Calendar}
+              placeholder="DD/MM/YYYY"
+              value={to ?? ''}
+              onChange={(val) => setDateRange(from, val || undefined)}
+              dateFormat="YYYY-MM-DD"
+            />
+          </div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <MultiSelectField
               id="filtro-estado"
               label="Estado"
@@ -198,7 +224,6 @@ function AppointmentListPage() {
               }
             />
           </div>
-
           <div>
             <SearchSelect
               id="filtro-orden-direccion"
@@ -209,28 +234,6 @@ function AppointmentListPage() {
                 setSortOrder(option?.data as 'ASC' | 'DESC')
               }
             />
-          </div>
-
-          {hasActiveFilters && (
-            <div className="flex items-center justify-between pt-2 border-t border-border-strong">
-              <span className="text-body-sm text-text-muted">
-                Filtros activos
-              </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={handleClearFilters}
-              >
-                Limpiar todo
-              </Button>
-            </div>
-          )}
-
-          <div className="flex gap-3 flex-wrap justify-end pt-2">
-            <Button type="button" variant="ghost" onClick={handleClearFilters}>
-              Limpiar filtros
-            </Button>
           </div>
         </form>
       </section>

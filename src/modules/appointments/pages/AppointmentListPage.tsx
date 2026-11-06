@@ -1,21 +1,13 @@
 import { Link } from 'react-router-dom';
-import { Calendar, CalendarPlus, Filter, Search, Trash2 } from 'lucide-react';
+import { CalendarPlus, Trash2 } from 'lucide-react';
 
-import {
-  Breadcrumbs,
-  Button,
-  InputField,
-  DatePickerField,
-  Modal,
-  Table,
-  SearchSelect,
-  MultiSelectField,
-} from '@/shared/components/ui';
+import { Breadcrumbs, Button, Modal, Table } from '@/shared/components/ui';
 import {
   sortOrderOptions,
   buildAppointmentListColumns,
 } from '@/modules/appointments/constants/appointmentListColumns';
 import useAppointmentListPage from '@/modules/appointments/hooks/useAppointmentListPage';
+import { AppointmentFilters } from '@/modules/appointments/components/AppointmentFilters';
 import type { SearchOption } from '@/shared/components/ui/form/SearchSelect/SearchSelect.types';
 import type { DoctorListItem } from '@/modules/doctors/types/Doctor';
 import type { ReactNode } from 'react';
@@ -121,122 +113,28 @@ function AppointmentListPage() {
         </Link>
       </section>
 
-      <section className="mt-6 rounded-xl border border-border-default bg-bg-surface p-6 shadow-sm sm:p-8">
-        {/* Cabecera con botón de limpiar filtros integrado */}
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-bg-surface-elevated text-primary">
-              <Filter aria-hidden="true" size={24} />
-            </div>
-            <div>
-              <h2 className="text-headline-md font-semibold text-text-primary">
-                Filtros
-              </h2>
-              <p className="text-body-md text-text-muted">
-                Busque y filtre citas por paciente, doctor, fecha y estado.
-              </p>
-            </div>
-          </div>
-
-          {hasActiveFilters && (
-            <div className="shrink-0">
-              <Button
-                type="button"
-                variant="solid"
-                color="primary"
-                onClick={handleClearFilters}
-                className="w-full sm:w-auto"
-              >
-                Limpiar todo
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <hr className="mb-6 border-border-strong" />
-
-        <form className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="sm:col-span-2 lg:col-span-2">
-            <InputField
-              id="buscar-cita"
-              label="Buscar paciente"
-              leftIcon={Search}
-              placeholder="Nombre del paciente..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-          </div>
-          <div className="sm:col-span-2 lg:col-span-1">
-            <SearchSelect
-              id="filtro-doctor"
-              label="Doctor"
-              placeholder="Todos los doctores"
-              options={doctorOptions}
-              value={doctorId}
-              renderOption={renderOption}
-              onSelect={(option) =>
-                setDoctorId(option?.id as number | undefined)
-              }
-            />
-          </div>
-
-          <div>
-            <DatePickerField
-              id="filtro-desde"
-              label="Citas que empiezan desde"
-              leftIcon={Calendar}
-              placeholder="DD/MM/YYYY"
-              value={from ?? ''}
-              onChange={(val) => setDateRange(val || undefined, to)}
-              dateFormat="DD/MM/YYYY"
-            />
-          </div>
-          <div>
-            <DatePickerField
-              id="filtro-hasta"
-              label="Citas que terminan hasta"
-              leftIcon={Calendar}
-              placeholder="DD/MM/YYYY"
-              value={to ?? ''}
-              onChange={(val) => setDateRange(from, val || undefined)}
-              dateFormat="YYYY-MM-DD"
-            />
-          </div>
-          <div className="sm:col-span-2 lg:col-span-1">
-            <MultiSelectField
-              id="filtro-estado"
-              label="Estado"
-              placeholder="Todos los estados"
-              options={statusOptions}
-              value={status as string[]}
-              onChange={(value) => setStatus(value as string[])}
-            />
-          </div>
-
-          <div>
-            <SearchSelect
-              id="filtro-ordenar"
-              label="Ordenar por"
-              options={sortByOptions}
-              value={sortBy}
-              onSelect={(option) =>
-                setSortBy(option?.data as 'startTime' | 'createdAt' | 'reason')
-              }
-            />
-          </div>
-          <div>
-            <SearchSelect
-              id="filtro-orden-direccion"
-              label="Dirección"
-              options={sortOrderOptions}
-              value={sortOrder}
-              onSelect={(option) =>
-                setSortOrder(option?.data as 'ASC' | 'DESC')
-              }
-            />
-          </div>
-        </form>
-      </section>
+      <AppointmentFilters
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        doctorId={doctorId}
+        setDoctorId={setDoctorId}
+        from={from}
+        to={to}
+        setDateRange={setDateRange}
+        status={status}
+        setStatus={setStatus}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        doctorOptions={doctorOptions}
+        statusOptions={statusOptions}
+        sortByOptions={sortByOptions}
+        sortOrderOptions={sortOrderOptions}
+        renderOption={renderOption}
+        hasActiveFilters={hasActiveFilters}
+        handleClearFilters={handleClearFilters}
+      />
 
       <div className="mt-6">
         <Table

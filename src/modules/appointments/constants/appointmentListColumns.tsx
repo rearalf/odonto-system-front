@@ -29,9 +29,13 @@ export function buildAppointmentListColumns({
       header: 'Paciente',
       sortable: true,
       render: (appointment) => (
-        <div className="font-medium text-text-primary">
+        <Link
+          to={`/patients/${appointment.patientId}`}
+          className="font-medium text-text-primary"
+          title="Ir al perfil"
+        >
           {appointment.patientFullName}
-        </div>
+        </Link>
       ),
     },
     {
@@ -39,7 +43,13 @@ export function buildAppointmentListColumns({
       header: 'Doctor',
       sortable: true,
       render: (appointment) => (
-        <div className="text-text-primary">{appointment.doctorFullName}</div>
+        <Link
+          to={`/doctors/${appointment.doctorId}`}
+          className="text-text-primary"
+          title="Ir al perfil"
+        >
+          Dr. {appointment.doctorFullName}
+        </Link>
       ),
     },
     {
@@ -49,11 +59,15 @@ export function buildAppointmentListColumns({
       align: 'center',
       render: (appointment) => (
         <div className="flex flex-col gap-1 items-center">
-          <span className="font-mono tabular-nums text-body-md">
-            {format(new Date(appointment.startTime), 'dd/MM/yyyy hh:mm aaa', { locale: es })}
+          <span className="font-mono tabular-nums text-body-md capitalize">
+            {format(new Date(appointment.startTime), 'EEEE dd/MM/yyyy', {
+              locale: es,
+            })}
           </span>
           <span className="text-text-secondary text-xs">
-            {format(new Date(appointment.startTime), 'eee', { locale: es })}
+            {format(new Date(appointment.startTime), 'hh:mm aaa', {
+              locale: es,
+            })}
           </span>
         </div>
       ),
@@ -120,7 +134,7 @@ export function buildAppointmentListColumns({
             to={`/appointments/${appointment.id}`}
             aria-label="Ver detalles de la cita"
           >
-            <Button variant="ghost" color="info">
+            <Button variant="outline" color="info" size="sm">
               <Eye className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
@@ -128,15 +142,16 @@ export function buildAppointmentListColumns({
             to={`/appointments/${appointment.id}/edit`}
             aria-label="Editar cita"
           >
-            <Button variant="ghost" color="primary">
+            <Button variant="outline" color="primary" size="sm">
               <Pencil className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Link>
           <Button
-            variant="ghost"
+            variant="outline"
             color="error"
             type="button"
             aria-label="Eliminar cita"
+            size="sm"
             onClick={() => onDelete(appointment)}
             disabled={deletingId !== undefined}
             loading={deletingId === appointment.id}

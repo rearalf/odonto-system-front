@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Clock, Eye, Pencil, Trash2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 import { Badge, Button, type TableColumn } from '@/shared/components/ui';
 import type { AppointmentListItem } from '@/modules/appointments/types';
@@ -48,19 +50,10 @@ export function buildAppointmentListColumns({
       render: (appointment) => (
         <div className="flex flex-col gap-1 items-center">
           <span className="font-mono tabular-nums text-body-md">
-            {new Intl.DateTimeFormat('es', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-            }).format(new Date(appointment.startTime))}
+            {format(new Date(appointment.startTime), 'dd/MM/yyyy hh:mm aaa', { locale: es })}
           </span>
           <span className="text-text-secondary text-xs">
-            {new Intl.DateTimeFormat('es', { weekday: 'short' }).format(
-              new Date(appointment.startTime),
-            )}
+            {format(new Date(appointment.startTime), 'eee', { locale: es })}
           </span>
         </div>
       ),

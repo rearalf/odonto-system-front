@@ -21,7 +21,7 @@ function useAppointmentSearch(statuses: AppointmentStatus[]) {
   const [sortBy, setSortBy] =
     useState<AppointmentListParams['sortBy']>('startTime');
   const [sortOrder, setSortOrder] =
-    useState<AppointmentListParams['sortOrder']>('ASC');
+    useState<AppointmentListParams['sortOrder']>('DESC');
 
   const debouncedSearch = useDebounce(search, 300);
 

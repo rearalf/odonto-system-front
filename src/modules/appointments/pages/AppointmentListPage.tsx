@@ -64,6 +64,14 @@ function AppointmentListPage() {
     </div>
   );
 
+  const statusSearchOptions: SearchOption<string>[] = statusOptions.map(
+    (option) => ({
+      id: option.value,
+      label: option.label,
+      data: option.value,
+    }),
+  );
+
   const emptyState = search ? (
     <div className="text-center py-8">
       <p className="text-body-md text-text-muted">
@@ -128,7 +136,7 @@ function AppointmentListPage() {
         sortOrder={sortOrder}
         setSortOrder={setSortOrder}
         doctorOptions={doctorOptions}
-        statusOptions={statusOptions}
+        statusOptions={statusSearchOptions}
         sortByOptions={sortByOptions}
         sortOrderOptions={sortOrderOptions}
         renderOption={renderOption}

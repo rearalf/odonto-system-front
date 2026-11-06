@@ -21,15 +21,17 @@ interface AppointmentFiltersProps {
   status: string[] | undefined;
   setStatus: (status: string[]) => void;
   sortBy: string | undefined;
-  setSortBy: (sortBy: string) => void;
+  setSortBy: (
+    newSortBy: 'startTime' | 'createdAt' | 'reason' | undefined,
+  ) => void;
   sortOrder: string | undefined;
-  setSortOrder: (sortOrder: string) => void;
+  setSortOrder: (newSortOrder: 'ASC' | 'DESC' | undefined) => void;
   doctorOptions: SearchOption<DoctorListItem>[];
   statusOptions: SearchOption<string>[];
   sortByOptions: SearchOption<string>[];
   sortOrderOptions: SearchOption<string>[];
   renderOption: (option: SearchOption<DoctorListItem>) => ReactNode;
-  hasActiveFilters: boolean;
+  hasActiveFilters: string | number | boolean;
   handleClearFilters: () => void;
 }
 
@@ -140,7 +142,10 @@ export function AppointmentFilters({
             id="filtro-estado"
             label="Estado"
             placeholder="Todos los estados"
-            options={statusOptions}
+            options={statusOptions.map((option) => ({
+              label: option.label,
+              value: option.data,
+            }))}
             value={status ?? []}
             onChange={(value) => setStatus(value as string[])}
           />

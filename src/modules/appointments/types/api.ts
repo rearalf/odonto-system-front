@@ -54,3 +54,89 @@ export type AppointmentResponse = {
   status: string;
   statusColor: string;
 };
+
+export type Specialty = {
+  isPrimary: boolean;
+  id: number;
+  name: string;
+  description: string;
+};
+
+export type DoctorDetail = {
+  id: number;
+  fullName: string;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  profilePictureUrl: string | null;
+  phone: string;
+  specialties: Specialty[];
+};
+
+export type PatientDetail = {
+  id: number;
+  fullName: string;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  profilePictureUrl: string | null;
+  phone: string;
+  birthDate: string;
+  gender: 'male' | 'female' | 'other';
+  completeOdontogram: boolean;
+};
+
+export type AppointmentDetailResponse = {
+  id: number;
+  reason: string;
+  notes: string | null;
+  startTime: string;
+  endTime: string;
+  modifiedAt: string | null;
+  modificationReason: string | null;
+  isWalkIn: boolean;
+  status: AppointmentStatus;
+  doctor: DoctorDetail;
+  patient: PatientDetail;
+};
+
+export type AppointmentDetailViewModel = {
+  id: number;
+  startDate: Date;
+  endDate: Date;
+  startDateFormatted: string;
+  startTimeFormatted: string;
+  endTimeFormatted: string;
+  durationMinutes: number;
+  durationFormatted: string;
+  status: AppointmentDetailResponse['status'];
+  statusLabel: string;
+  statusColor: string;
+  reason: string;
+  notes: string | null;
+  hasNotes: boolean;
+  isWalkIn: boolean;
+  walkInLabel: 'Sí' | 'No';
+  isRescheduled: boolean;
+  modifiedAt: Date | null;
+  modifiedAtFormatted: string | null;
+  modificationReason: string | null;
+  patient: {
+    id: number;
+    fullName: string;
+    phone: string;
+    gender: string;
+    genderLabel: string;
+    age: number;
+    ageFormatted: string;
+    completeOdontogram: boolean;
+  };
+  doctor: {
+    id: number;
+    fullName: string;
+    phone: string;
+    primarySpecialty: { id: number; name: string } | null;
+    secondarySpecialties: Array<{ id: number; name: string; index: number }>;
+    hasSecondarySpecialties: boolean;
+  };
+};

@@ -2,6 +2,7 @@ import { http } from '@/shared/services/http';
 
 import type {
   AppointmentResponse,
+  AppointmentDetailResponse,
   AppointmentListParams,
   AppointmentListResponse,
   AppointmentStatus,
@@ -16,6 +17,9 @@ export const appointmentApi = {
       params,
       paramsSerializer: { indexes: null },
     }),
+
+  getById: (id: number) =>
+    http.get<AppointmentDetailResponse>(`/appointments/${id}`),
 
   delete: (id: number) =>
     http.delete<void>(`/appointments/${id}`),

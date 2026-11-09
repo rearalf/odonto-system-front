@@ -1,6 +1,8 @@
 export { default as AvatarWithBadge } from './AvatarWithBadge';
 export { default as Breadcrumbs } from './Breadcrumbs';
 export { default as Button } from './button';
+export { default as DetailField } from './DetailField';
+export { default as AppointmentParticipantCard } from './AppointmentParticipantCard';
 export { default as Avatar } from './avatar';
 export { default as Modal } from './modal';
 export { default as NavTabs } from './NavTabs';

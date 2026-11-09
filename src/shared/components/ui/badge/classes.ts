@@ -1,6 +1,8 @@
 export const variantClasses = {
   default: 'bg-bg-surface-subtle text-text-secondary',
   primary: 'bg-primary-light text-primary',
+  secondary: 'bg-sky-50 text-secondary-text',
+  outline: 'border border-border-default text-text-secondary bg-transparent',
   success: 'bg-emerald-50 text-success',
   warning: 'bg-amber-50 text-warning',
   error: 'bg-red-50 text-error',
@@ -10,6 +12,8 @@ export const variantClasses = {
 export const dotClasses = {
   default: 'bg-text-subtle',
   primary: 'bg-primary',
+  secondary: 'bg-secondary-text',
+  outline: 'bg-text-secondary',
   success: 'bg-success',
   warning: 'bg-warning',
   error: 'bg-error',

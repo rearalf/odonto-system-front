@@ -19,9 +19,9 @@ export const appointmentApi = {
   getById: (id: number) =>
     http.get<AppointmentDetailResponse>(`/appointments/${id}`),
 
-  getStatuses: () => http.get<AppointmentStatus[]>('/appointments/statuses'),
+  getStatuses: () => http.get<AppointmentStatus[]>('/statuses/statuses'),
   updateStatus: (id: number, statusId: number) =>
-    http.patch<AppointmentResponse>(`/appointments/${id}/status`, {
+    http.patch<AppointmentResponse>(`/statuses/${id}/status`, {
       statusId,
     }),
 };

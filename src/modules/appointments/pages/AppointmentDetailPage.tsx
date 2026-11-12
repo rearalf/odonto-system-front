@@ -17,6 +17,7 @@ import {
   Breadcrumbs,
   DetailField,
   ParticipantCard,
+  Modal,
 } from '@/shared/components/ui';
 import { AppointmentStatusBadge } from '../components/AppointmentStatusBadge';
 import { useAppointmentDetail } from '../hooks/useAppointmentDetail';
@@ -28,9 +29,15 @@ function AppointmentDetailPage() {
     error,
     isError,
     isLoading,
+    isUpdatingStatus,
     appointment,
+    confirmAction,
+    confirmModalOpen,
     availableActions,
+    handleAction,
+    closeConfirm,
     handleRefetch,
+    confirmSelectedAction,
   } = useAppointmentDetail();
 
   if (isLoading) {
@@ -120,6 +127,7 @@ function AppointmentDetailPage() {
                     key={action.label}
                     type="button"
                     variant={action.variant}
+                    onClick={() => handleAction(action)}
                     className={cn(
                       isSolid
                         ? 'bg-(--action-color) text-white hover:bg-[rgba(var(--action-color-rgb),0.75)] active:bg-[rgba(var(--action-color-rgb),0.10)]'
@@ -367,6 +375,34 @@ function AppointmentDetailPage() {
           </dl>
         </section>
       </main>
+
+      <Modal
+        open={confirmModalOpen}
+        onOpenChange={closeConfirm}
+        title="Confirmar cita"
+        description={`¿Confirmar "${confirmAction?.label}"?`}
+        size="md"
+      >
+        <footer className="flex gap-2 justify-end">
+          <Button
+            variant="outline"
+            type="button"
+            onClick={closeConfirm}
+            disabled={isUpdatingStatus}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="solid"
+            type="button"
+            loading={isUpdatingStatus}
+            disabled={isUpdatingStatus}
+            onClick={confirmSelectedAction}
+          >
+            Confirmar
+          </Button>
+        </footer>
+      </Modal>
     </>
   );
 }

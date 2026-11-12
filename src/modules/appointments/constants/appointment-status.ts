@@ -1,5 +1,8 @@
 import type { AppointmentStatus } from '@/modules/appointments/types';
-import type { AppointmentStatusName, StatusAction } from '../types/AppointmentStatus';
+import type {
+  StatusAction,
+  AppointmentStatusName,
+} from '../types/AppointmentStatus';
 
 export const APPOINTMENT_STATUS = {
   SCHEDULED: 'scheduled',

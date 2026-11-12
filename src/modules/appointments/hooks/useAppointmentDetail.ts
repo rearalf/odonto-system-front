@@ -1,11 +1,8 @@
 import { useParams } from 'react-router-dom';
 
-import {
-  useAppointmentDetailQuery,
-  useAppointmentStatusesQuery,
-} from './queries';
-import { ACTIONS_BY_STATUS } from '../constants/appointment-status';
+import { useAppointmentDetailQuery } from './queries';
 import type { AppointmentStatusName } from '../types/AppointmentStatus';
+import { useAppointmentStatusActions } from './useAppointmentStatusActions';
 
 export function useAppointmentDetail() {
   const { id } = useParams<{ id: string }>();
@@ -18,32 +15,37 @@ export function useAppointmentDetail() {
     refetch: appointmentRefetch,
   } = useAppointmentDetailQuery(id);
 
-  const { data: statuses, refetch: statusRefecth } =
-    useAppointmentStatusesQuery();
+  const appointmentId = appointment?.id ?? (id ? Number(id) : undefined);
+
+  const statusName = appointment?.status?.name as
+    | AppointmentStatusName
+    | undefined;
+
+  const {
+    statuses,
+    statusesLoading,
+    statusesError,
+    error: statusesErrorObj,
+    refetchStatuses,
+    availableActions,
+    isUpdatingStatus,
+    confirmModalOpen,
+    confirmAction,
+    handleAction,
+    confirmSelectedAction,
+    closeConfirm,
+  } = useAppointmentStatusActions({
+    statusName,
+    appointmentId,
+  });
 
   const currentStatus =
     statuses?.find((s) => s.id === appointment?.status?.id) ?? null;
 
   const isValidStatus = !!currentStatus;
 
-  const statusName = appointment?.status?.name as
-    | AppointmentStatusName
-    | undefined;
-
-  const availableActions =
-    statusName && isValidStatus
-      ? (ACTIONS_BY_STATUS[statusName] ?? []).map((a) => {
-          const targetStatus = statuses?.find((s) => s.name === a.targetStatus);
-          const hexColor = targetStatus?.color ?? '#6b7280';
-          return {
-            ...a,
-            color: hexColor,
-          };
-        })
-      : [];
-
   const handleRefetch = () => {
-    statusRefecth();
+    refetchStatuses();
     appointmentRefetch();
   };
 
@@ -55,7 +57,18 @@ export function useAppointmentDetail() {
     statuses,
     currentStatus,
     isValidStatus,
+    statusesLoading,
+    statusesError,
+    statusesErrorObj,
     availableActions,
+    isUpdatingStatus,
+    // --- Parte del modal expuesta al padre ---
+    confirmModalOpen,
+    confirmAction,
+    handleAction,
+    confirmSelectedAction,
+    closeConfirm,
+    // -----------------------------------------
     handleRefetch,
   };
 }

@@ -5,6 +5,7 @@ import { dashboardRoutes } from '@/modules/dashboard/routes';
 import { patientRoutes } from '@/modules/patients/routes';
 import { doctorRoutes } from '@/modules/doctors/routes';
 import { appointmentRoutes } from '@/modules/appointments/routes';
+import { radiographyReportRoutes } from '@/modules/radiography-reports/routes';
 import { NotFoundPage } from './NotFoundPage';
 
 const allRoutes: RouteObject[] = [
@@ -16,6 +17,7 @@ const allRoutes: RouteObject[] = [
       ...patientRoutes,
       ...doctorRoutes,
       ...appointmentRoutes,
+      ...radiographyReportRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

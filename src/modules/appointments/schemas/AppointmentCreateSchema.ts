@@ -26,7 +26,18 @@ export const NewPatientQuickSchema = PatientCreateSchema.pick({
   hasSguIssues: true,
   hasSgiIssues: true,
   profilePicture: true,
-});
+}).transform((data) => ({
+  ...data,
+  completeOdontogram: data.completeOdontogram ?? true,
+  hasSncIssues: data.hasSncIssues ?? true,
+  hasSvcIssues: data.hasSvcIssues ?? true,
+  hasSeIssues: data.hasSeIssues ?? true,
+  hasSmeIssues: data.hasSmeIssues ?? true,
+  hasSrIssues: data.hasSrIssues ?? true,
+  hasSuIssues: data.hasSuIssues ?? true,
+  hasSguIssues: data.hasSguIssues ?? true,
+  hasSgiIssues: data.hasSgiIssues ?? true,
+}));
 
 export type NewPatientQuickValues = z.infer<typeof NewPatientQuickSchema>;
 

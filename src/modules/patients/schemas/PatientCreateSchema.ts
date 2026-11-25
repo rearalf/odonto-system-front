@@ -46,15 +46,15 @@ export const PatientCreateSchema = z.object({
     .trim()
     .max(255, 'Las notas de evaluación no pueden exceder los 255 caracteres.')
     .optional(),
-  completeOdontogram: z.boolean().default(false),
-  hasSncIssues: z.boolean().default(false),
-  hasSvcIssues: z.boolean().default(false),
-  hasSeIssues: z.boolean().default(false),
-  hasSmeIssues: z.boolean().default(false),
-  hasSrIssues: z.boolean().default(false),
-  hasSuIssues: z.boolean().default(false),
-  hasSguIssues: z.boolean().default(false),
-  hasSgiIssues: z.boolean().default(false),
+  completeOdontogram: z.boolean(),
+  hasSncIssues: z.boolean(),
+  hasSvcIssues: z.boolean(),
+  hasSeIssues: z.boolean(),
+  hasSmeIssues: z.boolean(),
+  hasSrIssues: z.boolean(),
+  hasSuIssues: z.boolean(),
+  hasSguIssues: z.boolean(),
+  hasSgiIssues: z.boolean(),
 });
 
 export type PatientCreateFormValues = z.infer<typeof PatientCreateSchema>;

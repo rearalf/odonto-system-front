@@ -18,6 +18,7 @@ export const appointmentApi = {
     }),
   getById: (id: number) =>
     http.get<AppointmentDetailResponse>(`/appointments/${id}`),
+  delete: (id: number) => http.delete<void>(`/appointments/${id}`),
 
   getStatuses: () => http.get<AppointmentStatus[]>('/statuses/statuses'),
   updateStatus: (id: number, statusId: number) =>
